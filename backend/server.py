@@ -862,6 +862,7 @@ async def create_guest_booking(body: GuestBookingIn, response: Response):
 
 
 
+@api.post("/payments/mock-pay")
 async def mock_pay(body: PaymentIn, user: dict = Depends(get_current_user)):
     booking = await db.bookings.find_one({"id": body.booking_id}, {"_id": 0})
     if not booking:
