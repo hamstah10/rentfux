@@ -571,6 +571,29 @@ async def admin_customers(_: dict = Depends(require_admin)):
     return users
 
 
+@api.get("/admin/customers/{uid}")
+async def admin_customer_detail(uid: str, _: dict = Depends(require_admin)):
+    user = await db.users.find_one({"id": uid, "role": "user"}, {"_id": 0, "password_hash": 0})
+    if not user:
+        raise HTTPException(404, "Kunde nicht gefunden")
+    bookings = await db.bookings.find({"user_id": uid}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    total_spent = round(sum(b["total"] for b in bookings if b.get("payment_status") == "paid"), 2)
+    completed = sum(1 for b in bookings if b.get("status") == "completed")
+    cancelled = sum(1 for b in bookings if b.get("status") == "cancelled")
+    active = sum(1 for b in bookings if b.get("status") in ("pending", "confirmed", "active"))
+    return {
+        "user": user,
+        "bookings": bookings,
+        "stats": {
+            "total_bookings": len(bookings),
+            "total_spent": total_spent,
+            "completed": completed,
+            "cancelled": cancelled,
+            "active": active,
+        },
+    }
+
+
 # ---------- Admin Stats ----------
 @api.get("/admin/stats")
 async def admin_stats(_: dict = Depends(require_admin)):

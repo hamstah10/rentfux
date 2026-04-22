@@ -21,6 +21,7 @@ import AdminBookings from "@/pages/admin/AdminBookings";
 import AdminBookingDetail from "@/pages/admin/AdminBookingDetail";
 import AdminLocationsPage from "@/pages/admin/AdminLocations";
 import AdminCustomers from "@/pages/admin/AdminCustomers";
+import AdminCustomerDetail from "@/pages/admin/AdminCustomerDetail";
 
 function PublicShell({ children }) {
   return (
@@ -55,6 +56,7 @@ function App() {
               <Route path="buchungen/:id" element={<AdminBookingDetail />} />
               <Route path="standorte" element={<AdminLocationsPage />} />
               <Route path="kunden" element={<AdminCustomers />} />
+              <Route path="kunden/:id" element={<AdminCustomerDetail />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import { Input } from "@/components/ui/input";
-import { Search, User as UserIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, User as UserIcon, Eye } from "lucide-react";
 
 export default function AdminCustomers() {
   const [items, setItems] = useState([]);
@@ -38,11 +40,12 @@ export default function AdminCustomers() {
               <th className="text-left p-3">Telefon</th>
               <th className="text-left p-3">Registriert</th>
               <th className="text-right p-3">Buchungen</th>
+              <th className="text-right p-3">Aktion</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {filtered.map((u) => (
-              <tr key={u.id} data-testid={`admin-customer-${u.id}`}>
+              <tr key={u.id} data-testid={`admin-customer-${u.id}`} className="hover:bg-slate-50">
                 <td className="p-3">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
@@ -55,9 +58,16 @@ export default function AdminCustomers() {
                 <td className="p-3 text-slate-600">{u.phone || "—"}</td>
                 <td className="p-3 text-slate-500 text-xs">{(u.created_at || "").slice(0, 10)}</td>
                 <td className="p-3 text-right font-semibold text-[#0A192F]">{u.bookings_count}</td>
+                <td className="p-3 text-right">
+                  <Link to={`/admin/kunden/${u.id}`}>
+                    <Button size="sm" variant="outline" data-testid={`customer-view-${u.id}`}>
+                      <Eye size={14} className="mr-1" /> Details
+                    </Button>
+                  </Link>
+                </td>
               </tr>
             ))}
-            {filtered.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-slate-500">Keine Kunden gefunden.</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-slate-500">Keine Kunden gefunden.</td></tr>}
           </tbody>
         </table>
       </div>
