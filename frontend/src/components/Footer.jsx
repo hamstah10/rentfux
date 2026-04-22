@@ -1,7 +1,19 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Car, Mail, MapPin, Phone } from "lucide-react";
+import { api } from "@/lib/api";
 
 export default function Footer() {
+  const [loc, setLoc] = useState(null);
+
+  useEffect(() => {
+    api.get("/locations").then((r) => setLoc(r.data[0] || null)).catch(() => {});
+  }, []);
+
+  const addressLine = loc ? `${loc.address}, ${loc.postal_code} ${loc.city}` : "";
+  const phone = loc?.phone || "";
+  const email = loc?.email || "service@rentfux.de";
+
   return (
     <footer className="mt-24 border-t border-slate-200 bg-[#0A192F] text-slate-200" data-testid="site-footer">
       <div className="rf-container py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -37,9 +49,20 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold text-white mb-3 font-display">Kontakt</h4>
           <ul className="space-y-3 text-sm text-slate-400">
-            <li className="flex items-start gap-2"><MapPin size={16} className="mt-0.5" /> Hachmannplatz 16, 20099 Hamburg</li>
-            <li className="flex items-center gap-2"><Phone size={16} /> +49 40 123 456 78</li>
-            <li className="flex items-center gap-2"><Mail size={16} /> service@rentfux.de</li>
+            {loc?.name && <li className="font-medium text-slate-300">{loc.name}</li>}
+            {addressLine && (
+              <li className="flex items-start gap-2" data-testid="footer-address">
+                <MapPin size={16} className="mt-0.5 shrink-0" /> {addressLine}
+              </li>
+            )}
+            {phone && (
+              <li className="flex items-center gap-2" data-testid="footer-phone">
+                <Phone size={16} /> <a href={`tel:${phone.replace(/\s+/g, "")}`} className="hover:text-white">{phone}</a>
+              </li>
+            )}
+            <li className="flex items-center gap-2" data-testid="footer-email">
+              <Mail size={16} /> <a href={`mailto:${email}`} className="hover:text-white">{email}</a>
+            </li>
           </ul>
         </div>
       </div>

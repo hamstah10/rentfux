@@ -277,6 +277,8 @@ class LocationIn(BaseModel):
     address: str
     city: str
     postal_code: str
+    phone: Optional[str] = ""
+    email: Optional[str] = ""
     active: bool = True
 
 
@@ -865,6 +867,8 @@ SEED_LOCATION = {
     "address": "Hachmannplatz 16",
     "city": "Hamburg",
     "postal_code": "20099",
+    "phone": "+49 40 123 456 78",
+    "email": "hamburg@rentfux.de",
     "active": True,
 }
 

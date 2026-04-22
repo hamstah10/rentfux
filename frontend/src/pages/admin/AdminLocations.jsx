@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
-const EMPTY = { name: "", address: "", city: "", postal_code: "", active: true };
+const EMPTY = { name: "", address: "", city: "", postal_code: "", phone: "", email: "", active: true };
 
 export default function AdminLocations() {
   const [items, setItems] = useState([]);
@@ -93,6 +93,12 @@ export default function AdminLocations() {
                 <Input value={form.postal_code} onChange={(e) => setForm({ ...form, postal_code: e.target.value })} data-testid="lf-plz" /></div>
               <div className="col-span-2"><Label className="mb-1.5 block text-xs text-slate-500">Stadt</Label>
                 <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} data-testid="lf-city" /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label className="mb-1.5 block text-xs text-slate-500">Telefon</Label>
+                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+49 ..." data-testid="lf-phone" /></div>
+              <div><Label className="mb-1.5 block text-xs text-slate-500">E-Mail</Label>
+                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="kontakt@rentfux.de" data-testid="lf-email" /></div>
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={form.active} onCheckedChange={(v) => setForm({ ...form, active: v })} data-testid="lf-active" />

@@ -23,8 +23,8 @@ export default function Locations() {
             <h2 className="font-display font-semibold text-xl text-[#0A192F]">{l.name}</h2>
             <div className="mt-2 text-sm text-slate-600">{l.address}, {l.postal_code} {l.city}</div>
             <div className="mt-4 flex flex-col gap-1.5 text-sm text-slate-600">
-              <span className="flex items-center gap-2"><Phone size={14} /> +49 40 123 456 78</span>
-              <span className="flex items-center gap-2"><Mail size={14} /> hamburg@rentfux.de</span>
+              {l.phone && <span className="flex items-center gap-2"><Phone size={14} /> <a href={`tel:${l.phone.replace(/\s+/g, "")}`} className="hover:text-[#0055FF]">{l.phone}</a></span>}
+              {l.email && <span className="flex items-center gap-2"><Mail size={14} /> <a href={`mailto:${l.email}`} className="hover:text-[#0055FF]">{l.email}</a></span>}
             </div>
             <div className="mt-5 pt-4 border-t border-slate-100 text-xs text-slate-500">Öffnungszeiten: 24/7 Selbstabholung · Schalter 07:00 – 22:00</div>
           </div>
