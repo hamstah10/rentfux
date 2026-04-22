@@ -231,7 +231,3 @@ function Info({ icon: Icon, label, value }) {
     </div>
   );
 }
-ont-semibold text-[#0A192F] truncate">{value}</div>
-    </div>
-  );
-}
