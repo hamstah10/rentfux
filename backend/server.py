@@ -186,6 +186,15 @@ class BookingStatusIn(BaseModel):
     status: Literal["pending", "confirmed", "active", "completed", "cancelled"]
 
 
+class BookingAdminUpdateIn(BaseModel):
+    status: Optional[Literal["pending", "confirmed", "active", "completed", "cancelled"]] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    location_id: Optional[str] = None
+    customer_note: Optional[str] = None
+    extras: Optional[List[str]] = None
+
+
 # ---------- Auth Routes ----------
 @api.post("/auth/register")
 async def register(body: RegisterIn, response: Response):
@@ -401,11 +410,7 @@ async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)
     if not await _is_available(body.vehicle_id, body.start_date, body.end_date):
         raise HTTPException(409, "Fahrzeug in diesem Zeitraum nicht verfügbar")
 
-    extras_price_map = {
-        "Navigation": 5, "Kindersitz": 7, "Zusatzfahrer": 8,
-        "Vollkasko": 12, "WLAN-Hotspot": 4,
-    }
-    extras_total = sum(extras_price_map.get(e, 0) for e in body.extras) * days
+    extras_total = sum(EXTRAS_PRICE_MAP.get(e, 0) for e in body.extras) * days
     subtotal = v["price_per_day"] * days
     total = round(subtotal + extras_total, 2)
 
@@ -483,9 +488,75 @@ async def admin_bookings(_: dict = Depends(require_admin)):
     return await db.bookings.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
 
 
+@api.get("/admin/bookings/{bid}")
+async def admin_booking_detail(bid: str, _: dict = Depends(require_admin)):
+    b = await db.bookings.find_one({"id": bid}, {"_id": 0})
+    if not b:
+        raise HTTPException(404, "Buchung nicht gefunden")
+    return b
+
+
+EXTRAS_PRICE_MAP = {
+    "Navigation": 5, "Kindersitz": 7, "Zusatzfahrer": 8,
+    "Vollkasko": 12, "WLAN-Hotspot": 4,
+}
+
+
 @api.patch("/admin/bookings/{bid}")
-async def admin_update_booking(bid: str, body: BookingStatusIn, _: dict = Depends(require_admin)):
-    r = await db.bookings.update_one({"id": bid}, {"$set": {"status": body.status}})
+async def admin_update_booking(bid: str, body: BookingAdminUpdateIn, _: dict = Depends(require_admin)):
+    existing = await db.bookings.find_one({"id": bid}, {"_id": 0})
+    if not existing:
+        raise HTTPException(404, "Buchung nicht gefunden")
+
+    upd: dict = {}
+    new_start = body.start_date or existing["start_date"]
+    new_end = body.end_date or existing["end_date"]
+
+    # If dates or extras change, recalculate totals
+    if body.start_date or body.end_date or body.extras is not None:
+        try:
+            days = _days_between(new_start, new_end)
+        except ValueError:
+            raise HTTPException(400, "Ungültige Datumsangabe")
+        extras_list = body.extras if body.extras is not None else existing.get("extras", [])
+        vehicle = await db.vehicles.find_one({"id": existing["vehicle_id"]}, {"_id": 0})
+        if not vehicle:
+            raise HTTPException(404, "Fahrzeug nicht gefunden")
+        extras_total = sum(EXTRAS_PRICE_MAP.get(e, 0) for e in extras_list) * days
+        subtotal = vehicle["price_per_day"] * days
+        total = round(subtotal + extras_total, 2)
+        upd.update({
+            "start_date": new_start, "end_date": new_end, "days": days,
+            "extras": extras_list, "extras_total": extras_total,
+            "subtotal": subtotal, "total": total,
+        })
+
+    if body.status is not None:
+        upd["status"] = body.status
+    if body.location_id is not None:
+        loc = await db.locations.find_one({"id": body.location_id}, {"_id": 0})
+        if not loc:
+            raise HTTPException(404, "Standort nicht gefunden")
+        upd["location_id"] = body.location_id
+        upd["location_name"] = loc["name"]
+    if body.customer_note is not None:
+        upd["customer_note"] = body.customer_note
+
+    if upd:
+        upd["updated_at"] = datetime.now(timezone.utc).isoformat()
+        await db.bookings.update_one({"id": bid}, {"$set": upd})
+    return await db.bookings.find_one({"id": bid}, {"_id": 0})
+
+
+@api.post("/admin/bookings/{bid}/cancel")
+async def admin_cancel_booking(bid: str, _: dict = Depends(require_admin)):
+    r = await db.bookings.update_one(
+        {"id": bid},
+        {"$set": {
+            "status": "cancelled",
+            "cancelled_at": datetime.now(timezone.utc).isoformat(),
+        }},
+    )
     if r.matched_count == 0:
         raise HTTPException(404, "Buchung nicht gefunden")
     return await db.bookings.find_one({"id": bid}, {"_id": 0})

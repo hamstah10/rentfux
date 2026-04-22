@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api, apiError } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Search } from "lucide-react";
+import { Search, Eye } from "lucide-react";
 
 const STATUSES = ["pending", "confirmed", "active", "completed", "cancelled"];
 const STATUS_LABEL = {
@@ -75,11 +77,12 @@ export default function AdminBookings() {
               <th className="text-left p-3">Zahlung</th>
               <th className="text-right p-3">Gesamt</th>
               <th className="text-left p-3">Status</th>
+              <th className="text-right p-3">Aktionen</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {filtered.map((b) => (
-              <tr key={b.id} data-testid={`admin-booking-${b.id}`}>
+              <tr key={b.id} data-testid={`admin-booking-${b.id}`} className="hover:bg-slate-50">
                 <td className="p-3 font-mono text-xs text-slate-500">{b.id.slice(0, 8).toUpperCase()}</td>
                 <td className="p-3">
                   <div className="font-semibold text-[#0A192F]">{b.user_name}</div>
@@ -108,9 +111,16 @@ export default function AdminBookings() {
                     </SelectContent>
                   </Select>
                 </td>
+                <td className="p-3 text-right">
+                  <Link to={`/admin/buchungen/${b.id}`}>
+                    <Button size="sm" variant="outline" data-testid={`booking-view-${b.id}`}>
+                      <Eye size={14} className="mr-1" /> Details
+                    </Button>
+                  </Link>
+                </td>
               </tr>
             ))}
-            {filtered.length === 0 && <tr><td colSpan={7} className="p-8 text-center text-slate-500">Keine Buchungen gefunden.</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-slate-500">Keine Buchungen gefunden.</td></tr>}
           </tbody>
         </table>
       </div>

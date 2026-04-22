@@ -18,6 +18,7 @@ import AdminLayout from "@/pages/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminVehicles from "@/pages/admin/AdminVehicles";
 import AdminBookings from "@/pages/admin/AdminBookings";
+import AdminBookingDetail from "@/pages/admin/AdminBookingDetail";
 import AdminLocationsPage from "@/pages/admin/AdminLocations";
 import AdminCustomers from "@/pages/admin/AdminCustomers";
 
@@ -51,6 +52,7 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="fahrzeuge" element={<AdminVehicles />} />
               <Route path="buchungen" element={<AdminBookings />} />
+              <Route path="buchungen/:id" element={<AdminBookingDetail />} />
               <Route path="standorte" element={<AdminLocationsPage />} />
               <Route path="kunden" element={<AdminCustomers />} />
             </Route>
