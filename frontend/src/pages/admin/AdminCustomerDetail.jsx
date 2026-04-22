@@ -48,7 +48,14 @@ export default function AdminCustomerDetail() {
         <div>
           <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Kundenprofil</div>
           <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">{user.name || "—"}</h1>
-          <div className="text-slate-500 text-sm mt-1 font-mono">ID: {user.id.slice(0, 8).toUpperCase()}</div>
+          <div className="mt-1 flex items-center gap-2 flex-wrap">
+            <div className="text-slate-500 text-sm font-mono">ID: {user.id.slice(0, 8).toUpperCase()}</div>
+            {user.is_business && (
+              <Badge className="bg-[#EFF4FF] text-[#0055FF] border-0 gap-1">
+                <Building2 size={12} /> Geschäftskunde
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
 
@@ -73,6 +80,19 @@ export default function AdminCustomerDetail() {
             </h3>
             <div className="text-sm text-[#0A192F] leading-relaxed">{addrFull}</div>
           </div>
+
+          {user.is_business && (
+            <div className="bg-white border border-slate-200 rounded-lg p-6" data-testid="customer-business">
+              <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+                <Building2 size={16} /> Firma
+              </h3>
+              <div className="space-y-3 text-sm">
+                <InfoRow icon={Building2} label="Firmenname" value={user.company?.company_name || "—"} />
+                <InfoRow icon={FileCheck2} label="USt-IdNr." value={user.company?.vat_id || "—"} />
+                <InfoRow icon={User} label="Ansprechpartner" value={user.company?.contact_person || "—"} />
+              </div>
+            </div>
+          )}
 
           <div className="bg-white border border-slate-200 rounded-lg p-6">
             <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">

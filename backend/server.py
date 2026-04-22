@@ -100,12 +100,40 @@ def user_public(u: dict) -> dict:
         "license_number": u.get("license_number", ""),
         "license_expiry": u.get("license_expiry", ""),
         "id_card_number": u.get("id_card_number", ""),
+        "is_business": bool(u.get("is_business", False)),
+        "company": u.get("company", {}),
         "documents": {
             "license": _doc_meta((u.get("documents") or {}).get("license")),
             "id_card": _doc_meta((u.get("documents") or {}).get("id_card")),
         },
         "created_at": u.get("created_at"),
     }
+
+
+def check_booking_profile(user: dict) -> List[str]:
+    """Returns list of missing required fields for booking."""
+    missing = []
+    if not user.get("name"):
+        missing.append("Name")
+    if not user.get("phone"):
+        missing.append("Telefon")
+    if not user.get("date_of_birth"):
+        missing.append("Geburtsdatum")
+    if not user.get("license_number"):
+        missing.append("Führerscheinnummer")
+    addr = user.get("address") or {}
+    if not addr.get("street") or not addr.get("postal_code") or not addr.get("city"):
+        missing.append("Vollständige Adresse")
+    docs = user.get("documents") or {}
+    if not docs.get("license"):
+        missing.append("Führerschein-Upload")
+    if not docs.get("id_card"):
+        missing.append("Personalausweis-Upload")
+    if user.get("is_business"):
+        company = user.get("company") or {}
+        if not company.get("company_name"):
+            missing.append("Firmenname")
+    return missing
 
 
 def _doc_meta(d):
@@ -226,6 +254,12 @@ class AddressIn(BaseModel):
     country: Optional[str] = "Deutschland"
 
 
+class CompanyIn(BaseModel):
+    company_name: Optional[str] = ""
+    vat_id: Optional[str] = ""
+    contact_person: Optional[str] = ""
+
+
 class UserUpdateIn(BaseModel):
     name: Optional[str] = None
     phone: Optional[str] = None
@@ -234,6 +268,8 @@ class UserUpdateIn(BaseModel):
     license_number: Optional[str] = None
     license_expiry: Optional[str] = None
     id_card_number: Optional[str] = None
+    is_business: Optional[bool] = None
+    company: Optional[CompanyIn] = None
 
 
 class LocationIn(BaseModel):
@@ -350,13 +386,20 @@ async def me(user: dict = Depends(get_current_user)):
 @api.patch("/auth/profile")
 async def update_profile(body: UserUpdateIn, user: dict = Depends(get_current_user)):
     raw = body.model_dump(exclude_none=True)
-    # Normalize nested address
     if "address" in raw and raw["address"] is not None:
         raw["address"] = {k: (v or "") for k, v in raw["address"].items()}
+    if "company" in raw and raw["company"] is not None:
+        raw["company"] = {k: (v or "") for k, v in raw["company"].items()}
     if raw:
         await db.users.update_one({"id": user["id"]}, {"$set": raw})
     refreshed = await db.users.find_one({"id": user["id"]}, {"_id": 0})
     return {"user": user_public(refreshed)}
+
+
+@api.get("/auth/profile-status")
+async def profile_status(user: dict = Depends(get_current_user)):
+    missing = check_booking_profile(user)
+    return {"complete": len(missing) == 0, "missing": missing}
 
 
 # ---------- Document Uploads ----------
@@ -569,6 +612,12 @@ async def check_availability(vid: str, start: str, end: str):
 
 @api.post("/bookings")
 async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)):
+    missing = check_booking_profile(user)
+    if missing:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Profil unvollständig. Bitte ergänze: {', '.join(missing)}",
+        )
     v = await db.vehicles.find_one({"id": body.vehicle_id, "active": True}, {"_id": 0})
     if not v:
         raise HTTPException(404, "Fahrzeug nicht verfügbar")

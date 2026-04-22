@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Check, ArrowLeft, ArrowRight, CreditCard, Calendar, MapPin, Sparkles, ShieldCheck } from "lucide-react";
+import { Check, ArrowLeft, ArrowRight, CreditCard, Calendar, MapPin, Sparkles, ShieldCheck, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -46,6 +46,11 @@ export default function BookingFlow() {
   const [payment, setPayment] = useState("stripe");
   const [booking, setBooking] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [profileStatus, setProfileStatus] = useState({ complete: true, missing: [] });
+
+  useEffect(() => {
+    api.get("/auth/profile-status").then((r) => setProfileStatus(r.data)).catch(() => {});
+  }, [user]);
 
   useEffect(() => {
     api.get(`/vehicles/${vehicleId}`).then((r) => setVehicle(r.data)).catch((e) => toast.error(apiError(e)));
@@ -114,6 +119,21 @@ export default function BookingFlow() {
       <Link to={`/fahrzeug/${vehicleId}`} className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-[#0055FF] mb-6" data-testid="back-to-vehicle">
         <ArrowLeft size={14} /> Zurück
       </Link>
+
+      {!profileStatus.complete && step < 4 && (
+        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3" data-testid="profile-warning">
+          <AlertTriangle size={20} className="text-amber-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <div className="font-semibold text-amber-900">Profil unvollständig</div>
+            <div className="text-sm text-amber-800 mt-1">
+              Um zu buchen, benötigen wir: <strong>{profileStatus.missing.join(", ")}</strong>.
+            </div>
+          </div>
+          <Button size="sm" variant="outline" className="border-amber-300 shrink-0" onClick={() => navigate("/konto")} data-testid="profile-warning-btn">
+            Profil vervollständigen
+          </Button>
+        </div>
+      )}
 
       {/* Stepper */}
       <div className="mb-10 bg-white border border-slate-200 rounded-lg p-5">
@@ -268,7 +288,7 @@ export default function BookingFlow() {
               <Button variant="outline" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0} data-testid="step-back">
                 <ArrowLeft size={14} className="mr-1" /> Zurück
               </Button>
-              <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={goNext} disabled={submitting} data-testid="step-next">
+              <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={goNext} disabled={submitting || (step === 3 && !profileStatus.complete)} data-testid="step-next">
                 {step === 3 ? (submitting ? "Wird verarbeitet..." : `Jetzt zahlen · ${total.toFixed(2)}€`) : (<>Weiter <ArrowRight size={14} className="ml-1" /></>)}
               </Button>
             </div>

@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, MapPin, Save, User as UserIcon, FileText, Home } from "lucide-react";
+import { Calendar, Car, MapPin, Save, User as UserIcon, FileText, Home, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import DocumentUpload from "@/components/DocumentUpload";
+import { Switch } from "@/components/ui/switch";
 
 const STATUS_MAP = {
   pending: { label: "Ausstehend", cls: "bg-amber-100 text-amber-800" },
@@ -20,6 +21,7 @@ const STATUS_MAP = {
 };
 
 const EMPTY_ADDR = { street: "", house_number: "", postal_code: "", city: "", country: "Deutschland" };
+const EMPTY_COMPANY = { company_name: "", vat_id: "", contact_person: "" };
 
 export default function Account() {
   const { user, updateProfile, refresh } = useAuth();
@@ -35,6 +37,8 @@ export default function Account() {
     license_number: user?.license_number || "",
     license_expiry: user?.license_expiry || "",
     id_card_number: user?.id_card_number || "",
+    is_business: user?.is_business || false,
+    company: { ...EMPTY_COMPANY, ...(user?.company || {}) },
   });
 
   useEffect(() => {
@@ -47,6 +51,8 @@ export default function Account() {
         license_number: user.license_number || "",
         license_expiry: user.license_expiry || "",
         id_card_number: user.id_card_number || "",
+        is_business: user.is_business || false,
+        company: { ...EMPTY_COMPANY, ...(user.company || {}) },
       });
     }
   }, [user]);
@@ -168,6 +174,33 @@ export default function Account() {
           </div>
         </TabsContent>
 
+        {/* Business */}
+        <TabsContent value="business" className="mt-6">
+          <div className="max-w-2xl bg-white border border-slate-200 rounded-lg p-6">
+            <div className="flex items-start justify-between mb-5 gap-4">
+              <div>
+                <h2 className="font-display font-semibold text-lg text-[#0A192F]">Geschäftskunde</h2>
+                <p className="text-sm text-slate-500 mt-1">Aktiviere diese Option, wenn du im Namen eines Unternehmens buchst.</p>
+              </div>
+              <Switch
+                checked={form.is_business}
+                onCheckedChange={(v) => setForm({ ...form, is_business: v })}
+                data-testid="biz-toggle"
+              />
+            </div>
+            {form.is_business && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-5 border-t border-slate-100">
+                <div className="md:col-span-2"><Field label="Firmenname *"><Input value={form.company.company_name} onChange={(e) => setForm({ ...form, company: { ...form.company, company_name: e.target.value } })} data-testid="biz-name" /></Field></div>
+                <Field label="USt-IdNr. (USt-ID)"><Input value={form.company.vat_id} onChange={(e) => setForm({ ...form, company: { ...form.company, vat_id: e.target.value } })} placeholder="DE123456789" data-testid="biz-vat" /></Field>
+                <Field label="Ansprechpartner"><Input value={form.company.contact_person} onChange={(e) => setForm({ ...form, company: { ...form.company, contact_person: e.target.value } })} data-testid="biz-contact" /></Field>
+              </div>
+            )}
+            <Button onClick={saveProfile} disabled={saving} className="mt-6 bg-[#0055FF] hover:bg-[#0044CC]" data-testid="biz-save">
+              <Save size={14} className="mr-2" /> {saving ? "Speichert..." : "Speichern"}
+            </Button>
+          </div>
+        </TabsContent>
+
         {/* Documents */}
         <TabsContent value="documents" className="mt-6">
           <div className="max-w-2xl">
@@ -195,6 +228,10 @@ function Info({ icon: Icon, label, value }) {
     <div>
       <div className="text-slate-500 flex items-center gap-1"><Icon size={11} /> {label}</div>
       <div className="font-semibold text-[#0A192F] truncate">{value}</div>
+    </div>
+  );
+}
+ont-semibold text-[#0A192F] truncate">{value}</div>
     </div>
   );
 }
