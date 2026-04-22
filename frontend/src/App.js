@@ -22,6 +22,8 @@ import AdminBookingDetail from "@/pages/admin/AdminBookingDetail";
 import AdminLocationsPage from "@/pages/admin/AdminLocations";
 import AdminCustomers from "@/pages/admin/AdminCustomers";
 import AdminCustomerDetail from "@/pages/admin/AdminCustomerDetail";
+import AdminDiscounts from "@/pages/admin/AdminDiscounts";
+import ProfileSetup from "@/pages/ProfileSetup";
 
 function PublicShell({ children }) {
   return (
@@ -48,6 +50,7 @@ function App() {
             <Route path="/registrieren" element={<PublicShell><Register /></PublicShell>} />
             <Route path="/buchen/:vehicleId" element={<PublicShell><BookingFlow /></PublicShell>} />
             <Route path="/konto" element={<ProtectedRoute><PublicShell><Account /></PublicShell></ProtectedRoute>} />
+            <Route path="/konto/einrichten" element={<ProtectedRoute><PublicShell><ProfileSetup /></PublicShell></ProtectedRoute>} />
 
             <Route path="/admin" element={<ProtectedRoute adminOnly><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
@@ -57,6 +60,7 @@ function App() {
               <Route path="standorte" element={<AdminLocationsPage />} />
               <Route path="kunden" element={<AdminCustomers />} />
               <Route path="kunden/:id" element={<AdminCustomerDetail />} />
+              <Route path="rabatte" element={<AdminDiscounts />} />
             </Route>
           </Routes>
         </BrowserRouter>

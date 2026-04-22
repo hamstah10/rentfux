@@ -15,6 +15,7 @@ import bcrypt
 import jwt
 import requests
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, Query, UploadFile, File, Header
+from fastapi.responses import StreamingResponse
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, EmailStr
@@ -305,6 +306,7 @@ class BookingIn(BaseModel):
     end_date: str
     extras: List[str] = []
     customer_note: str = ""
+    discount_code: Optional[str] = None
 
 
 class GuestCustomerIn(BaseModel):
@@ -329,6 +331,34 @@ class GuestBookingIn(BaseModel):
     payment_method: Literal["stripe", "paypal"]
     create_account: bool = False
     password: Optional[str] = None
+    discount_code: Optional[str] = None
+
+
+class DiscountCodeIn(BaseModel):
+    code: str = Field(min_length=2)
+    type: Literal["percent", "fixed"]
+    value: float = Field(gt=0)
+    max_uses: Optional[int] = None
+    min_total: Optional[float] = 0
+    valid_until: Optional[str] = None
+    active: bool = True
+
+
+class ApplyDiscountIn(BaseModel):
+    code: str
+    subtotal: float
+
+
+class AdminCustomerUpdateIn(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    address: Optional[AddressIn] = None
+    license_number: Optional[str] = None
+    license_expiry: Optional[str] = None
+    id_card_number: Optional[str] = None
+    is_business: Optional[bool] = None
+    company: Optional[CompanyIn] = None
 
 
 class PaymentIn(BaseModel):
@@ -636,6 +666,39 @@ async def check_availability(vid: str, start: str, end: str):
     return {"available": ok}
 
 
+async def _resolve_discount(code: Optional[str], subtotal_plus_extras: float):
+    """Returns (discount_amount, discount_doc) or (0, None). Raises HTTPException if invalid."""
+    if not code:
+        return 0.0, None
+    code_up = code.strip().upper()
+    if not code_up:
+        return 0.0, None
+    d = await db.discount_codes.find_one({"code": code_up, "active": True}, {"_id": 0})
+    if not d:
+        raise HTTPException(400, "Rabattcode ungültig")
+    if d.get("valid_until"):
+        try:
+            until = datetime.strptime(d["valid_until"], "%Y-%m-%d").date()
+            if datetime.now(timezone.utc).date() > until:
+                raise HTTPException(400, "Rabattcode abgelaufen")
+        except ValueError:
+            pass
+    if d.get("max_uses") and d.get("used_count", 0) >= d["max_uses"]:
+        raise HTTPException(400, "Rabattcode ist aufgebraucht")
+    if d.get("min_total") and subtotal_plus_extras < d["min_total"]:
+        raise HTTPException(400, f"Mindestbestellwert {d['min_total']:.2f}€ nicht erreicht")
+    if d["type"] == "percent":
+        amount = round(subtotal_plus_extras * (d["value"] / 100.0), 2)
+    else:
+        amount = round(min(d["value"], subtotal_plus_extras), 2)
+    return amount, d
+
+
+async def _consume_discount(d: Optional[dict]):
+    if d:
+        await db.discount_codes.update_one({"code": d["code"]}, {"$inc": {"used_count": 1}})
+
+
 @api.post("/bookings")
 async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)):
     missing = check_booking_profile(user)
@@ -659,7 +722,9 @@ async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)
 
     extras_total = sum(EXTRAS_PRICE_MAP.get(e, 0) for e in body.extras) * days
     subtotal = v["price_per_day"] * days
-    total = round(subtotal + extras_total, 2)
+    gross = subtotal + extras_total
+    discount_amount, discount_doc = await _resolve_discount(body.discount_code, gross)
+    total = round(max(0.0, gross - discount_amount), 2)
 
     doc = {
         "id": str(uuid.uuid4()),
@@ -678,6 +743,8 @@ async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)
         "extras": body.extras,
         "extras_total": extras_total,
         "subtotal": subtotal,
+        "discount_code": discount_doc["code"] if discount_doc else None,
+        "discount_amount": discount_amount,
         "total": total,
         "status": "pending",
         "payment_status": "unpaid",
@@ -687,6 +754,7 @@ async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.bookings.insert_one(doc)
+    await _consume_discount(discount_doc)
     doc.pop("_id", None)
     return doc
 
@@ -743,7 +811,9 @@ async def create_guest_booking(body: GuestBookingIn, response: Response):
 
     extras_total = sum(EXTRAS_PRICE_MAP.get(e, 0) for e in body.extras) * days
     subtotal = v["price_per_day"] * days
-    total = round(subtotal + extras_total, 2)
+    gross = subtotal + extras_total
+    discount_amount, discount_doc = await _resolve_discount(body.discount_code, gross)
+    total = round(max(0.0, gross - discount_amount), 2)
 
     # Determine booking owner
     owner_id = (created_user or existing_user or {}).get("id")
@@ -768,6 +838,8 @@ async def create_guest_booking(body: GuestBookingIn, response: Response):
         "extras": body.extras,
         "extras_total": extras_total,
         "subtotal": subtotal,
+        "discount_code": discount_doc["code"] if discount_doc else None,
+        "discount_amount": discount_amount,
         "total": total,
         "status": "confirmed",
         "payment_status": "paid",
@@ -778,6 +850,7 @@ async def create_guest_booking(body: GuestBookingIn, response: Response):
         "paid_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.bookings.insert_one(doc)
+    await _consume_discount(discount_doc)
     doc.pop("_id", None)
     logger.info(f"[MOCK] Guest booking {doc['id']} for {email} confirmed")
 
@@ -973,6 +1046,278 @@ async def admin_stats(_: dict = Depends(require_admin)):
         "monthly_revenue": monthly,
         "status_counts": status_counts,
     }
+
+
+# ---------- Discount Codes ----------
+@api.post("/bookings/apply-discount")
+async def apply_discount(body: ApplyDiscountIn):
+    amount, d = await _resolve_discount(body.code, body.subtotal)
+    return {
+        "valid": True,
+        "code": d["code"],
+        "type": d["type"],
+        "value": d["value"],
+        "discount": amount,
+        "new_total": round(max(0.0, body.subtotal - amount), 2),
+    }
+
+
+@api.get("/admin/discounts")
+async def admin_list_discounts(_: dict = Depends(require_admin)):
+    return await db.discount_codes.find({}, {"_id": 0}).sort("created_at", -1).to_list(500)
+
+
+@api.post("/admin/discounts")
+async def admin_create_discount(body: DiscountCodeIn, _: dict = Depends(require_admin)):
+    code = body.code.strip().upper()
+    if await db.discount_codes.find_one({"code": code}):
+        raise HTTPException(400, "Rabattcode existiert bereits")
+    doc = {
+        **body.model_dump(),
+        "code": code,
+        "used_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.discount_codes.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api.put("/admin/discounts/{code}")
+async def admin_update_discount(code: str, body: DiscountCodeIn, _: dict = Depends(require_admin)):
+    code_up = code.strip().upper()
+    upd = body.model_dump()
+    upd["code"] = body.code.strip().upper()
+    r = await db.discount_codes.update_one({"code": code_up}, {"$set": upd})
+    if r.matched_count == 0:
+        raise HTTPException(404, "Rabattcode nicht gefunden")
+    return await db.discount_codes.find_one({"code": upd["code"]}, {"_id": 0})
+
+
+@api.delete("/admin/discounts/{code}")
+async def admin_delete_discount(code: str, _: dict = Depends(require_admin)):
+    r = await db.discount_codes.delete_one({"code": code.strip().upper()})
+    return {"ok": r.deleted_count > 0}
+
+
+# ---------- Admin Customer Edit ----------
+@api.patch("/admin/customers/{uid}")
+async def admin_update_customer(uid: str, body: AdminCustomerUpdateIn, _: dict = Depends(require_admin)):
+    target = await db.users.find_one({"id": uid}, {"_id": 0})
+    if not target:
+        raise HTTPException(404, "Kunde nicht gefunden")
+    raw = body.model_dump(exclude_none=True)
+    if "address" in raw and raw["address"] is not None:
+        raw["address"] = {k: (v or "") for k, v in raw["address"].items()}
+    if "company" in raw and raw["company"] is not None:
+        raw["company"] = {k: (v or "") for k, v in raw["company"].items()}
+    if raw:
+        await db.users.update_one({"id": uid}, {"$set": raw})
+    refreshed = await db.users.find_one({"id": uid}, {"_id": 0})
+    return {"user": user_public(refreshed)}
+
+
+# ---------- Invoice PDF ----------
+def _render_invoice_pdf(booking: dict, location: Optional[dict]) -> bytes:
+    from io import BytesIO
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm
+    from reportlab.lib import colors
+    from reportlab.pdfgen import canvas as rl_canvas
+
+    buf = BytesIO()
+    c = rl_canvas.Canvas(buf, pagesize=A4)
+    w, h = A4
+    y = h - 25 * mm
+    PRIMARY = colors.HexColor("#0055FF")
+    NAVY = colors.HexColor("#0A192F")
+    MUTED = colors.HexColor("#64748B")
+    LINE = colors.HexColor("#E2E8F0")
+
+    # Header brand
+    c.setFillColor(PRIMARY)
+    c.rect(20 * mm, y - 2 * mm, 10 * mm, 10 * mm, fill=1, stroke=0)
+    c.setFillColor(colors.white)
+    c.setFont("Helvetica-Bold", 10)
+    c.drawCentredString(25 * mm, y + 1.5 * mm, "RF")
+    c.setFillColor(NAVY)
+    c.setFont("Helvetica-Bold", 20)
+    c.drawString(33 * mm, y + 2 * mm, "RentFux")
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica", 9)
+    c.drawString(33 * mm, y - 2 * mm, "Premium Autovermietung")
+
+    # Invoice title (right)
+    c.setFillColor(NAVY)
+    c.setFont("Helvetica-Bold", 22)
+    c.drawRightString(w - 20 * mm, y + 3 * mm, "Buchungsbestätigung")
+    c.setFont("Helvetica", 9)
+    c.setFillColor(MUTED)
+    c.drawRightString(w - 20 * mm, y - 3 * mm, f"Nr. {booking['id'][:8].upper()}")
+    created = (booking.get("created_at") or "")[:10]
+    c.drawRightString(w - 20 * mm, y - 7 * mm, f"Datum: {created}")
+
+    # Divider
+    y -= 20 * mm
+    c.setStrokeColor(LINE)
+    c.line(20 * mm, y, w - 20 * mm, y)
+    y -= 10 * mm
+
+    # Customer + Location blocks
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica", 8)
+    c.drawString(20 * mm, y, "KUNDE")
+    c.drawString(110 * mm, y, "ABHOLSTATION")
+    y -= 5 * mm
+    c.setFillColor(NAVY)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(20 * mm, y, booking.get("user_name") or "—")
+    if location:
+        c.drawString(110 * mm, y, location.get("name") or "")
+    y -= 5 * mm
+    c.setFont("Helvetica", 10)
+    c.setFillColor(NAVY)
+    c.drawString(20 * mm, y, booking.get("user_email") or "")
+    if location:
+        c.drawString(110 * mm, y, f"{location.get('address','')}")
+    y -= 5 * mm
+
+    gc = booking.get("guest_customer") or {}
+    phone_line = gc.get("phone") or ""
+    if phone_line:
+        c.drawString(20 * mm, y, phone_line)
+    if location:
+        c.drawString(110 * mm, y, f"{location.get('postal_code','')} {location.get('city','')}")
+    y -= 5 * mm
+
+    addr = gc.get("address") or {}
+    if addr.get("street"):
+        addr_line = f"{addr.get('street','')} {addr.get('house_number','')}".strip()
+        c.drawString(20 * mm, y, addr_line)
+        y -= 5 * mm
+        c.drawString(20 * mm, y, f"{addr.get('postal_code','')} {addr.get('city','')}")
+        y -= 5 * mm
+
+    # Booking details table
+    y -= 10 * mm
+    c.setStrokeColor(LINE)
+    c.line(20 * mm, y, w - 20 * mm, y)
+    y -= 8 * mm
+    c.setFillColor(NAVY)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(20 * mm, y, "Buchungsdetails")
+    y -= 8 * mm
+
+    details = [
+        ("Fahrzeug", f"{booking.get('vehicle_brand','')} {booking.get('vehicle_name','')}"),
+        ("Abholdatum", booking.get("start_date", "")),
+        ("Rückgabedatum", booking.get("end_date", "")),
+        ("Anzahl Tage", str(booking.get("days", ""))),
+        ("Zahlungsmethode", (booking.get("payment_method") or "—").title()),
+        ("Status", (booking.get("status") or "").title()),
+    ]
+    c.setFont("Helvetica", 10)
+    c.setFillColor(NAVY)
+    for k, v in details:
+        c.setFillColor(MUTED)
+        c.drawString(20 * mm, y, k)
+        c.setFillColor(NAVY)
+        c.drawString(80 * mm, y, str(v))
+        y -= 6 * mm
+
+    # Items
+    y -= 5 * mm
+    c.setStrokeColor(LINE)
+    c.line(20 * mm, y, w - 20 * mm, y)
+    y -= 8 * mm
+    c.setFillColor(NAVY)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(20 * mm, y, "Abrechnung")
+    y -= 8 * mm
+
+    c.setFont("Helvetica", 10)
+    c.setFillColor(MUTED)
+    c.drawString(20 * mm, y, "Position")
+    c.drawRightString(w - 20 * mm, y, "Betrag")
+    y -= 6 * mm
+    c.setStrokeColor(LINE)
+    c.line(20 * mm, y + 2 * mm, w - 20 * mm, y + 2 * mm)
+
+    c.setFillColor(NAVY)
+    days = booking.get("days", 1)
+    per_day = (booking.get("subtotal", 0) / days) if days else 0
+    c.drawString(20 * mm, y, f"Fahrzeug ({per_day:.2f}€ × {days} Tage)")
+    c.drawRightString(w - 20 * mm, y, f"{booking.get('subtotal', 0):.2f} EUR")
+    y -= 6 * mm
+
+    for ex in booking.get("extras", []) or []:
+        c.drawString(20 * mm, y, f"Extra: {ex}")
+        y -= 6 * mm
+
+    if booking.get("extras_total"):
+        c.drawString(20 * mm, y, "Extras gesamt")
+        c.drawRightString(w - 20 * mm, y, f"{booking.get('extras_total', 0):.2f} EUR")
+        y -= 6 * mm
+
+    if booking.get("discount_amount"):
+        c.setFillColor(colors.HexColor("#10B981"))
+        c.drawString(20 * mm, y, f"Rabatt ({booking.get('discount_code','')})")
+        c.drawRightString(w - 20 * mm, y, f"- {booking.get('discount_amount', 0):.2f} EUR")
+        c.setFillColor(NAVY)
+        y -= 6 * mm
+
+    y -= 2 * mm
+    c.setStrokeColor(NAVY)
+    c.setLineWidth(1)
+    c.line(20 * mm, y, w - 20 * mm, y)
+    y -= 8 * mm
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(20 * mm, y, "Gesamtbetrag")
+    c.setFillColor(PRIMARY)
+    c.drawRightString(w - 20 * mm, y, f"{booking.get('total', 0):.2f} EUR")
+
+    # Footer
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica", 8)
+    c.drawCentredString(w / 2, 20 * mm, "RentFux GmbH · Hachmannplatz 16 · 20099 Hamburg · service@rentfux.de")
+    c.drawCentredString(w / 2, 15 * mm, "Vielen Dank für deine Buchung. Bitte bringe Führerschein & Ausweis zur Abholung mit.")
+
+    c.showPage()
+    c.save()
+    return buf.getvalue()
+
+
+@api.get("/bookings/{bid}/invoice")
+async def booking_invoice(bid: str, request: Request, token: Optional[str] = Query(None)):
+    booking = await db.bookings.find_one({"id": bid}, {"_id": 0})
+    if not booking:
+        raise HTTPException(404, "Buchung nicht gefunden")
+    # Access control: allow owner, admin, or guest with booking_id (anyone who knows the UUID)
+    is_guest = booking.get("is_guest", False)
+    user = None
+    try:
+        # Mimic dependency manually since we want optional auth
+        t = request.cookies.get("access_token") or token
+        if not t:
+            auth = request.headers.get("Authorization", "")
+            if auth.startswith("Bearer "):
+                t = auth[7:]
+        if t:
+            payload = jwt.decode(t, get_jwt_secret(), algorithms=[JWT_ALGORITHM])
+            user = await db.users.find_one({"id": payload["sub"]}, {"_id": 0})
+    except Exception:
+        user = None
+    if not is_guest:
+        if not user or (booking["user_id"] != user["id"] and user.get("role") != "admin"):
+            raise HTTPException(403, "Keine Berechtigung")
+    location = await db.locations.find_one({"id": booking.get("location_id")}, {"_id": 0})
+    pdf = _render_invoice_pdf(booking, location)
+    from io import BytesIO
+    return StreamingResponse(
+        BytesIO(pdf),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="RentFux-Buchung-{bid[:8].upper()}.pdf"'},
+    )
 
 
 # ---------- Health ----------

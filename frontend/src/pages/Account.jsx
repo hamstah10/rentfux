@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { api, apiError } from "@/lib/api";
+import { api, apiError, API_BASE } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, MapPin, Save, User as UserIcon, FileText, Home, Building2 } from "lucide-react";
+import { Calendar, Car, MapPin, Save, User as UserIcon, FileText, Home, Building2, Download } from "lucide-react";
 import { toast } from "sonner";
 import DocumentUpload from "@/components/DocumentUpload";
 import { Switch } from "@/components/ui/switch";
@@ -127,6 +127,16 @@ export default function Account() {
                         <Info icon={Calendar} label="Rückgabe" value={b.end_date} />
                         <Info icon={MapPin} label="Standort" value={b.location_name} />
                         <Info icon={Car} label="Gesamt" value={`${b.total.toFixed(2)}€`} />
+                      </div>
+                      <div className="mt-3 flex justify-end">
+                        <a
+                          href={`${API_BASE}/bookings/${b.id}/invoice`}
+                          target="_blank" rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0055FF] hover:underline"
+                          data-testid={`invoice-${b.id}`}
+                        >
+                          <Download size={12} /> Rechnung (PDF)
+                        </a>
                       </div>
                     </div>
                   </div>

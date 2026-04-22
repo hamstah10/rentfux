@@ -18,12 +18,41 @@ const STATUS = {
 export default function AdminCustomerDetail() {
   const { id } = useParams();
   const [data, setData] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [form, setForm] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    api.get(`/admin/customers/${id}`)
-      .then((r) => setData(r.data))
-      .catch((e) => toast.error(apiError(e)));
-  }, [id]);
+  const load = () => api.get(`/admin/customers/${id}`)
+    .then((r) => setData(r.data))
+    .catch((e) => toast.error(apiError(e)));
+
+  useEffect(() => { load(); }, [id]);
+
+  const openEdit = () => {
+    const u = data.user;
+    setForm({
+      name: u.name || "", phone: u.phone || "", date_of_birth: u.date_of_birth || "",
+      address: { street: "", house_number: "", postal_code: "", city: "", country: "Deutschland", ...(u.address || {}) },
+      license_number: u.license_number || "", license_expiry: u.license_expiry || "", id_card_number: u.id_card_number || "",
+      is_business: u.is_business || false,
+      company: { company_name: "", vat_id: "", contact_person: "", ...(u.company || {}) },
+    });
+    setEditOpen(true);
+  };
+
+  const saveEdit = async () => {
+    setSaving(true);
+    try {
+      await api.patch(`/admin/customers/${id}`, form);
+      toast.success("Kundendaten aktualisiert");
+      setEditOpen(false);
+      load();
+    } catch (e) { toast.error(apiError(e)); }
+    finally { setSaving(false); }
+  };
+
+  const setAddr = (k, v) => setForm({ ...form, address: { ...form.address, [k]: v } });
+  const setCompany = (k, v) => setForm({ ...form, company: { ...form.company, [k]: v } });
 
   if (!data) return <div className="text-slate-500">Lädt...</div>;
   const { user, bookings, stats } = data;
@@ -41,11 +70,11 @@ export default function AdminCustomerDetail() {
         <ArrowLeft size={14} /> Zurück zur Kundenliste
       </Link>
 
-      <div className="flex items-center gap-5 mb-8">
+      <div className="flex items-center gap-5 mb-8 flex-wrap">
         <div className="w-20 h-20 rounded-full bg-[#EFF4FF] text-[#0055FF] flex items-center justify-center font-display font-bold text-3xl">
           {(user.name || user.email).slice(0, 1).toUpperCase()}
         </div>
-        <div>
+        <div className="flex-1">
           <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Kundenprofil</div>
           <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">{user.name || "—"}</h1>
           <div className="mt-1 flex items-center gap-2 flex-wrap">
@@ -57,6 +86,9 @@ export default function AdminCustomerDetail() {
             )}
           </div>
         </div>
+        <Button onClick={openEdit} className="bg-[#0055FF] hover:bg-[#0044CC]" data-testid="customer-edit-btn">
+          <Pencil size={14} className="mr-2" /> Bearbeiten
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -169,8 +201,70 @@ export default function AdminCustomerDetail() {
           </div>
         </section>
       </div>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>Kundendaten bearbeiten</DialogTitle></DialogHeader>
+          {form && (
+            <div className="space-y-5">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Kontakt</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <FieldLabel label="Name"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} data-testid="ae-name" /></FieldLabel>
+                  <FieldLabel label="Telefon"><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} data-testid="ae-phone" /></FieldLabel>
+                  <FieldLabel label="Geburtsdatum"><Input type="date" value={form.date_of_birth} onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })} data-testid="ae-dob" /></FieldLabel>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Adresse</div>
+                <div className="grid grid-cols-6 gap-3">
+                  <div className="col-span-4"><FieldLabel label="Straße"><Input value={form.address.street} onChange={(e) => setAddr("street", e.target.value)} data-testid="ae-street" /></FieldLabel></div>
+                  <div className="col-span-2"><FieldLabel label="Hausnr."><Input value={form.address.house_number} onChange={(e) => setAddr("house_number", e.target.value)} data-testid="ae-house" /></FieldLabel></div>
+                  <div className="col-span-2"><FieldLabel label="PLZ"><Input value={form.address.postal_code} onChange={(e) => setAddr("postal_code", e.target.value)} data-testid="ae-plz" /></FieldLabel></div>
+                  <div className="col-span-4"><FieldLabel label="Stadt"><Input value={form.address.city} onChange={(e) => setAddr("city", e.target.value)} data-testid="ae-city" /></FieldLabel></div>
+                  <div className="col-span-6"><FieldLabel label="Land"><Input value={form.address.country} onChange={(e) => setAddr("country", e.target.value)} data-testid="ae-country" /></FieldLabel></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Führerschein & Ausweis</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <FieldLabel label="Führerschein-Nr."><Input value={form.license_number} onChange={(e) => setForm({ ...form, license_number: e.target.value })} data-testid="ae-lic" /></FieldLabel>
+                  <FieldLabel label="Gültig bis"><Input type="date" value={form.license_expiry} onChange={(e) => setForm({ ...form, license_expiry: e.target.value })} data-testid="ae-lic-exp" /></FieldLabel>
+                  <div className="col-span-2"><FieldLabel label="Personalausweis-Nr."><Input value={form.id_card_number} onChange={(e) => setForm({ ...form, id_card_number: e.target.value })} data-testid="ae-idcard" /></FieldLabel></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <Switch checked={form.is_business} onCheckedChange={(v) => setForm({ ...form, is_business: v })} data-testid="ae-biz-toggle" />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Geschäftskunde</span>
+                </div>
+                {form.is_business && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="col-span-2"><FieldLabel label="Firmenname"><Input value={form.company.company_name} onChange={(e) => setCompany("company_name", e.target.value)} data-testid="ae-company" /></FieldLabel></div>
+                    <FieldLabel label="USt-ID"><Input value={form.company.vat_id} onChange={(e) => setCompany("vat_id", e.target.value)} data-testid="ae-vat" /></FieldLabel>
+                    <FieldLabel label="Ansprechpartner"><Input value={form.company.contact_person} onChange={(e) => setCompany("contact_person", e.target.value)} data-testid="ae-contact" /></FieldLabel>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>Abbrechen</Button>
+            <Button onClick={saveEdit} disabled={saving} className="bg-[#0055FF] hover:bg-[#0044CC]" data-testid="ae-save">
+              <Save size={14} className="mr-2" /> {saving ? "Speichert..." : "Speichern"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+}
+
+function FieldLabel({ label, children }) {
+  return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
 }
 
 function InfoRow({ icon: Icon, label, value }) {

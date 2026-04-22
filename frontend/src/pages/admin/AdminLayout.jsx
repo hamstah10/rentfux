@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Car, Calendar, MapPin, Users, LogOut, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Car, Calendar, MapPin, Users, LogOut, ArrowLeft, Tag } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
@@ -9,6 +9,7 @@ const links = [
   { to: "/admin/buchungen", icon: Calendar, label: "Buchungen", testid: "admin-nav-bookings" },
   { to: "/admin/standorte", icon: MapPin, label: "Standorte", testid: "admin-nav-locations" },
   { to: "/admin/kunden", icon: Users, label: "Kunden", testid: "admin-nav-customers" },
+  { to: "/admin/rabatte", icon: Tag, label: "Rabattcodes", testid: "admin-nav-discounts" },
 ];
 
 export default function AdminLayout() {

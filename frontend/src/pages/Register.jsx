@@ -21,7 +21,7 @@ export default function Register() {
     try {
       await register(form);
       toast.success("Konto erstellt! Willkommen bei RentFux.");
-      navigate("/");
+      navigate("/konto/einrichten");
     } catch (err) {
       toast.error(apiError(err, "Registrierung fehlgeschlagen"));
     } finally { setLoading(false); }

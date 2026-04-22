@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import DiscountInput from "@/components/DiscountInput";
+import { API_BASE } from "@/lib/api";
 
 const EXTRAS = [
   { id: "Navigation", label: "Navigation", price: 5 },
@@ -66,6 +68,7 @@ export default function BookingFlow() {
   const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState("");
   const [accountCreated, setAccountCreated] = useState(false);
+  const [discount, setDiscount] = useState(null); // {code, discount, type, value}
 
   useEffect(() => {
     api.get(`/vehicles/${vehicleId}`).then((r) => setVehicle(r.data)).catch((e) => toast.error(apiError(e)));
@@ -86,7 +89,9 @@ export default function BookingFlow() {
   const days = Math.max(1, Math.ceil((new Date(end) - new Date(start)) / 86400000));
   const extrasTotal = extras.reduce((s, id) => s + (EXTRAS.find((e) => e.id === id)?.price || 0), 0) * days;
   const subtotal = vehicle ? vehicle.price_per_day * days : 0;
-  const total = subtotal + extrasTotal;
+  const gross = subtotal + extrasTotal;
+  const discountAmount = discount?.discount || 0;
+  const total = Math.max(0, gross - discountAmount);
 
   const toggleExtra = (id) =>
     setExtras(extras.includes(id) ? extras.filter((x) => x !== id) : [...extras, id]);
@@ -138,6 +143,7 @@ export default function BookingFlow() {
           payment_method: payment,
           create_account: createAccount,
           password: createAccount ? password : null,
+          discount_code: discount?.code || null,
         };
         const { data } = await api.post("/bookings/guest", payload);
         setBooking(data.booking);
@@ -151,7 +157,7 @@ export default function BookingFlow() {
       } else {
         const { data: b } = await api.post("/bookings", {
           vehicle_id: vehicleId, location_id: locationId, start_date: start, end_date: end,
-          extras, customer_note: note,
+          extras, customer_note: note, discount_code: discount?.code || null,
         });
         const { data: paid } = await api.post("/payments/mock-pay", { booking_id: b.id, method: payment });
         setBooking(paid);
@@ -457,11 +463,32 @@ export default function BookingFlow() {
                 const e = EXTRAS.find((x) => x.id === id);
                 return <Row key={id} k={`${e.label} (${days}×)`} v={`${(e.price * days).toFixed(2)}€`} muted />;
               })}
+              {discountAmount > 0 && (
+                <Row k={`Rabatt (${discount.code})`} v={`−${discountAmount.toFixed(2)}€`} accent />
+              )}
               <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between">
                 <span className="font-semibold text-[#0A192F]">Gesamt</span>
                 <span className="font-display font-bold text-2xl text-[#0055FF]" data-testid="book-total">{total.toFixed(2)}€</span>
               </div>
             </div>
+
+            {step < 4 && (
+              <div className="mt-5 pt-4 border-t border-slate-100">
+                <div className="text-xs uppercase tracking-wider text-slate-500 mb-2">Rabattcode</div>
+                <DiscountInput subtotal={gross} applied={discount} onApply={setDiscount} />
+              </div>
+            )}
+
+            {step === 4 && booking && (
+              <a
+                href={`${API_BASE}/bookings/${booking.id}/invoice`}
+                target="_blank" rel="noreferrer"
+                className="mt-5 w-full inline-flex items-center justify-center gap-2 h-10 rounded-md border border-slate-300 hover:bg-slate-50 text-sm font-semibold text-[#0A192F]"
+                data-testid="invoice-download"
+              >
+                Rechnung als PDF herunterladen
+              </a>
+            )}
           </div>
         </aside>
       </div>
@@ -473,11 +500,11 @@ function Field({ label, children }) {
   return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
 }
 
-function Row({ k, v, strong, muted }) {
+function Row({ k, v, strong, muted, accent }) {
   return (
     <div className="flex items-center justify-between">
-      <span className={muted ? "text-slate-500" : "text-slate-600"}>{k}</span>
-      <span className={strong ? "font-bold text-[#0A192F]" : "text-[#0A192F] font-medium"}>{v}</span>
+      <span className={muted ? "text-slate-500" : accent ? "text-emerald-700 font-medium" : "text-slate-600"}>{k}</span>
+      <span className={strong ? "font-bold text-[#0A192F]" : accent ? "text-emerald-700 font-semibold" : "text-[#0A192F] font-medium"}>{v}</span>
     </div>
   );
 }
