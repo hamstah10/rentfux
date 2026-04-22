@@ -1,52 +1,63 @@
-import { useEffect } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Home from "@/pages/Home";
+import Catalog from "@/pages/Catalog";
+import VehicleDetail from "@/pages/VehicleDetail";
+import BookingFlow from "@/pages/BookingFlow";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import Account from "@/pages/Account";
+import Locations from "@/pages/Locations";
+import About from "@/pages/About";
+import AdminLayout from "@/pages/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminVehicles from "@/pages/admin/AdminVehicles";
+import AdminBookings from "@/pages/admin/AdminBookings";
+import AdminLocationsPage from "@/pages/admin/AdminLocations";
+import AdminCustomers from "@/pages/admin/AdminCustomers";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
+function PublicShell({ children }) {
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
+    </>
   );
-};
+}
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<PublicShell><Home /></PublicShell>} />
+            <Route path="/katalog" element={<PublicShell><Catalog /></PublicShell>} />
+            <Route path="/fahrzeug/:id" element={<PublicShell><VehicleDetail /></PublicShell>} />
+            <Route path="/standorte" element={<PublicShell><Locations /></PublicShell>} />
+            <Route path="/ueber-uns" element={<PublicShell><About /></PublicShell>} />
+            <Route path="/login" element={<PublicShell><Login /></PublicShell>} />
+            <Route path="/registrieren" element={<PublicShell><Register /></PublicShell>} />
+            <Route path="/buchen/:vehicleId" element={<ProtectedRoute><PublicShell><BookingFlow /></PublicShell></ProtectedRoute>} />
+            <Route path="/konto" element={<ProtectedRoute><PublicShell><Account /></PublicShell></ProtectedRoute>} />
+
+            <Route path="/admin" element={<ProtectedRoute adminOnly><AdminLayout /></ProtectedRoute>}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="fahrzeuge" element={<AdminVehicles />} />
+              <Route path="buchungen" element={<AdminBookings />} />
+              <Route path="standorte" element={<AdminLocationsPage />} />
+              <Route path="kunden" element={<AdminCustomers />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Toaster position="top-right" richColors />
+      </AuthProvider>
     </div>
   );
 }

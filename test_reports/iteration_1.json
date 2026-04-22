@@ -1,0 +1,47 @@
+{
+  "summary": "Backend regression suite for RentFux created and executed. 30/31 tests pass (96.8%). 1 xfailed due to real backend issue: brute force lockout uses request.client.host which in k8s ingress does not represent the real client IP, so the 5-attempt lockout never triggers across requests.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {
+        "endpoint": "/api/auth/login",
+        "issue": "Brute force lockout relies on request.client.host + email as identifier. Behind k8s ingress/proxy, request.client.host is often the proxy IP and can rotate between pods, so attempt counter does not accumulate and the 15-min lockout never triggers. Verified with 6 consecutive wrong-password calls followed by a successful login (HTTP 200). Recommend using X-Forwarded-For (first hop) or key the lockout on email only, or add explicit ProxyHeadersMiddleware and trust X-Forwarded-For."
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_rentfux_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Fix brute-force lockout to work behind reverse proxy: read X-Forwarded-For (first client IP) OR drop IP from the lockout identifier and key only on email.",
+    "Optional: set_auth_cookies uses SameSite=None + Secure which is correct for cross-site cookies, but make sure the preview host is https (it is). No action required."
+  ],
+  "critical_code_review_comments": [
+    "Brute force lockout ineffective behind proxy (see backend_issues).",
+    "set_auth_cookies uses samesite='none' with secure=True (correct for cross-origin frontend). CORS allow_origins defaults to ['*'] while allow_credentials=True — browsers reject credentials with wildcard origins. For production, CORS_ORIGINS env must be set to explicit origin(s). Currently works in tests because we use header tokens and direct API calls.",
+    "server.py is a single 690+ line file. Consider splitting into routers (auth, vehicles, bookings, admin) as the app grows.",
+    "login_attempts identifier combines ip:email; collision-free but vulnerable to credential stuffing when ip rotates.",
+    "No rate limiting on /api/auth/register (could be spammed to create users).",
+    "JWT secret is stored in .env and read via os.environ['JWT_SECRET'] — fine. Access token TTL 8h is generous; refresh_token is created but there is no /auth/refresh endpoint to actually rotate tokens, so the refresh_token cookie is currently decorative.",
+    "Pydantic model BookingIn accepts arbitrary extras strings; unknown extras are silently valued at 0. Consider Literal[...] for validation."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_rentfux_api.py"
+  ],
+  "success_rate": {
+    "backend": "96.8% (30/31, 1 xfailed known issue)",
+    "frontend": "N/A (backend-only testing requested)"
+  },
+  "test_credentials": "Admin admin@rentfux.de / Admin123! (auto-seeded, verified working). Test users created dynamically with TEST_ prefix.",
+  "seed_data_creation": "Verified 8 seeded vehicles and 1 seeded location (Hamburg Hbf). No additional seed needed.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Regression suite at /app/backend/tests/test_rentfux_api.py covers: health, public vehicles + filters, single vehicle 404, locations, auth (register/login/me/logout/profile), duplicate register, admin role seeding, invalid password German error, bookings (create+total calc incl extras, conflict 409, availability before/after, owner-only access, 403 for other user, 404 for bad vehicle), admin (stats with all required keys, bookings list, PATCH status, customers with bookings_count and no password_hash), admin vehicle/location CRUD with soft-delete visibility (admin sees inactive, public does not), 403 for non-admin on admin endpoints. Brute-force lockout test is xfail — real backend issue. All flows verified _id never leaks. Payment flow (/api/payments/mock-pay) verified MOCKED (just flips payment_status=paid, status=confirmed).",
+  "rca_of_the_issue": "Brute-force lockout not triggering: backend uses `ip = request.client.host` as part of lockout identifier. In Kubernetes with ingress, `request.client.host` typically returns the ingress proxy IP which can vary across requests or across pods, preventing attempt accumulation under a single identifier. Reproduction: 6 consecutive POST /api/auth/login with wrong password from same external client still returns 401 for each (expected after 5: 429). Mitigation: (a) parse X-Forwarded-For first entry and use that, or (b) use only the normalized email as identifier (simplest), or (c) add starlette's ProxyHeadersMiddleware / uvicorn --proxy-headers flag to populate request.client.host from X-Forwarded-For."
+}

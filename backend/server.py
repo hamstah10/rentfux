@@ -1,89 +1,693 @@
-from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
-import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
-import uuid
-from datetime import datetime, timezone
-
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
+import os
+import uuid
+import logging
+import secrets as _secrets
+from datetime import datetime, timezone, timedelta
+from typing import List, Optional, Literal
+
+import bcrypt
+import jwt
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, Query
+from starlette.middleware.cors import CORSMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
+from pydantic import BaseModel, Field, EmailStr
+
+
+# ---------- Setup ----------
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("rentfux")
+
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
-app = FastAPI()
+JWT_ALGORITHM = "HS256"
+ACCESS_TTL_MIN = 60 * 8  # 8h for nicer UX
+REFRESH_TTL_DAYS = 7
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+app = FastAPI(title="RentFux API")
+api = APIRouter(prefix="/api")
 
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+# ---------- Helpers ----------
+def hash_password(pw: str) -> str:
+    return bcrypt.hashpw(pw.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
 
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
+def verify_password(pw: str, hashed: str) -> bool:
+    try:
+        return bcrypt.checkpw(pw.encode("utf-8"), hashed.encode("utf-8"))
+    except Exception:
+        return False
+
+
+def get_jwt_secret() -> str:
+    return os.environ["JWT_SECRET"]
+
+
+def create_access_token(user_id: str, email: str, role: str) -> str:
+    payload = {
+        "sub": user_id,
+        "email": email,
+        "role": role,
+        "type": "access",
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TTL_MIN),
+    }
+    return jwt.encode(payload, get_jwt_secret(), algorithm=JWT_ALGORITHM)
+
+
+def create_refresh_token(user_id: str) -> str:
+    payload = {
+        "sub": user_id,
+        "type": "refresh",
+        "exp": datetime.now(timezone.utc) + timedelta(days=REFRESH_TTL_DAYS),
+    }
+    return jwt.encode(payload, get_jwt_secret(), algorithm=JWT_ALGORITHM)
+
+
+def set_auth_cookies(response: Response, access: str, refresh: str):
+    response.set_cookie(
+        key="access_token", value=access, httponly=True, secure=True,
+        samesite="none", max_age=ACCESS_TTL_MIN * 60, path="/",
+    )
+    response.set_cookie(
+        key="refresh_token", value=refresh, httponly=True, secure=True,
+        samesite="none", max_age=REFRESH_TTL_DAYS * 86400, path="/",
+    )
+
+
+def clear_auth_cookies(response: Response):
+    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("refresh_token", path="/")
+
+
+def user_public(u: dict) -> dict:
+    return {
+        "id": u["id"],
+        "email": u["email"],
+        "name": u.get("name", ""),
+        "role": u.get("role", "user"),
+        "phone": u.get("phone", ""),
+        "created_at": u.get("created_at"),
+    }
+
+
+async def get_current_user(request: Request) -> dict:
+    token = request.cookies.get("access_token")
+    if not token:
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            token = auth[7:]
+    if not token:
+        raise HTTPException(status_code=401, detail="Nicht authentifiziert")
+    try:
+        payload = jwt.decode(token, get_jwt_secret(), algorithms=[JWT_ALGORITHM])
+        if payload.get("type") != "access":
+            raise HTTPException(status_code=401, detail="Ungültiger Token-Typ")
+        user = await db.users.find_one({"id": payload["sub"]}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=401, detail="Benutzer nicht gefunden")
+        return user
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token abgelaufen")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Ungültiger Token")
+
+
+async def require_admin(user: dict = Depends(get_current_user)) -> dict:
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Administratorrechte erforderlich")
+    return user
+
+
+# ---------- Models ----------
+class RegisterIn(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=6)
+    name: str = Field(min_length=1)
+    phone: Optional[str] = ""
+
+
+class LoginIn(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserUpdateIn(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+
+
+class LocationIn(BaseModel):
+    name: str
+    address: str
+    city: str
+    postal_code: str
+    active: bool = True
+
+
+class VehicleIn(BaseModel):
+    name: str
+    brand: str
+    category: Literal["Kleinwagen", "Kompakt", "Mittelklasse", "SUV", "Van", "Luxus", "Transporter"]
+    transmission: Literal["Automatik", "Schaltgetriebe"]
+    fuel: Literal["Benzin", "Diesel", "Elektro", "Hybrid"]
+    seats: int
+    doors: int = 4
+    price_per_day: float
+    image_url: str
+    description: str = ""
+    features: List[str] = []
+    active: bool = True
+    location_id: Optional[str] = None
+
+
+class BookingIn(BaseModel):
+    vehicle_id: str
+    location_id: str
+    start_date: str  # ISO date YYYY-MM-DD
+    end_date: str
+    extras: List[str] = []
+    customer_note: str = ""
+
+
+class PaymentIn(BaseModel):
+    booking_id: str
+    method: Literal["stripe", "paypal"]
+
+
+class BookingStatusIn(BaseModel):
+    status: Literal["pending", "confirmed", "active", "completed", "cancelled"]
+
+
+# ---------- Auth Routes ----------
+@api.post("/auth/register")
+async def register(body: RegisterIn, response: Response):
+    email = body.email.lower().strip()
+    if await db.users.find_one({"email": email}):
+        raise HTTPException(status_code=400, detail="E-Mail ist bereits registriert")
+    uid = str(uuid.uuid4())
+    doc = {
+        "id": uid,
+        "email": email,
+        "password_hash": hash_password(body.password),
+        "name": body.name.strip(),
+        "phone": (body.phone or "").strip(),
+        "role": "user",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.users.insert_one(doc)
+    access = create_access_token(uid, email, "user")
+    refresh = create_refresh_token(uid)
+    set_auth_cookies(response, access, refresh)
+    return {"user": user_public(doc), "token": access}
+
+
+@api.post("/auth/login")
+async def login(body: LoginIn, request: Request, response: Response):
+    email = body.email.lower().strip()
+    ip = request.client.host if request.client else "unknown"
+    ident = f"{ip}:{email}"
+    attempts = await db.login_attempts.find_one({"identifier": ident})
+    now = datetime.now(timezone.utc)
+    if attempts and attempts.get("lock_until"):
+        lu = datetime.fromisoformat(attempts["lock_until"])
+        if lu > now:
+            raise HTTPException(status_code=429, detail="Zu viele Fehlversuche. Bitte später erneut versuchen.")
+    user = await db.users.find_one({"email": email}, {"_id": 0})
+    if not user or not verify_password(body.password, user["password_hash"]):
+        new_count = (attempts.get("count", 0) if attempts else 0) + 1
+        update = {"identifier": ident, "count": new_count, "updated_at": now.isoformat()}
+        if new_count >= 5:
+            update["lock_until"] = (now + timedelta(minutes=15)).isoformat()
+        await db.login_attempts.update_one({"identifier": ident}, {"$set": update}, upsert=True)
+        raise HTTPException(status_code=401, detail="Ungültige E-Mail oder Passwort")
+    await db.login_attempts.delete_one({"identifier": ident})
+    access = create_access_token(user["id"], user["email"], user.get("role", "user"))
+    refresh = create_refresh_token(user["id"])
+    set_auth_cookies(response, access, refresh)
+    return {"user": user_public(user), "token": access}
+
+
+@api.post("/auth/logout")
+async def logout(response: Response):
+    clear_auth_cookies(response)
+    return {"ok": True}
+
+
+@api.get("/auth/me")
+async def me(user: dict = Depends(get_current_user)):
+    return {"user": user_public(user)}
+
+
+@api.patch("/auth/profile")
+async def update_profile(body: UserUpdateIn, user: dict = Depends(get_current_user)):
+    upd = {k: v for k, v in body.model_dump().items() if v is not None}
+    if upd:
+        await db.users.update_one({"id": user["id"]}, {"$set": upd})
+    refreshed = await db.users.find_one({"id": user["id"]}, {"_id": 0})
+    return {"user": user_public(refreshed)}
+
+
+# ---------- Locations ----------
+@api.get("/locations")
+async def list_locations():
+    items = await db.locations.find({"active": True}, {"_id": 0}).to_list(200)
+    return items
+
+
+@api.post("/locations")
+async def create_location(body: LocationIn, _: dict = Depends(require_admin)):
+    doc = {"id": str(uuid.uuid4()), **body.model_dump(),
+           "created_at": datetime.now(timezone.utc).isoformat()}
+    await db.locations.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api.put("/locations/{loc_id}")
+async def update_location(loc_id: str, body: LocationIn, _: dict = Depends(require_admin)):
+    r = await db.locations.update_one({"id": loc_id}, {"$set": body.model_dump()})
+    if r.matched_count == 0:
+        raise HTTPException(404, "Standort nicht gefunden")
+    return await db.locations.find_one({"id": loc_id}, {"_id": 0})
+
+
+@api.delete("/locations/{loc_id}")
+async def delete_location(loc_id: str, _: dict = Depends(require_admin)):
+    await db.locations.update_one({"id": loc_id}, {"$set": {"active": False}})
+    return {"ok": True}
+
+
+@api.get("/admin/locations")
+async def admin_list_locations(_: dict = Depends(require_admin)):
+    return await db.locations.find({}, {"_id": 0}).to_list(500)
+
+
+# ---------- Vehicles ----------
+@api.get("/vehicles")
+async def list_vehicles(
+    category: Optional[str] = None,
+    transmission: Optional[str] = None,
+    fuel: Optional[str] = None,
+    seats_min: Optional[int] = None,
+    price_max: Optional[float] = None,
+    price_min: Optional[float] = None,
+    search: Optional[str] = None,
+):
+    q: dict = {"active": True}
+    if category:
+        q["category"] = category
+    if transmission:
+        q["transmission"] = transmission
+    if fuel:
+        q["fuel"] = fuel
+    if seats_min:
+        q["seats"] = {"$gte": seats_min}
+    price_q = {}
+    if price_min is not None:
+        price_q["$gte"] = price_min
+    if price_max is not None:
+        price_q["$lte"] = price_max
+    if price_q:
+        q["price_per_day"] = price_q
+    if search:
+        q["$or"] = [
+            {"name": {"$regex": search, "$options": "i"}},
+            {"brand": {"$regex": search, "$options": "i"}},
+        ]
+    items = await db.vehicles.find(q, {"_id": 0}).to_list(500)
+    return items
+
+
+@api.get("/vehicles/{vid}")
+async def get_vehicle(vid: str):
+    v = await db.vehicles.find_one({"id": vid}, {"_id": 0})
+    if not v:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    return v
+
+
+@api.post("/vehicles")
+async def create_vehicle(body: VehicleIn, _: dict = Depends(require_admin)):
+    doc = {"id": str(uuid.uuid4()), **body.model_dump(),
+           "created_at": datetime.now(timezone.utc).isoformat()}
+    await db.vehicles.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api.put("/vehicles/{vid}")
+async def update_vehicle(vid: str, body: VehicleIn, _: dict = Depends(require_admin)):
+    r = await db.vehicles.update_one({"id": vid}, {"$set": body.model_dump()})
+    if r.matched_count == 0:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    return await db.vehicles.find_one({"id": vid}, {"_id": 0})
+
+
+@api.delete("/vehicles/{vid}")
+async def delete_vehicle(vid: str, _: dict = Depends(require_admin)):
+    await db.vehicles.update_one({"id": vid}, {"$set": {"active": False}})
+    return {"ok": True}
+
+
+@api.get("/admin/vehicles")
+async def admin_list_vehicles(_: dict = Depends(require_admin)):
+    return await db.vehicles.find({}, {"_id": 0}).to_list(500)
+
+
+# ---------- Bookings ----------
+def _days_between(s: str, e: str) -> int:
+    ds = datetime.strptime(s, "%Y-%m-%d").date()
+    de = datetime.strptime(e, "%Y-%m-%d").date()
+    days = (de - ds).days
+    return max(days, 1)
+
+
+async def _is_available(vehicle_id: str, start: str, end: str) -> bool:
+    overlap = await db.bookings.find_one({
+        "vehicle_id": vehicle_id,
+        "status": {"$in": ["pending", "confirmed", "active"]},
+        "start_date": {"$lt": end},
+        "end_date": {"$gt": start},
+    })
+    return overlap is None
+
+
+@api.get("/vehicles/{vid}/availability")
+async def check_availability(vid: str, start: str, end: str):
+    ok = await _is_available(vid, start, end)
+    return {"available": ok}
+
+
+@api.post("/bookings")
+async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)):
+    v = await db.vehicles.find_one({"id": body.vehicle_id, "active": True}, {"_id": 0})
+    if not v:
+        raise HTTPException(404, "Fahrzeug nicht verfügbar")
+    loc = await db.locations.find_one({"id": body.location_id}, {"_id": 0})
+    if not loc:
+        raise HTTPException(404, "Standort nicht gefunden")
+    try:
+        days = _days_between(body.start_date, body.end_date)
+    except ValueError:
+        raise HTTPException(400, "Ungültige Datumsangabe")
+    if not await _is_available(body.vehicle_id, body.start_date, body.end_date):
+        raise HTTPException(409, "Fahrzeug in diesem Zeitraum nicht verfügbar")
+
+    extras_price_map = {
+        "Navigation": 5, "Kindersitz": 7, "Zusatzfahrer": 8,
+        "Vollkasko": 12, "WLAN-Hotspot": 4,
+    }
+    extras_total = sum(extras_price_map.get(e, 0) for e in body.extras) * days
+    subtotal = v["price_per_day"] * days
+    total = round(subtotal + extras_total, 2)
+
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["id"],
+        "user_email": user["email"],
+        "user_name": user.get("name", ""),
+        "vehicle_id": body.vehicle_id,
+        "vehicle_name": v["name"],
+        "vehicle_brand": v["brand"],
+        "vehicle_image": v["image_url"],
+        "location_id": body.location_id,
+        "location_name": loc["name"],
+        "start_date": body.start_date,
+        "end_date": body.end_date,
+        "days": days,
+        "extras": body.extras,
+        "extras_total": extras_total,
+        "subtotal": subtotal,
+        "total": total,
+        "status": "pending",
+        "payment_status": "unpaid",
+        "payment_method": None,
+        "customer_note": body.customer_note,
+        "notifications": {"email_sent": False, "whatsapp_sent": False},
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.bookings.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api.post("/payments/mock-pay")
+async def mock_pay(body: PaymentIn, user: dict = Depends(get_current_user)):
+    booking = await db.bookings.find_one({"id": body.booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(404, "Buchung nicht gefunden")
+    if booking["user_id"] != user["id"]:
+        raise HTTPException(403, "Keine Berechtigung")
+    # MOCKED payment — just mark as paid
+    await db.bookings.update_one(
+        {"id": body.booking_id},
+        {"$set": {
+            "payment_status": "paid",
+            "payment_method": body.method,
+            "status": "confirmed",
+            "notifications": {"email_sent": True, "whatsapp_sent": True},
+            "paid_at": datetime.now(timezone.utc).isoformat(),
+        }},
+    )
+    logger.info(f"[MOCK] E-Mail & WhatsApp-Bestätigung an {user['email']} gesendet für Buchung {body.booking_id}")
+    updated = await db.bookings.find_one({"id": body.booking_id}, {"_id": 0})
+    return updated
+
+
+@api.get("/bookings/me")
+async def my_bookings(user: dict = Depends(get_current_user)):
+    items = await db.bookings.find({"user_id": user["id"]}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return items
+
+
+@api.get("/bookings/{bid}")
+async def get_booking(bid: str, user: dict = Depends(get_current_user)):
+    b = await db.bookings.find_one({"id": bid}, {"_id": 0})
+    if not b:
+        raise HTTPException(404, "Buchung nicht gefunden")
+    if b["user_id"] != user["id"] and user.get("role") != "admin":
+        raise HTTPException(403, "Keine Berechtigung")
+    return b
+
+
+@api.get("/admin/bookings")
+async def admin_bookings(_: dict = Depends(require_admin)):
+    return await db.bookings.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+
+
+@api.patch("/admin/bookings/{bid}")
+async def admin_update_booking(bid: str, body: BookingStatusIn, _: dict = Depends(require_admin)):
+    r = await db.bookings.update_one({"id": bid}, {"$set": {"status": body.status}})
+    if r.matched_count == 0:
+        raise HTTPException(404, "Buchung nicht gefunden")
+    return await db.bookings.find_one({"id": bid}, {"_id": 0})
+
+
+@api.get("/admin/customers")
+async def admin_customers(_: dict = Depends(require_admin)):
+    users = await db.users.find({"role": "user"}, {"_id": 0, "password_hash": 0}).to_list(1000)
+    # attach booking count per user
+    for u in users:
+        u["bookings_count"] = await db.bookings.count_documents({"user_id": u["id"]})
+    return users
+
+
+# ---------- Admin Stats ----------
+@api.get("/admin/stats")
+async def admin_stats(_: dict = Depends(require_admin)):
+    total_bookings = await db.bookings.count_documents({})
+    paid = await db.bookings.find({"payment_status": "paid"}, {"_id": 0, "total": 1, "created_at": 1}).to_list(10000)
+    revenue = round(sum(b["total"] for b in paid), 2)
+    vehicles_count = await db.vehicles.count_documents({"active": True})
+    customers_count = await db.users.count_documents({"role": "user"})
+
+    # monthly revenue last 6 months
+    by_month: dict = {}
+    for b in paid:
+        try:
+            dt = datetime.fromisoformat(b["created_at"])
+            key = dt.strftime("%Y-%m")
+            by_month[key] = round(by_month.get(key, 0) + b["total"], 2)
+        except Exception:
+            continue
+    months = sorted(by_month.keys())[-6:]
+    monthly = [{"month": m, "revenue": by_month[m]} for m in months]
+
+    # status breakdown
+    pipeline = [{"$group": {"_id": "$status", "count": {"$sum": 1}}}]
+    status_counts = {d["_id"]: d["count"] async for d in db.bookings.aggregate(pipeline)}
+
+    return {
+        "total_bookings": total_bookings,
+        "revenue": revenue,
+        "vehicles": vehicles_count,
+        "customers": customers_count,
+        "monthly_revenue": monthly,
+        "status_counts": status_counts,
+    }
+
+
+# ---------- Health ----------
+@api.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"service": "RentFux API", "status": "ok"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+# ---------- Startup: indexes + seed ----------
+SEED_LOCATION = {
+    "id": "loc-hamburg-hbf",
+    "name": "RentFux Hamburg Hauptbahnhof",
+    "address": "Hachmannplatz 16",
+    "city": "Hamburg",
+    "postal_code": "20099",
+    "active": True,
+}
 
-# Include the router in the main app
-app.include_router(api_router)
+SEED_VEHICLES = [
+    {
+        "name": "Polo", "brand": "Volkswagen", "category": "Kleinwagen",
+        "transmission": "Schaltgetriebe", "fuel": "Benzin", "seats": 5, "doors": 4,
+        "price_per_day": 39.0,
+        "image_url": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+        "description": "Wendiger Kleinwagen – ideal für die Stadt und Kurzstrecken.",
+        "features": ["Klimaanlage", "Bluetooth", "USB-C"],
+    },
+    {
+        "name": "Golf 8", "brand": "Volkswagen", "category": "Kompakt",
+        "transmission": "Automatik", "fuel": "Benzin", "seats": 5, "doors": 5,
+        "price_per_day": 59.0,
+        "image_url": "https://images.unsplash.com/photo-1520031441872-265e4ff70366?auto=format&fit=crop&w=1200&q=80",
+        "description": "Der beliebte Kompaktwagen – effizient, komfortabel und zuverlässig.",
+        "features": ["Automatik", "Navigation", "Tempomat", "LED-Scheinwerfer"],
+    },
+    {
+        "name": "A-Klasse", "brand": "Mercedes-Benz", "category": "Mittelklasse",
+        "transmission": "Automatik", "fuel": "Diesel", "seats": 5, "doors": 5,
+        "price_per_day": 79.0,
+        "image_url": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=1200&q=80",
+        "description": "Sportlich-elegante Limousine mit MBUX und Premium-Ausstattung.",
+        "features": ["MBUX", "Automatik", "Ledersitze", "Sitzheizung"],
+    },
+    {
+        "name": "3er Touring", "brand": "BMW", "category": "Mittelklasse",
+        "transmission": "Automatik", "fuel": "Diesel", "seats": 5, "doors": 5,
+        "price_per_day": 89.0,
+        "image_url": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
+        "description": "Dynamischer Kombi mit viel Platz – perfekt für Geschäftsreisen.",
+        "features": ["Navigation", "Head-Up-Display", "Automatik", "Panoramadach"],
+    },
+    {
+        "name": "Tiguan", "brand": "Volkswagen", "category": "SUV",
+        "transmission": "Automatik", "fuel": "Diesel", "seats": 5, "doors": 5,
+        "price_per_day": 99.0,
+        "image_url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80",
+        "description": "Geräumiger SUV mit 4Motion-Allradantrieb – ideal für Familien.",
+        "features": ["Allrad", "Panoramadach", "AppConnect", "Rückfahrkamera"],
+    },
+    {
+        "name": "Model 3", "brand": "Tesla", "category": "Mittelklasse",
+        "transmission": "Automatik", "fuel": "Elektro", "seats": 5, "doors": 4,
+        "price_per_day": 119.0,
+        "image_url": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=80",
+        "description": "Vollelektrisch, leise und schnell. Autopilot inklusive.",
+        "features": ["Autopilot", "Supercharger-Zugang", "Glasdach", "15'' Display"],
+    },
+    {
+        "name": "Multivan", "brand": "Volkswagen", "category": "Van",
+        "transmission": "Automatik", "fuel": "Diesel", "seats": 7, "doors": 5,
+        "price_per_day": 149.0,
+        "image_url": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80",
+        "description": "Das Raumwunder für Großfamilien und Geschäftsteams.",
+        "features": ["7 Sitze", "Schiebetüren", "Klimaautomatik", "Anhängerkupplung"],
+    },
+    {
+        "name": "Q5", "brand": "Audi", "category": "Luxus",
+        "transmission": "Automatik", "fuel": "Hybrid", "seats": 5, "doors": 5,
+        "price_per_day": 169.0,
+        "image_url": "https://images.unsplash.com/photo-1606611013016-969c19ba27bf?auto=format&fit=crop&w=1200&q=80",
+        "description": "Premium-SUV mit quattro-Allrad und Plug-in-Hybrid.",
+        "features": ["quattro", "Virtual Cockpit", "B&O Sound", "Matrix LED"],
+    },
+]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+async def seed_admin():
+    email = os.environ["ADMIN_EMAIL"].lower().strip()
+    pw = os.environ["ADMIN_PASSWORD"]
+    existing = await db.users.find_one({"email": email})
+    if not existing:
+        await db.users.insert_one({
+            "id": str(uuid.uuid4()),
+            "email": email,
+            "password_hash": hash_password(pw),
+            "name": "RentFux Admin",
+            "phone": "",
+            "role": "admin",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        })
+        logger.info(f"Admin user seeded: {email}")
+    elif not verify_password(pw, existing["password_hash"]):
+        await db.users.update_one(
+            {"email": email},
+            {"$set": {"password_hash": hash_password(pw), "role": "admin"}},
+        )
+        logger.info(f"Admin password refreshed: {email}")
+
+
+async def seed_data():
+    if await db.locations.count_documents({}) == 0:
+        await db.locations.insert_one({
+            **SEED_LOCATION,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        })
+        logger.info("Seeded default location")
+    if await db.vehicles.count_documents({}) == 0:
+        loc_id = SEED_LOCATION["id"]
+        for v in SEED_VEHICLES:
+            await db.vehicles.insert_one({
+                "id": str(uuid.uuid4()),
+                "active": True,
+                "location_id": loc_id,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                **v,
+            })
+        logger.info(f"Seeded {len(SEED_VEHICLES)} vehicles")
+
+
+@app.on_event("startup")
+async def on_startup():
+    await db.users.create_index("email", unique=True)
+    await db.vehicles.create_index("active")
+    await db.bookings.create_index("user_id")
+    await db.bookings.create_index("vehicle_id")
+    await db.login_attempts.create_index("identifier")
+    await seed_admin()
+    await seed_data()
+
 
 @app.on_event("shutdown")
-async def shutdown_db_client():
+async def on_shutdown():
     client.close()
+
+
+# ---------- Wire app ----------
+app.include_router(api)
+
+_origins_raw = os.environ.get("CORS_ORIGINS", "*")
+_origins = [o.strip() for o in _origins_raw.split(",")] if _origins_raw else ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["Set-Cookie"],
+)
