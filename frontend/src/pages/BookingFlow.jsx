@@ -8,7 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Check, ArrowLeft, ArrowRight, CreditCard, Calendar, MapPin, Sparkles, ShieldCheck, AlertTriangle } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import {
+  Check, ArrowLeft, ArrowRight, CreditCard, Calendar, MapPin,
+  Sparkles, ShieldCheck, AlertTriangle, User, UserPlus, LogIn,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -19,6 +23,12 @@ const EXTRAS = [
   { id: "Vollkasko", label: "Vollkasko-Versicherung", price: 12 },
   { id: "WLAN-Hotspot", label: "WLAN-Hotspot", price: 4 },
 ];
+
+const EMPTY_GUEST = {
+  email: "", name: "", phone: "", date_of_birth: "",
+  address: { street: "", house_number: "", postal_code: "", city: "", country: "Deutschland" },
+  license_number: "", license_expiry: "", id_card_number: "",
+};
 
 function todayPlus(d) {
   const x = new Date();
@@ -31,7 +41,8 @@ const STEPS = ["Zeitraum", "Extras", "Kundendaten", "Zahlung", "Bestätigung"];
 export default function BookingFlow() {
   const { vehicleId } = useParams();
   const navigate = useNavigate();
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, refresh } = useAuth();
+  const isGuest = !user;
 
   const [step, setStep] = useState(0);
   const [vehicle, setVehicle] = useState(null);
@@ -40,17 +51,21 @@ export default function BookingFlow() {
   const [start, setStart] = useState(todayPlus(1));
   const [end, setEnd] = useState(todayPlus(4));
   const [extras, setExtras] = useState([]);
-  const [name, setName] = useState(user?.name || "");
-  const [phone, setPhone] = useState(user?.phone || "");
   const [note, setNote] = useState("");
   const [payment, setPayment] = useState("stripe");
   const [booking, setBooking] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Logged-in user inline edit (name + phone)
+  const [authedName, setAuthedName] = useState(user?.name || "");
+  const [authedPhone, setAuthedPhone] = useState(user?.phone || "");
   const [profileStatus, setProfileStatus] = useState({ complete: true, missing: [] });
 
-  useEffect(() => {
-    api.get("/auth/profile-status").then((r) => setProfileStatus(r.data)).catch(() => {});
-  }, [user]);
+  // Guest fields
+  const [guest, setGuest] = useState(EMPTY_GUEST);
+  const [createAccount, setCreateAccount] = useState(false);
+  const [password, setPassword] = useState("");
+  const [accountCreated, setAccountCreated] = useState(false);
 
   useEffect(() => {
     api.get(`/vehicles/${vehicleId}`).then((r) => setVehicle(r.data)).catch((e) => toast.error(apiError(e)));
@@ -60,6 +75,14 @@ export default function BookingFlow() {
     });
   }, [vehicleId]);
 
+  useEffect(() => {
+    if (user) {
+      api.get("/auth/profile-status").then((r) => setProfileStatus(r.data)).catch(() => {});
+      setAuthedName(user.name || "");
+      setAuthedPhone(user.phone || "");
+    }
+  }, [user]);
+
   const days = Math.max(1, Math.ceil((new Date(end) - new Date(start)) / 86400000));
   const extrasTotal = extras.reduce((s, id) => s + (EXTRAS.find((e) => e.id === id)?.price || 0), 0) * days;
   const subtotal = vehicle ? vehicle.price_per_day * days : 0;
@@ -68,43 +91,73 @@ export default function BookingFlow() {
   const toggleExtra = (id) =>
     setExtras(extras.includes(id) ? extras.filter((x) => x !== id) : [...extras, id]);
 
+  const validateGuest = () => {
+    if (!guest.email || !guest.name || !guest.phone || !guest.date_of_birth) return "Bitte alle Pflichtfelder ausfüllen.";
+    if (!guest.address.street || !guest.address.house_number || !guest.address.postal_code || !guest.address.city)
+      return "Bitte vollständige Adresse angeben.";
+    if (!guest.license_number) return "Führerscheinnummer ist erforderlich.";
+    return null;
+  };
+
   const goNext = async () => {
     if (step === 0) {
       if (!locationId) return toast.error("Bitte Standort wählen.");
       if (new Date(end) <= new Date(start)) return toast.error("Rückgabedatum muss nach Abholdatum liegen.");
     }
     if (step === 2) {
-      if (!name.trim()) return toast.error("Name ist erforderlich.");
-      if (!phone.trim()) return toast.error("Telefonnummer ist erforderlich.");
-      if (user && (user.name !== name || user.phone !== phone)) {
-        try { await updateProfile({ name, phone }); } catch {}
+      if (isGuest) {
+        const err = validateGuest();
+        if (err) return toast.error(err);
+      } else {
+        if (!authedName.trim() || !authedPhone.trim()) return toast.error("Name und Telefon sind erforderlich.");
+        if (user.name !== authedName || user.phone !== authedPhone) {
+          try { await updateProfile({ name: authedName, phone: authedPhone }); } catch {}
+        }
       }
     }
     if (step === 3) {
-      await handlePayment();
+      if (createAccount && password.length < 6) return toast.error("Passwort muss mind. 6 Zeichen haben.");
+      await handleSubmit();
       return;
     }
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
 
-  const handlePayment = async () => {
+  const handleSubmit = async () => {
+    setSubmitting(true);
     try {
-      setSubmitting(true);
-      const { data: b } = await api.post("/bookings", {
-        vehicle_id: vehicleId,
-        location_id: locationId,
-        start_date: start,
-        end_date: end,
-        extras,
-        customer_note: note,
-      });
-      const { data: paid } = await api.post("/payments/mock-pay", {
-        booking_id: b.id,
-        method: payment,
-      });
-      setBooking(paid);
+      if (isGuest) {
+        const payload = {
+          vehicle_id: vehicleId,
+          location_id: locationId,
+          start_date: start,
+          end_date: end,
+          extras,
+          customer_note: note,
+          customer: guest,
+          payment_method: payment,
+          create_account: createAccount,
+          password: createAccount ? password : null,
+        };
+        const { data } = await api.post("/bookings/guest", payload);
+        setBooking(data.booking);
+        setAccountCreated(Boolean(data.account_created));
+        if (data.account_created) {
+          await refresh();
+          toast.success("Buchung bestätigt und Konto erstellt!");
+        } else {
+          toast.success("Buchung bestätigt!");
+        }
+      } else {
+        const { data: b } = await api.post("/bookings", {
+          vehicle_id: vehicleId, location_id: locationId, start_date: start, end_date: end,
+          extras, customer_note: note,
+        });
+        const { data: paid } = await api.post("/payments/mock-pay", { booking_id: b.id, method: payment });
+        setBooking(paid);
+        toast.success("Buchung bestätigt!");
+      }
       setStep(4);
-      toast.success("Buchung bestätigt!");
     } catch (e) {
       toast.error(apiError(e));
     } finally {
@@ -114,14 +167,28 @@ export default function BookingFlow() {
 
   if (!vehicle) return <div className="rf-container py-24 text-center text-slate-500">Lädt...</div>;
 
+  const setAddr = (key, val) => setGuest({ ...guest, address: { ...guest.address, [key]: val } });
+
   return (
     <div className="rf-container py-10 rf-fade-in" data-testid="booking-flow">
       <Link to={`/fahrzeug/${vehicleId}`} className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-[#0055FF] mb-6" data-testid="back-to-vehicle">
         <ArrowLeft size={14} /> Zurück
       </Link>
 
-      {!profileStatus.complete && step < 4 && (
-        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3" data-testid="profile-warning">
+      {isGuest && step < 4 && (
+        <div className="mb-6 bg-[#EFF4FF] border border-[#DBEAFE] rounded-lg p-4 flex items-center gap-3 flex-wrap" data-testid="guest-banner">
+          <User size={18} className="text-[#0055FF] shrink-0" />
+          <div className="flex-1 text-sm text-[#0A192F]">
+            <strong>Als Gast buchen</strong> – oder melde dich an, wenn du bereits ein Konto hast.
+          </div>
+          <Button size="sm" variant="outline" onClick={() => navigate(`/login`, { state: { from: `/buchen/${vehicleId}` } })} data-testid="guest-login-btn">
+            <LogIn size={14} className="mr-1.5" /> Anmelden
+          </Button>
+        </div>
+      )}
+
+      {!isGuest && !profileStatus.complete && step < 4 && (
+        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3 flex-wrap" data-testid="profile-warning">
           <AlertTriangle size={20} className="text-amber-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <div className="font-semibold text-amber-900">Profil unvollständig</div>
@@ -129,7 +196,7 @@ export default function BookingFlow() {
               Um zu buchen, benötigen wir: <strong>{profileStatus.missing.join(", ")}</strong>.
             </div>
           </div>
-          <Button size="sm" variant="outline" className="border-amber-300 shrink-0" onClick={() => navigate("/konto")} data-testid="profile-warning-btn">
+          <Button size="sm" variant="outline" className="border-amber-300" onClick={() => navigate("/konto")} data-testid="profile-warning-btn">
             Profil vervollständigen
           </Button>
         </div>
@@ -155,8 +222,8 @@ export default function BookingFlow() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Step Content */}
         <section className="lg:col-span-8 bg-white border border-slate-200 rounded-lg p-6 md:p-8">
+          {/* Step 0 — Dates */}
           {step === 0 && (
             <div data-testid="step-dates">
               <h2 className="font-display text-2xl font-bold text-[#0A192F] mb-6">Zeitraum & Standort</h2>
@@ -182,6 +249,7 @@ export default function BookingFlow() {
             </div>
           )}
 
+          {/* Step 1 — Extras */}
           {step === 1 && (
             <div data-testid="step-extras">
               <h2 className="font-display text-2xl font-bold text-[#0A192F] mb-2">Extras hinzufügen</h2>
@@ -205,30 +273,63 @@ export default function BookingFlow() {
             </div>
           )}
 
-          {step === 2 && (
-            <div data-testid="step-customer">
+          {/* Step 2 — Customer Data */}
+          {step === 2 && isGuest && (
+            <div data-testid="step-customer-guest">
+              <h2 className="font-display text-2xl font-bold text-[#0A192F] mb-2">Deine Daten</h2>
+              <p className="text-slate-500 text-sm mb-6">Diese Angaben benötigen wir für die Anmietung.</p>
+
+              <h3 className="font-display font-semibold text-[#0A192F] mb-3">Kontakt</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <Field label="Vollständiger Name *"><Input value={guest.name} onChange={(e) => setGuest({ ...guest, name: e.target.value })} data-testid="g-name" /></Field>
+                <Field label="E-Mail *"><Input type="email" value={guest.email} onChange={(e) => setGuest({ ...guest, email: e.target.value })} data-testid="g-email" /></Field>
+                <Field label="Telefon *"><Input value={guest.phone} onChange={(e) => setGuest({ ...guest, phone: e.target.value })} placeholder="+49 ..." data-testid="g-phone" /></Field>
+                <Field label="Geburtsdatum *"><Input type="date" value={guest.date_of_birth} onChange={(e) => setGuest({ ...guest, date_of_birth: e.target.value })} data-testid="g-dob" /></Field>
+              </div>
+
+              <h3 className="font-display font-semibold text-[#0A192F] mb-3">Adresse</h3>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
+                <div className="md:col-span-4"><Field label="Straße *"><Input value={guest.address.street} onChange={(e) => setAddr("street", e.target.value)} data-testid="g-street" /></Field></div>
+                <div className="md:col-span-2"><Field label="Hausnummer *"><Input value={guest.address.house_number} onChange={(e) => setAddr("house_number", e.target.value)} data-testid="g-house" /></Field></div>
+                <div className="md:col-span-2"><Field label="PLZ *"><Input value={guest.address.postal_code} onChange={(e) => setAddr("postal_code", e.target.value)} data-testid="g-plz" /></Field></div>
+                <div className="md:col-span-4"><Field label="Stadt *"><Input value={guest.address.city} onChange={(e) => setAddr("city", e.target.value)} data-testid="g-city" /></Field></div>
+                <div className="md:col-span-6"><Field label="Land"><Input value={guest.address.country} onChange={(e) => setAddr("country", e.target.value)} data-testid="g-country" /></Field></div>
+              </div>
+
+              <h3 className="font-display font-semibold text-[#0A192F] mb-3">Führerschein & Ausweis</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <Field label="Führerscheinnummer *"><Input value={guest.license_number} onChange={(e) => setGuest({ ...guest, license_number: e.target.value })} placeholder="z.B. B12345678" data-testid="g-lic-num" /></Field>
+                <Field label="Führerschein gültig bis"><Input type="date" value={guest.license_expiry} onChange={(e) => setGuest({ ...guest, license_expiry: e.target.value })} data-testid="g-lic-exp" /></Field>
+                <div className="md:col-span-2"><Field label="Personalausweis-Nr."><Input value={guest.id_card_number} onChange={(e) => setGuest({ ...guest, id_card_number: e.target.value })} data-testid="g-idcard" /></Field></div>
+              </div>
+
+              <Field label="Anmerkung (optional)">
+                <Textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} data-testid="g-note" />
+              </Field>
+
+              <p className="text-xs text-slate-500 mt-4">
+                Originaldokumente bringst du bitte bei der Abholung mit. Du kannst sie optional auch später in deinem Konto hochladen.
+              </p>
+            </div>
+          )}
+
+          {step === 2 && !isGuest && (
+            <div data-testid="step-customer-user">
               <h2 className="font-display text-2xl font-bold text-[#0A192F] mb-6">Kundendaten</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <Label className="mb-1.5 block">Vollständiger Name</Label>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} className="h-11" data-testid="book-name" />
-                </div>
-                <div>
-                  <Label className="mb-1.5 block">Telefonnummer</Label>
-                  <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+49 ..." className="h-11" data-testid="book-phone" />
+                <Field label="Name"><Input value={authedName} onChange={(e) => setAuthedName(e.target.value)} className="h-11" data-testid="book-name" /></Field>
+                <Field label="Telefon"><Input value={authedPhone} onChange={(e) => setAuthedPhone(e.target.value)} placeholder="+49 ..." className="h-11" data-testid="book-phone" /></Field>
+                <div className="md:col-span-2">
+                  <Field label="E-Mail"><Input value={user?.email || ""} disabled className="h-11 bg-slate-50" /></Field>
                 </div>
                 <div className="md:col-span-2">
-                  <Label className="mb-1.5 block">E-Mail</Label>
-                  <Input value={user?.email || ""} disabled className="h-11 bg-slate-50" />
-                </div>
-                <div className="md:col-span-2">
-                  <Label className="mb-1.5 block">Anmerkung (optional)</Label>
-                  <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} data-testid="book-note" />
+                  <Field label="Anmerkung (optional)"><Textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)} data-testid="book-note" /></Field>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Step 3 — Payment */}
           {step === 3 && (
             <div data-testid="step-payment">
               <h2 className="font-display text-2xl font-bold text-[#0A192F] mb-2">Zahlungsmethode wählen</h2>
@@ -256,9 +357,39 @@ export default function BookingFlow() {
                   </div>
                 </label>
               </RadioGroup>
+
+              {isGuest && (
+                <div className="mt-8 pt-6 border-t border-slate-100" data-testid="create-account-block">
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-[#EFF4FF] text-[#0055FF] flex items-center justify-center">
+                        <UserPlus size={18} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-[#0A192F]">Kundenkonto erstellen?</div>
+                        <div className="text-sm text-slate-500">Speichert deine Daten für zukünftige Buchungen. Du kannst Dokumente hochladen und deine Buchungshistorie sehen.</div>
+                      </div>
+                    </div>
+                    <Switch checked={createAccount} onCheckedChange={setCreateAccount} data-testid="create-account-toggle" />
+                  </div>
+                  {createAccount && (
+                    <div className="mt-4">
+                      <Field label="Passwort wählen (mind. 6 Zeichen)">
+                        <Input
+                          type="password" minLength={6}
+                          value={password} onChange={(e) => setPassword(e.target.value)}
+                          className="h-11" data-testid="create-account-password"
+                          placeholder="••••••••"
+                        />
+                      </Field>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
+          {/* Step 4 — Confirmation */}
           {step === 4 && booking && (
             <div data-testid="step-confirmation" className="text-center py-6">
               <div className="w-16 h-16 rounded-full bg-[#10B981]/10 text-[#10B981] flex items-center justify-center mx-auto mb-4">
@@ -268,6 +399,12 @@ export default function BookingFlow() {
               <p className="mt-2 text-slate-600">Buchungsnummer: <span className="font-mono font-semibold">{booking.id.slice(0, 8).toUpperCase()}</span></p>
               <p className="mt-1 text-sm text-slate-500">Bestätigung per E-Mail & WhatsApp versendet (MOCKED).</p>
 
+              {accountCreated && (
+                <div className="mt-6 max-w-md mx-auto bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg p-4 text-sm" data-testid="account-created-msg">
+                  Dein Kundenkonto wurde erfolgreich erstellt. Du bist automatisch angemeldet.
+                </div>
+              )}
+
               <div className="mt-8 text-left max-w-md mx-auto bg-slate-50 rounded-lg p-5 border border-slate-200 space-y-2 text-sm">
                 <Row k="Fahrzeug" v={`${booking.vehicle_brand} ${booking.vehicle_name}`} />
                 <Row k="Zeitraum" v={`${booking.start_date} → ${booking.end_date}`} />
@@ -276,9 +413,11 @@ export default function BookingFlow() {
                 <Row k="Gesamt" v={`${booking.total.toFixed(2)}€`} strong />
               </div>
 
-              <div className="mt-8 flex gap-3 justify-center">
+              <div className="mt-8 flex gap-3 justify-center flex-wrap">
                 <Button variant="outline" onClick={() => navigate("/katalog")} data-testid="conf-back-catalog">Weitere Fahrzeuge</Button>
-                <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={() => navigate("/konto")} data-testid="conf-go-account">Meine Buchungen</Button>
+                {(user || accountCreated) && (
+                  <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={() => navigate("/konto")} data-testid="conf-go-account">Meine Buchungen</Button>
+                )}
               </div>
             </div>
           )}
@@ -288,8 +427,15 @@ export default function BookingFlow() {
               <Button variant="outline" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0} data-testid="step-back">
                 <ArrowLeft size={14} className="mr-1" /> Zurück
               </Button>
-              <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={goNext} disabled={submitting || (step === 3 && !profileStatus.complete)} data-testid="step-next">
-                {step === 3 ? (submitting ? "Wird verarbeitet..." : `Jetzt zahlen · ${total.toFixed(2)}€`) : (<>Weiter <ArrowRight size={14} className="ml-1" /></>)}
+              <Button
+                className="bg-[#0055FF] hover:bg-[#0044CC]"
+                onClick={goNext}
+                disabled={submitting || (step === 3 && !isGuest && !profileStatus.complete)}
+                data-testid="step-next"
+              >
+                {step === 3
+                  ? (submitting ? "Wird verarbeitet..." : `Jetzt zahlen · ${total.toFixed(2)}€`)
+                  : (<>Weiter <ArrowRight size={14} className="ml-1" /></>)}
               </Button>
             </div>
           )}
@@ -321,6 +467,10 @@ export default function BookingFlow() {
       </div>
     </div>
   );
+}
+
+function Field({ label, children }) {
+  return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
 }
 
 function Row({ k, v, strong, muted }) {

@@ -307,6 +307,30 @@ class BookingIn(BaseModel):
     customer_note: str = ""
 
 
+class GuestCustomerIn(BaseModel):
+    email: EmailStr
+    name: str = Field(min_length=1)
+    phone: str = Field(min_length=3)
+    date_of_birth: str = Field(min_length=8)
+    address: AddressIn
+    license_number: str = Field(min_length=3)
+    license_expiry: Optional[str] = ""
+    id_card_number: Optional[str] = ""
+
+
+class GuestBookingIn(BaseModel):
+    vehicle_id: str
+    location_id: str
+    start_date: str
+    end_date: str
+    extras: List[str] = []
+    customer_note: str = ""
+    customer: GuestCustomerIn
+    payment_method: Literal["stripe", "paypal"]
+    create_account: bool = False
+    password: Optional[str] = None
+
+
 class PaymentIn(BaseModel):
     booking_id: str
     method: Literal["stripe", "paypal"]
@@ -667,7 +691,104 @@ async def create_booking(body: BookingIn, user: dict = Depends(get_current_user)
     return doc
 
 
-@api.post("/payments/mock-pay")
+@api.post("/bookings/guest")
+async def create_guest_booking(body: GuestBookingIn, response: Response):
+    email = body.customer.email.lower().strip()
+    existing_user = await db.users.find_one({"email": email}, {"_id": 0})
+
+    # Handle account creation up-front if requested
+    created_user = None
+    access_token = None
+    if body.create_account:
+        if not body.password or len(body.password) < 6:
+            raise HTTPException(400, "Passwort erforderlich (mind. 6 Zeichen)")
+        if existing_user:
+            raise HTTPException(
+                400,
+                "Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich an.",
+            )
+        uid = str(uuid.uuid4())
+        created_user = {
+            "id": uid,
+            "email": email,
+            "password_hash": hash_password(body.password),
+            "name": body.customer.name.strip(),
+            "phone": body.customer.phone.strip(),
+            "date_of_birth": body.customer.date_of_birth,
+            "address": body.customer.address.model_dump(),
+            "license_number": body.customer.license_number,
+            "license_expiry": body.customer.license_expiry or "",
+            "id_card_number": body.customer.id_card_number or "",
+            "role": "user",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await db.users.insert_one(created_user)
+        access_token = create_access_token(uid, email, "user")
+        refresh_token = create_refresh_token(uid)
+        set_auth_cookies(response, access_token, refresh_token)
+
+    # Validate vehicle + location + dates
+    v = await db.vehicles.find_one({"id": body.vehicle_id, "active": True}, {"_id": 0})
+    if not v:
+        raise HTTPException(404, "Fahrzeug nicht verfügbar")
+    loc = await db.locations.find_one({"id": body.location_id}, {"_id": 0})
+    if not loc:
+        raise HTTPException(404, "Standort nicht gefunden")
+    try:
+        days = _days_between(body.start_date, body.end_date)
+    except ValueError:
+        raise HTTPException(400, "Ungültige Datumsangabe")
+    if not await _is_available(body.vehicle_id, body.start_date, body.end_date):
+        raise HTTPException(409, "Fahrzeug in diesem Zeitraum nicht verfügbar")
+
+    extras_total = sum(EXTRAS_PRICE_MAP.get(e, 0) for e in body.extras) * days
+    subtotal = v["price_per_day"] * days
+    total = round(subtotal + extras_total, 2)
+
+    # Determine booking owner
+    owner_id = (created_user or existing_user or {}).get("id")
+    is_guest = owner_id is None
+
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": owner_id or f"guest-{uuid.uuid4()}",
+        "user_email": email,
+        "user_name": body.customer.name.strip(),
+        "is_guest": is_guest,
+        "guest_customer": body.customer.model_dump() if is_guest else None,
+        "vehicle_id": body.vehicle_id,
+        "vehicle_name": v["name"],
+        "vehicle_brand": v["brand"],
+        "vehicle_image": v["image_url"],
+        "location_id": body.location_id,
+        "location_name": loc["name"],
+        "start_date": body.start_date,
+        "end_date": body.end_date,
+        "days": days,
+        "extras": body.extras,
+        "extras_total": extras_total,
+        "subtotal": subtotal,
+        "total": total,
+        "status": "confirmed",
+        "payment_status": "paid",
+        "payment_method": body.payment_method,
+        "customer_note": body.customer_note,
+        "notifications": {"email_sent": True, "whatsapp_sent": True},
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "paid_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.bookings.insert_one(doc)
+    doc.pop("_id", None)
+    logger.info(f"[MOCK] Guest booking {doc['id']} for {email} confirmed")
+
+    result = {"booking": doc, "account_created": bool(created_user)}
+    if created_user:
+        result["user"] = user_public(created_user)
+        result["token"] = access_token
+    return result
+
+
+
 async def mock_pay(body: PaymentIn, user: dict = Depends(get_current_user)):
     booking = await db.bookings.find_one({"id": body.booking_id}, {"_id": 0})
     if not booking:

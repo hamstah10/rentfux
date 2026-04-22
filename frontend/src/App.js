@@ -46,7 +46,7 @@ function App() {
             <Route path="/ueber-uns" element={<PublicShell><About /></PublicShell>} />
             <Route path="/login" element={<PublicShell><Login /></PublicShell>} />
             <Route path="/registrieren" element={<PublicShell><Register /></PublicShell>} />
-            <Route path="/buchen/:vehicleId" element={<ProtectedRoute><PublicShell><BookingFlow /></PublicShell></ProtectedRoute>} />
+            <Route path="/buchen/:vehicleId" element={<PublicShell><BookingFlow /></PublicShell>} />
             <Route path="/konto" element={<ProtectedRoute><PublicShell><Account /></PublicShell></ProtectedRoute>} />
 
             <Route path="/admin" element={<ProtectedRoute adminOnly><AdminLayout /></ProtectedRoute>}>
