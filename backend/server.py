@@ -13,7 +13,8 @@ from typing import List, Optional, Literal
 
 import bcrypt
 import jwt
-from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, Query
+import requests
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, Query, UploadFile, File, Header
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, EmailStr
@@ -94,8 +95,86 @@ def user_public(u: dict) -> dict:
         "name": u.get("name", ""),
         "role": u.get("role", "user"),
         "phone": u.get("phone", ""),
+        "date_of_birth": u.get("date_of_birth", ""),
+        "address": u.get("address", {}),
+        "license_number": u.get("license_number", ""),
+        "license_expiry": u.get("license_expiry", ""),
+        "id_card_number": u.get("id_card_number", ""),
+        "documents": {
+            "license": _doc_meta((u.get("documents") or {}).get("license")),
+            "id_card": _doc_meta((u.get("documents") or {}).get("id_card")),
+        },
         "created_at": u.get("created_at"),
     }
+
+
+def _doc_meta(d):
+    if not d:
+        return None
+    return {
+        "filename": d.get("filename"),
+        "content_type": d.get("content_type"),
+        "size": d.get("size"),
+        "uploaded_at": d.get("uploaded_at"),
+    }
+
+
+# ---------- Object Storage ----------
+STORAGE_URL = "https://integrations.emergentagent.com/objstore/api/v1/storage"
+APP_NAME = os.environ.get("APP_NAME", "rentfux")
+_storage_key = None
+
+
+def init_storage():
+    global _storage_key
+    if _storage_key:
+        return _storage_key
+    key = os.environ.get("EMERGENT_LLM_KEY")
+    if not key:
+        logger.warning("EMERGENT_LLM_KEY not set - uploads disabled")
+        return None
+    try:
+        r = requests.post(f"{STORAGE_URL}/init", json={"emergent_key": key}, timeout=30)
+        r.raise_for_status()
+        _storage_key = r.json()["storage_key"]
+        logger.info("Object storage initialized")
+        return _storage_key
+    except Exception as e:
+        logger.error(f"Storage init failed: {e}")
+        return None
+
+
+def put_object(path: str, data: bytes, content_type: str) -> dict:
+    key = init_storage()
+    if not key:
+        raise HTTPException(503, "Dateispeicher nicht verfügbar")
+    r = requests.put(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key, "Content-Type": content_type},
+        data=data, timeout=120,
+    )
+    r.raise_for_status()
+    return r.json()
+
+
+def get_object(path: str):
+    key = init_storage()
+    if not key:
+        raise HTTPException(503, "Dateispeicher nicht verfügbar")
+    r = requests.get(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key}, timeout=60,
+    )
+    r.raise_for_status()
+    return r.content, r.headers.get("Content-Type", "application/octet-stream")
+
+
+ALLOWED_EXT = {"jpg", "jpeg", "png", "pdf", "webp"}
+MIME_TYPES = {
+    "jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png",
+    "webp": "image/webp", "pdf": "application/pdf",
+}
+MAX_UPLOAD_BYTES = 5 * 1024 * 1024
 
 
 async def get_current_user(request: Request) -> dict:
@@ -139,9 +218,22 @@ class LoginIn(BaseModel):
     password: str
 
 
+class AddressIn(BaseModel):
+    street: Optional[str] = ""
+    house_number: Optional[str] = ""
+    postal_code: Optional[str] = ""
+    city: Optional[str] = ""
+    country: Optional[str] = "Deutschland"
+
+
 class UserUpdateIn(BaseModel):
     name: Optional[str] = None
     phone: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    address: Optional[AddressIn] = None
+    license_number: Optional[str] = None
+    license_expiry: Optional[str] = None
+    id_card_number: Optional[str] = None
 
 
 class LocationIn(BaseModel):
@@ -257,11 +349,91 @@ async def me(user: dict = Depends(get_current_user)):
 
 @api.patch("/auth/profile")
 async def update_profile(body: UserUpdateIn, user: dict = Depends(get_current_user)):
-    upd = {k: v for k, v in body.model_dump().items() if v is not None}
-    if upd:
-        await db.users.update_one({"id": user["id"]}, {"$set": upd})
+    raw = body.model_dump(exclude_none=True)
+    # Normalize nested address
+    if "address" in raw and raw["address"] is not None:
+        raw["address"] = {k: (v or "") for k, v in raw["address"].items()}
+    if raw:
+        await db.users.update_one({"id": user["id"]}, {"$set": raw})
     refreshed = await db.users.find_one({"id": user["id"]}, {"_id": 0})
     return {"user": user_public(refreshed)}
+
+
+# ---------- Document Uploads ----------
+DOC_TYPES = {"license", "id_card"}
+
+
+async def _save_user_document(user_id: str, doc_type: str, file: UploadFile) -> dict:
+    if doc_type not in DOC_TYPES:
+        raise HTTPException(400, "Ungültiger Dokumenttyp")
+    if not file.filename:
+        raise HTTPException(400, "Datei fehlt")
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if ext not in ALLOWED_EXT:
+        raise HTTPException(400, "Nur JPG, PNG, WEBP oder PDF erlaubt")
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, "Datei zu groß (max 5 MB)")
+    if len(data) == 0:
+        raise HTTPException(400, "Datei ist leer")
+    content_type = file.content_type or MIME_TYPES.get(ext, "application/octet-stream")
+    path = f"{APP_NAME}/users/{user_id}/{doc_type}/{uuid.uuid4()}.{ext}"
+    result = put_object(path, data, content_type)
+    meta = {
+        "path": result["path"],
+        "filename": file.filename,
+        "content_type": content_type,
+        "size": len(data),
+        "uploaded_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {f"documents.{doc_type}": meta}},
+    )
+    return meta
+
+
+@api.post("/uploads/documents/{doc_type}")
+async def upload_my_document(
+    doc_type: str,
+    file: UploadFile = File(...),
+    user: dict = Depends(get_current_user),
+):
+    meta = await _save_user_document(user["id"], doc_type, file)
+    return _doc_meta(meta)
+
+
+@api.delete("/uploads/documents/{doc_type}")
+async def delete_my_document(doc_type: str, user: dict = Depends(get_current_user)):
+    if doc_type not in DOC_TYPES:
+        raise HTTPException(400, "Ungültiger Dokumenttyp")
+    await db.users.update_one({"id": user["id"]}, {"$unset": {f"documents.{doc_type}": ""}})
+    return {"ok": True}
+
+
+@api.get("/uploads/documents/me/{doc_type}")
+async def get_my_document(doc_type: str, user: dict = Depends(get_current_user)):
+    if doc_type not in DOC_TYPES:
+        raise HTTPException(400, "Ungültiger Dokumenttyp")
+    meta = (user.get("documents") or {}).get(doc_type)
+    if not meta:
+        raise HTTPException(404, "Kein Dokument hochgeladen")
+    data, ct = get_object(meta["path"])
+    return Response(content=data, media_type=meta.get("content_type", ct))
+
+
+@api.get("/admin/customers/{uid}/documents/{doc_type}")
+async def admin_get_customer_document(uid: str, doc_type: str, _: dict = Depends(require_admin)):
+    if doc_type not in DOC_TYPES:
+        raise HTTPException(400, "Ungültiger Dokumenttyp")
+    target = await db.users.find_one({"id": uid}, {"_id": 0})
+    if not target:
+        raise HTTPException(404, "Kunde nicht gefunden")
+    meta = (target.get("documents") or {}).get(doc_type)
+    if not meta:
+        raise HTTPException(404, "Kein Dokument hochgeladen")
+    data, ct = get_object(meta["path"])
+    return Response(content=data, media_type=meta.get("content_type", ct))
 
 
 # ---------- Locations ----------
@@ -565,10 +737,12 @@ async def admin_cancel_booking(bid: str, _: dict = Depends(require_admin)):
 @api.get("/admin/customers")
 async def admin_customers(_: dict = Depends(require_admin)):
     users = await db.users.find({"role": "user"}, {"_id": 0, "password_hash": 0}).to_list(1000)
-    # attach booking count per user
+    result = []
     for u in users:
-        u["bookings_count"] = await db.bookings.count_documents({"user_id": u["id"]})
-    return users
+        pub = user_public(u)
+        pub["bookings_count"] = await db.bookings.count_documents({"user_id": u["id"]})
+        result.append(pub)
+    return result
 
 
 @api.get("/admin/customers/{uid}")
@@ -582,7 +756,7 @@ async def admin_customer_detail(uid: str, _: dict = Depends(require_admin)):
     cancelled = sum(1 for b in bookings if b.get("status") == "cancelled")
     active = sum(1 for b in bookings if b.get("status") in ("pending", "confirmed", "active"))
     return {
-        "user": user,
+        "user": user_public(user),
         "bookings": bookings,
         "stats": {
             "total_bookings": len(bookings),
@@ -765,6 +939,10 @@ async def on_startup():
     await db.login_attempts.create_index("identifier")
     await seed_admin()
     await seed_data()
+    try:
+        init_storage()
+    except Exception as e:
+        logger.warning(f"Storage init skipped: {e}")
 
 
 @app.on_event("shutdown")

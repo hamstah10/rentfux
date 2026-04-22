@@ -3,8 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import { api, apiError } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mail, Phone, Calendar, User, Euro, CheckCircle2, XCircle, Clock, Eye } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Calendar, User, Euro, CheckCircle2, XCircle, Clock, Eye, MapPin, IdCard, FileCheck2 } from "lucide-react";
 import { toast } from "sonner";
+import AdminDocumentCard from "@/components/AdminDocumentCard";
 
 const STATUS = {
   pending: { label: "Ausstehend", cls: "bg-amber-100 text-amber-800" },
@@ -26,6 +27,13 @@ export default function AdminCustomerDetail() {
 
   if (!data) return <div className="text-slate-500">Lädt...</div>;
   const { user, bookings, stats } = data;
+  const addr = user.address || {};
+  const addrFull = [
+    [addr.street, addr.house_number].filter(Boolean).join(" "),
+    [addr.postal_code, addr.city].filter(Boolean).join(" "),
+    addr.country,
+  ].filter(Boolean).join(", ") || "—";
+  const docs = user.documents || {};
 
   return (
     <div className="rf-fade-in" data-testid="admin-customer-detail">
@@ -45,16 +53,35 @@ export default function AdminCustomerDetail() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left: Profile + Stats */}
+        {/* Sidebar */}
         <aside className="lg:col-span-4 space-y-6">
           <div className="bg-white border border-slate-200 rounded-lg p-6">
             <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
               <User size={16} /> Kontaktdaten
             </h3>
             <div className="space-y-3 text-sm">
-              <Row icon={Mail} label="E-Mail" value={user.email} />
-              <Row icon={Phone} label="Telefon" value={user.phone || "—"} />
-              <Row icon={Calendar} label="Registriert" value={(user.created_at || "").slice(0, 10)} />
+              <InfoRow icon={Mail} label="E-Mail" value={user.email} />
+              <InfoRow icon={Phone} label="Telefon" value={user.phone || "—"} />
+              <InfoRow icon={Calendar} label="Geburtsdatum" value={user.date_of_birth || "—"} />
+              <InfoRow icon={Calendar} label="Registriert" value={(user.created_at || "").slice(0, 10)} />
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+              <MapPin size={16} /> Adresse
+            </h3>
+            <div className="text-sm text-[#0A192F] leading-relaxed">{addrFull}</div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+              <IdCard size={16} /> Ausweis-Daten
+            </h3>
+            <div className="space-y-3 text-sm">
+              <InfoRow icon={FileCheck2} label="Führerschein-Nr." value={user.license_number || "—"} />
+              <InfoRow icon={Calendar} label="Gültig bis" value={user.license_expiry || "—"} />
+              <InfoRow icon={IdCard} label="Personalausweis-Nr." value={user.id_card_number || "—"} />
             </div>
           </div>
 
@@ -70,10 +97,20 @@ export default function AdminCustomerDetail() {
           </div>
         </aside>
 
-        {/* Right: Bookings */}
-        <section className="lg:col-span-8">
+        {/* Main */}
+        <section className="lg:col-span-8 space-y-6">
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+              <FileCheck2 size={16} /> Dokumente
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <AdminDocumentCard customerId={user.id} docType="license" meta={docs.license} />
+              <AdminDocumentCard customerId={user.id} docType="id_card" meta={docs.id_card} />
+            </div>
+          </div>
+
           <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-slate-100">
               <h3 className="font-display font-semibold text-[#0A192F]">Buchungshistorie ({bookings.length})</h3>
             </div>
             {bookings.length === 0 ? (
@@ -116,13 +153,13 @@ export default function AdminCustomerDetail() {
   );
 }
 
-function Row({ icon: Icon, label, value }) {
+function InfoRow({ icon: Icon, label, value }) {
   return (
     <div className="flex items-start gap-3">
-      <Icon size={14} className="text-slate-400 mt-0.5" />
+      <Icon size={14} className="text-slate-400 mt-0.5 shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="text-xs text-slate-500">{label}</div>
-        <div className="text-[#0A192F] font-medium truncate">{value}</div>
+        <div className="text-[#0A192F] font-medium break-words">{value}</div>
       </div>
     </div>
   );
