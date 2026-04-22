@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { api, apiError } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mail, Phone, Calendar, User, Euro, CheckCircle2, XCircle, Clock, Eye, MapPin, IdCard, FileCheck2 } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Calendar, User, Euro, CheckCircle2, XCircle, Clock, Eye, MapPin, IdCard, FileCheck2, Building2, Pencil, Save } from "lucide-react";
 import { toast } from "sonner";
 import AdminDocumentCard from "@/components/AdminDocumentCard";
 
