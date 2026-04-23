@@ -7,9 +7,23 @@ Premium-Autovermietung für Privat- und Geschäftskunden. Deutschsprachige Web-P
 
 ---
 
+## Übersicht der Seiten (Screenshots)
+
+| Landingpage | Fahrzeugkatalog |
+|:-:|:-:|
+| ![Home](./docs/screenshots/01-home.jpg) | ![Katalog](./docs/screenshots/02-catalog.jpg) |
+| **Fahrzeug-Detail** | **Buchungs-Flow (Gast)** |
+| ![Fahrzeug](./docs/screenshots/03-vehicle-detail.jpg) | ![Buchung Gast](./docs/screenshots/04-booking-guest.jpg) |
+| **Login** | **Mein Konto** |
+| ![Login](./docs/screenshots/05-login.jpg) | ![Konto](./docs/screenshots/13-account.jpg) |
+
+---
+
 ## 1. Öffentlicher Bereich (Gäste & Kunden)
 
 ### Landingpage (`/`)
+![Home](./docs/screenshots/01-home.jpg)
+
 - Hero mit Fahrzeug-Bildhintergrund und prominenter Suchleiste (Standort, Abholdatum, Rückgabedatum)
 - Trust-Icons: Vollkasko, 24/7-Abholung, transparente Preise, zentrale Standorte
 - Featured-Fahrzeuge (bis zu 6 aus der Flotte)
@@ -17,12 +31,16 @@ Premium-Autovermietung für Privat- und Geschäftskunden. Deutschsprachige Web-P
 - Testimonial-Sektion
 
 ### Fahrzeugkatalog (`/katalog`)
+![Katalog](./docs/screenshots/02-catalog.jpg)
+
 - Live-Suche + Sticky-Filter-Sidebar
 - **Filter:** Preisbereich (Slider), Kategorie, Getriebe, Kraftstoff, Mindest-Sitzplätze
 - Grid mit Fahrzeugkarten (Bild, Marke, Modell, Specs, Preis/Tag)
 - Hover-Animation, Responsive (1–3 Spalten)
 
 ### Fahrzeug-Detail (`/fahrzeug/:id`)
+![Fahrzeug Detail](./docs/screenshots/03-vehicle-detail.jpg)
+
 - Große Bildgalerie
 - Vollständige Spezifikationen: Sitze, Getriebe, Kraftstoff, Türen
 - Ausstattungsliste (Features)
@@ -42,12 +60,15 @@ Premium-Autovermietung für Privat- und Geschäftskunden. Deutschsprachige Web-P
 
 ## 2. Authentifizierung
 
+### Login (`/login`)
+![Login](./docs/screenshots/05-login.jpg)
+
 ### Registrierung (`/registrieren`)
 - E-Mail, Passwort (min. 6 Zeichen), Name, Telefon (optional)
 - Erstellt JWT + httpOnly-Cookies
 - Nach Registrierung automatische Weiterleitung zum **Profil-Setup-Wizard** (`/konto/einrichten`)
 
-### Login (`/login`)
+### Login
 - E-Mail + Passwort
 - Brute-Force-Schutz: 5 Fehlversuche → 15 Min Sperre
 - Admin wird automatisch zum Admin-Bereich geleitet
@@ -73,6 +94,8 @@ Premium-Autovermietung für Privat- und Geschäftskunden. Deutschsprachige Web-P
 
 ## 3. Mein Konto (`/konto`) – Eingeloggte Kunden
 
+![Mein Konto](./docs/screenshots/13-account.jpg)
+
 ### Tabs
 | Tab | Inhalt |
 |-----|--------|
@@ -88,6 +111,8 @@ Premium-Autovermietung für Privat- und Geschäftskunden. Deutschsprachige Web-P
 ---
 
 ## 4. Buchungsflow (`/buchen/:vehicleId`)
+
+![Buchung Gast-Modus](./docs/screenshots/04-booking-guest.jpg)
 
 **5-Schritt-Stepper** mit Shadcn-Progress-UI. Funktioniert **für Gäste (ohne Anmeldung) und für registrierte Kunden**.
 
@@ -144,46 +169,56 @@ Standort-Dropdown + Abhol-/Rückgabedatum
 - Dashboard · Fahrzeuge · Buchungen · Standorte · Kunden · Rabattcodes
 
 ### 5.1 Dashboard (`/admin`)
+![Admin Dashboard](./docs/screenshots/06-admin-dashboard.jpg)
+
 - **KPI-Kacheln:** Umsatz, Buchungen, aktive Fahrzeuge, Kunden
 - **Balkendiagramm:** Umsatz der letzten 6 Monate (Recharts)
 - **Status-Verteilung:** Pending/Confirmed/Active/Completed/Cancelled-Zähler
 - **Neueste Buchungen:** letzte 5 Einträge
 
 ### 5.2 Fahrzeuge (`/admin/fahrzeuge`)
+![Admin Fahrzeuge](./docs/screenshots/07-admin-vehicles.jpg)
+
 - Tabellenübersicht mit Thumbnail, Marke/Modell, Kategorie, Preis, Aktiv-Status
 - **Neues Fahrzeug** Dialog: Marke, Modell, Kategorie, Getriebe, Kraftstoff, Sitze, Türen, Preis/Tag, Standort, Bild-URL, Beschreibung, Features (Komma-getrennt)
 - Bearbeiten · Deaktivieren (Soft-Delete)
 
 ### 5.3 Buchungen (`/admin/buchungen`)
+![Admin Buchungen](./docs/screenshots/08-admin-bookings.jpg)
+
 - Volltextsuche (Kunde, Fahrzeug, Buchungs-ID)
 - Status-Filter
 - Tabelle mit 8 Spalten inkl. Inline-Status-Dropdown & „Details"-Button
 - Zahlungsstatus-Badge (Bezahlt/Offen)
 
 ### 5.4 Buchungs-Detail (`/admin/buchungen/:id`)
+![Admin Buchungs-Detail](./docs/screenshots/09-admin-booking-detail.jpg)
+
 - **Bearbeitbar:** Datum (Preis wird automatisch neu berechnet), Standort, Status, Extras, Kundenanmerkung
 - **Stornieren-Button** mit AlertDialog-Bestätigung
   - Setzt Status auf „Storniert" und gibt das Fahrzeug wieder frei
 - Sidebar mit Kundendaten, Fahrzeug-Karte, Zahlungsdetails, Zeitstempeln (erstellt/bezahlt/storniert/aktualisiert)
 
 ### 5.5 Standorte (`/admin/standorte`)
+![Admin Standorte](./docs/screenshots/11-admin-locations.jpg)
+
 - Grid-Übersicht
 - CRUD-Dialog: Name, Adresse, PLZ, Stadt, Telefon, E-Mail, Aktiv-Toggle
 - Telefon & E-Mail werden live im **Footer und auf der Standorte-Seite** angezeigt
 
-### 5.6 Kunden (`/admin/kunden`)
-- Tabelle: Avatar, Name, E-Mail, Telefon, Registriert, Buchungsanzahl
-- Volltextsuche
-- „Details"-Button pro Zeile
+### 5.6 Kunden (`/admin/kunden`) + Detail (`/admin/kunden/:id`)
+![Admin Kunden-Detail](./docs/screenshots/10-admin-customer-detail.jpg)
 
-### 5.7 Kunden-Detail (`/admin/kunden/:id`)
-- Avatar, Name, Kunden-ID, **Geschäftskunde-Badge**
+- Tabelle: Avatar, Name, E-Mail, Telefon, Registriert, Buchungsanzahl, Details-Button
+- Kundenprofil mit **Geschäftskunde-Badge**
 - **Sidebar-Karten:** Kontaktdaten · Adresse · Firmen-Infos (wenn Geschäftskunde) · Ausweis-Daten · Kennzahlen (Buchungen, Umsatz, Abgeschlossen/Storniert/Aktiv)
 - **Dokumente-Sektion:** Inline-Preview (Bilder) oder iframe (PDFs) + „In neuem Tab öffnen"
 - **Buchungshistorie** mit Verlinkung zu jeweiligen Buchungs-Details
 - **Bearbeiten-Button** öffnet Dialog zur Vollbearbeitung aller Kundendaten (inkl. Firma)
 
-### 5.8 Rabattcodes (`/admin/rabatte`)
+### 5.7 Rabattcodes (`/admin/rabatte`)
+![Admin Rabatte](./docs/screenshots/12-admin-discounts.jpg)
+
 - Tabelle: Code, Typ, Wert, Nutzung, Mindestbestellwert, Gültigkeit, Status
 - Dialog zum Anlegen/Bearbeiten:
   - Code (eindeutig, Großbuchstaben)
