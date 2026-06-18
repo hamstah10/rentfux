@@ -44,7 +44,7 @@ export default function DiscountInput({ subtotal, onApply, applied }) {
   return (
     <div className="flex gap-2" data-testid="discount-input">
       <div className="relative flex-1">
-        <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A3A3A3]" />
         <Input
           value={code} onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="Rabattcode" className="pl-9 h-10 uppercase"

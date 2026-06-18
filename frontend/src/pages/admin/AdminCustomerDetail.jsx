@@ -15,7 +15,7 @@ const STATUS = {
   pending: { label: "Ausstehend", cls: "bg-amber-100 text-amber-800" },
   confirmed: { label: "Bestätigt", cls: "bg-emerald-100 text-emerald-800" },
   active: { label: "Aktiv", cls: "bg-blue-100 text-blue-800" },
-  completed: { label: "Abgeschlossen", cls: "bg-slate-100 text-slate-700" },
+  completed: { label: "Abgeschlossen", cls: "bg-[#F4F4F4] text-[#262626]" },
   cancelled: { label: "Storniert", cls: "bg-red-100 text-red-800" },
 };
 
@@ -58,7 +58,7 @@ export default function AdminCustomerDetail() {
   const setAddr = (k, v) => setForm({ ...form, address: { ...form.address, [k]: v } });
   const setCompany = (k, v) => setForm({ ...form, company: { ...form.company, [k]: v } });
 
-  if (!data) return <div className="text-slate-500">Lädt...</div>;
+  if (!data) return <div className="text-[#525252]">Lädt...</div>;
   const { user, bookings, stats } = data;
   const addr = user.address || {};
   const addrFull = [
@@ -70,27 +70,27 @@ export default function AdminCustomerDetail() {
 
   return (
     <div className="rf-fade-in" data-testid="admin-customer-detail">
-      <Link to="/admin/kunden" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-[#0055FF] mb-5" data-testid="back-to-customers">
+      <Link to="/admin/kunden" className="inline-flex items-center gap-1.5 text-sm text-[#525252] hover:text-[#E11226] mb-5" data-testid="back-to-customers">
         <ArrowLeft size={14} /> Zurück zur Kundenliste
       </Link>
 
       <div className="flex items-center gap-5 mb-8 flex-wrap">
-        <div className="w-20 h-20 rounded-full bg-[#EFF4FF] text-[#0055FF] flex items-center justify-center font-display font-bold text-3xl">
+        <div className="w-20 h-20 rounded-full bg-[#FEE2E5] text-[#E11226] flex items-center justify-center font-display font-bold text-3xl">
           {(user.name || user.email).slice(0, 1).toUpperCase()}
         </div>
         <div className="flex-1">
-          <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Kundenprofil</div>
-          <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">{user.name || "—"}</h1>
+          <div className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">Kundenprofil</div>
+          <h1 className="font-display text-3xl font-bold text-[#0A0A0A] mt-1">{user.name || "—"}</h1>
           <div className="mt-1 flex items-center gap-2 flex-wrap">
-            <div className="text-slate-500 text-sm font-mono">ID: {user.id.slice(0, 8).toUpperCase()}</div>
+            <div className="text-[#525252] text-sm font-mono">ID: {user.id.slice(0, 8).toUpperCase()}</div>
             {user.is_business && (
-              <Badge className="bg-[#EFF4FF] text-[#0055FF] border-0 gap-1">
+              <Badge className="bg-[#FEE2E5] text-[#E11226] border-0 gap-1">
                 <Building2 size={12} /> Geschäftskunde
               </Badge>
             )}
           </div>
         </div>
-        <Button onClick={openEdit} className="bg-[#0055FF] hover:bg-[#0044CC]" data-testid="customer-edit-btn">
+        <Button onClick={openEdit} className="bg-[#E11226] hover:bg-[#C20E1F]" data-testid="customer-edit-btn">
           <Pencil size={14} className="mr-2" /> Bearbeiten
         </Button>
       </div>
@@ -98,8 +98,8 @@ export default function AdminCustomerDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Sidebar */}
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <User size={16} /> Kontaktdaten
             </h3>
             <div className="space-y-3 text-sm">
@@ -110,16 +110,16 @@ export default function AdminCustomerDetail() {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <MapPin size={16} /> Adresse
             </h3>
-            <div className="text-sm text-[#0A192F] leading-relaxed">{addrFull}</div>
+            <div className="text-sm text-[#0A0A0A] leading-relaxed">{addrFull}</div>
           </div>
 
           {user.is_business && (
-            <div className="bg-white border border-slate-200 rounded-lg p-6" data-testid="customer-business">
-              <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+            <div className="bg-white border border-[#E5E5E5] rounded-lg p-6" data-testid="customer-business">
+              <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
                 <Building2 size={16} /> Firma
               </h3>
               <div className="space-y-3 text-sm">
@@ -130,8 +130,8 @@ export default function AdminCustomerDetail() {
             </div>
           )}
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <IdCard size={16} /> Ausweis-Daten
             </h3>
             <div className="space-y-3 text-sm">
@@ -141,8 +141,8 @@ export default function AdminCustomerDetail() {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4">Kennzahlen</h3>
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4">Kennzahlen</h3>
             <div className="grid grid-cols-2 gap-3">
               <StatBox icon={Calendar} label="Buchungen" value={stats.total_bookings} />
               <StatBox icon={Euro} label="Umsatz" value={`${stats.total_spent.toFixed(0)}€`} accent />
@@ -155,8 +155,8 @@ export default function AdminCustomerDetail() {
 
         {/* Main */}
         <section className="lg:col-span-8 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <FileCheck2 size={16} /> Dokumente
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -165,31 +165,31 @@ export default function AdminCustomerDetail() {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="font-display font-semibold text-[#0A192F]">Buchungshistorie ({bookings.length})</h3>
+          <div className="bg-white border border-[#E5E5E5] rounded-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#E5E5E5]">
+              <h3 className="font-display font-semibold text-[#0A0A0A]">Buchungshistorie ({bookings.length})</h3>
             </div>
             {bookings.length === 0 ? (
-              <div className="p-10 text-center text-slate-500">Dieser Kunde hat noch keine Buchungen.</div>
+              <div className="p-10 text-center text-[#525252]">Dieser Kunde hat noch keine Buchungen.</div>
             ) : (
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-[#E5E5E5]">
                 {bookings.map((b) => {
                   const s = STATUS[b.status] || STATUS.pending;
                   return (
-                    <div key={b.id} className="p-5 flex items-center gap-4 hover:bg-slate-50" data-testid={`cust-booking-${b.id}`}>
-                      <img src={b.vehicle_image} alt="" className="w-24 h-16 object-cover rounded-md border border-slate-100 shrink-0" />
+                    <div key={b.id} className="p-5 flex items-center gap-4 hover:bg-[#F4F4F4]" data-testid={`cust-booking-${b.id}`}>
+                      <img src={b.vehicle_image} alt="" className="w-24 h-16 object-cover rounded-md border border-[#E5E5E5] shrink-0" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2 flex-wrap">
                           <div className="min-w-0">
-                            <div className="text-xs text-slate-500">{b.vehicle_brand}</div>
-                            <div className="font-semibold text-[#0A192F] truncate">{b.vehicle_name}</div>
+                            <div className="text-xs text-[#525252]">{b.vehicle_brand}</div>
+                            <div className="font-semibold text-[#0A0A0A] truncate">{b.vehicle_name}</div>
                           </div>
                           <Badge className={`${s.cls} border-0 shrink-0`}>{s.label}</Badge>
                         </div>
-                        <div className="mt-1.5 grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-slate-500">
+                        <div className="mt-1.5 grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-[#525252]">
                           <span><Calendar size={11} className="inline mr-1" /> {b.start_date} → {b.end_date}</span>
                           <span>{b.days} Tag{b.days !== 1 && "e"}</span>
-                          <span className="font-semibold text-[#0A192F]">{b.total.toFixed(2)}€</span>
+                          <span className="font-semibold text-[#0A0A0A]">{b.total.toFixed(2)}€</span>
                         </div>
                       </div>
                       <Link to={`/admin/buchungen/${b.id}`} className="shrink-0">
@@ -212,7 +212,7 @@ export default function AdminCustomerDetail() {
           {form && (
             <div className="space-y-5">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Kontakt</div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#525252] mb-2">Kontakt</div>
                 <div className="grid grid-cols-2 gap-3">
                   <FieldLabel label="Name"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} data-testid="ae-name" /></FieldLabel>
                   <FieldLabel label="Telefon"><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} data-testid="ae-phone" /></FieldLabel>
@@ -221,7 +221,7 @@ export default function AdminCustomerDetail() {
               </div>
 
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Adresse</div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#525252] mb-2">Adresse</div>
                 <div className="grid grid-cols-6 gap-3">
                   <div className="col-span-4"><FieldLabel label="Straße"><Input value={form.address.street} onChange={(e) => setAddr("street", e.target.value)} data-testid="ae-street" /></FieldLabel></div>
                   <div className="col-span-2"><FieldLabel label="Hausnr."><Input value={form.address.house_number} onChange={(e) => setAddr("house_number", e.target.value)} data-testid="ae-house" /></FieldLabel></div>
@@ -232,7 +232,7 @@ export default function AdminCustomerDetail() {
               </div>
 
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Führerschein & Ausweis</div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#525252] mb-2">Führerschein & Ausweis</div>
                 <div className="grid grid-cols-2 gap-3">
                   <FieldLabel label="Führerschein-Nr."><Input value={form.license_number} onChange={(e) => setForm({ ...form, license_number: e.target.value })} data-testid="ae-lic" /></FieldLabel>
                   <FieldLabel label="Gültig bis"><Input type="date" value={form.license_expiry} onChange={(e) => setForm({ ...form, license_expiry: e.target.value })} data-testid="ae-lic-exp" /></FieldLabel>
@@ -243,7 +243,7 @@ export default function AdminCustomerDetail() {
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <Switch checked={form.is_business} onCheckedChange={(v) => setForm({ ...form, is_business: v })} data-testid="ae-biz-toggle" />
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Geschäftskunde</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#525252]">Geschäftskunde</span>
                 </div>
                 {form.is_business && (
                   <div className="grid grid-cols-2 gap-3">
@@ -257,7 +257,7 @@ export default function AdminCustomerDetail() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOpen(false)}>Abbrechen</Button>
-            <Button onClick={saveEdit} disabled={saving} className="bg-[#0055FF] hover:bg-[#0044CC]" data-testid="ae-save">
+            <Button onClick={saveEdit} disabled={saving} className="bg-[#E11226] hover:bg-[#C20E1F]" data-testid="ae-save">
               <Save size={14} className="mr-2" /> {saving ? "Speichert..." : "Speichern"}
             </Button>
           </DialogFooter>
@@ -268,16 +268,16 @@ export default function AdminCustomerDetail() {
 }
 
 function FieldLabel({ label, children }) {
-  return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
+  return (<div><Label className="mb-1.5 block text-xs text-[#525252]">{label}</Label>{children}</div>);
 }
 
 function InfoRow({ icon: Icon, label, value }) {
   return (
     <div className="flex items-start gap-3">
-      <Icon size={14} className="text-slate-400 mt-0.5 shrink-0" />
+      <Icon size={14} className="text-[#A3A3A3] mt-0.5 shrink-0" />
       <div className="flex-1 min-w-0">
-        <div className="text-xs text-slate-500">{label}</div>
-        <div className="text-[#0A192F] font-medium break-words">{value}</div>
+        <div className="text-xs text-[#525252]">{label}</div>
+        <div className="text-[#0A0A0A] font-medium break-words">{value}</div>
       </div>
     </div>
   );
@@ -285,11 +285,11 @@ function InfoRow({ icon: Icon, label, value }) {
 
 function StatBox({ icon: Icon, label, value, accent }) {
   return (
-    <div className={`rounded-md border p-3 ${accent ? "bg-[#EFF4FF] border-[#DBEAFE]" : "bg-slate-50 border-slate-200"}`}>
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-slate-500">
+    <div className={`rounded-md border p-3 ${accent ? "bg-[#FEE2E5] border-[#FECDD3]" : "bg-[#F4F4F4] border-[#E5E5E5]"}`}>
+      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-[#525252]">
         <Icon size={11} /> {label}
       </div>
-      <div className={`font-display font-bold text-xl mt-1 ${accent ? "text-[#0055FF]" : "text-[#0A192F]"}`}>{value}</div>
+      <div className={`font-display font-bold text-xl mt-1 ${accent ? "text-[#E11226]" : "text-[#0A0A0A]"}`}>{value}</div>
     </div>
   );
 }

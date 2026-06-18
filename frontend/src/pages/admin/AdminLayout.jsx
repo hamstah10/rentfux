@@ -18,15 +18,15 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex" data-testid="admin-layout">
-      <aside className="hidden md:flex md:w-64 bg-white border-r border-slate-200 flex-col">
-        <div className="p-5 border-b border-slate-200">
+      <aside className="hidden md:flex md:w-64 bg-white border-r border-[#E5E5E5] flex-col">
+        <div className="p-5 border-b border-[#E5E5E5]">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-[#0055FF] flex items-center justify-center text-white">
+            <div className="w-9 h-9 rounded-lg bg-[#E11226] flex items-center justify-center text-white">
               <Car size={18} />
             </div>
             <div>
-              <div className="font-display font-bold text-[#0A192F]">RentFux</div>
-              <div className="text-[11px] uppercase tracking-widest text-slate-400">Admin</div>
+              <div className="font-display font-bold text-[#0A0A0A]">RentFux</div>
+              <div className="text-[11px] uppercase tracking-widest text-[#A3A3A3]">Admin</div>
             </div>
           </div>
         </div>
@@ -46,10 +46,10 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-slate-200">
+        <div className="p-3 border-t border-[#E5E5E5]">
           <div className="px-3 py-2 text-xs">
-            <div className="font-semibold text-[#0A192F] truncate">{user?.name}</div>
-            <div className="text-slate-500 truncate">{user?.email}</div>
+            <div className="font-semibold text-[#0A0A0A] truncate">{user?.name}</div>
+            <div className="text-[#525252] truncate">{user?.email}</div>
           </div>
           <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/")} data-testid="admin-back-site">
             <ArrowLeft size={14} className="mr-2" /> Zur Webseite
@@ -61,7 +61,7 @@ export default function AdminLayout() {
       </aside>
 
       <main className="flex-1 min-w-0">
-        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 overflow-x-auto">
+        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E5E5E5] px-4 py-3 flex items-center gap-3 overflow-x-auto">
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => `rf-side-link whitespace-nowrap ${isActive ? "active" : ""}`}>
               <l.icon size={14} /> {l.label}

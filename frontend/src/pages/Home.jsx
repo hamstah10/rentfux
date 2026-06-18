@@ -16,27 +16,25 @@ export default function Home() {
     <div data-testid="home-page" className="rf-fade-in">
       {/* Hero */}
       <section className="relative rf-hero-bg">
-        <div className="rf-container pt-20 pb-40 md:pt-28 md:pb-48 text-white relative">
-          <div className="max-w-2xl">
-            <span className="inline-block text-xs tracking-[0.2em] uppercase bg-white/10 border border-white/20 backdrop-blur-md rounded-full px-3 py-1 mb-6">
-              Premium Autovermietung · Hamburg
-            </span>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.05]">
-              Fahrzeuge für jeden Anlass – <span className="text-[#7FB2FF]">einfach online</span> buchen.
+        <div className="rf-container pt-24 pb-44 md:pt-32 md:pb-52 text-white relative">
+          <div className="max-w-3xl">
+            <div className="ds-eyebrow text-[#FB7185] mb-6">// Premium Mietflotte · Hamburg</div>
+            <h1 className="ds-display text-5xl sm:text-6xl lg:text-7xl text-white">
+              Performance.<br /><span className="text-[#FB7185]">On Demand.</span>
             </h1>
-            <p className="mt-5 text-base md:text-lg text-slate-200/90 max-w-xl">
-              Vom Kleinwagen für die Stadt bis zum Premium-SUV für die Geschäftsreise.
-              Transparente Preise, moderne Flotte, keine versteckten Kosten.
+            <p className="mt-6 text-base md:text-lg text-neutral-300 max-w-xl leading-relaxed">
+              Vom Kompaktwagen für die Stadt bis zum 400-PS-Allradler für die Geschäftsreise.
+              Transparente Preise, geprüfte Fahrzeuge, keine versteckten Kosten.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/katalog">
-                <Button size="lg" className="bg-[#0055FF] hover:bg-[#0044CC] h-12 px-6" data-testid="hero-cta-catalog">
-                  Flotte entdecken <ArrowRight size={16} className="ml-2" />
+                <Button size="lg" className="bg-[#E11226] hover:bg-[#C20E1F] h-12 px-6 rounded-sm rf-power-glow uppercase tracking-wider font-semibold text-sm" data-testid="hero-cta-catalog">
+                  Flotte ansehen <ArrowRight size={16} className="ml-2" />
                 </Button>
               </Link>
               <Link to="/ueber-uns">
-                <Button size="lg" variant="outline" className="h-12 px-6 bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white" data-testid="hero-cta-about">
-                  Mehr über uns
+                <Button size="lg" variant="outline" className="h-12 px-6 rounded-sm bg-transparent border-white/30 text-white hover:bg-white/10 hover:text-white uppercase tracking-wider font-semibold text-sm" data-testid="hero-cta-about">
+                  Über uns
                 </Button>
               </Link>
             </div>
@@ -58,12 +56,12 @@ export default function Home() {
             { icon: MapPin, title: "Zentrale Standorte", sub: "Hamburg Hbf & mehr" },
           ].map((f, i) => (
             <div key={i} className="flex items-start gap-3" data-testid={`trust-item-${i}`}>
-              <div className="w-11 h-11 rounded-lg bg-[#EFF4FF] text-[#0055FF] flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-lg bg-[#FEE2E5] text-[#E11226] flex items-center justify-center shrink-0">
                 <f.icon size={20} />
               </div>
               <div>
-                <div className="font-semibold text-[#0A192F]">{f.title}</div>
-                <div className="text-sm text-slate-500">{f.sub}</div>
+                <div className="font-semibold text-[#0A0A0A]">{f.title}</div>
+                <div className="text-sm text-[#525252]">{f.sub}</div>
               </div>
             </div>
           ))}
@@ -72,12 +70,12 @@ export default function Home() {
 
       {/* Fleet */}
       <section className="rf-container pt-16">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex items-end justify-between mb-8 border-b border-[#E5E5E5] pb-5">
           <div>
-            <span className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Unsere Flotte</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mt-1 text-[#0A192F]">Beliebte Fahrzeuge</h2>
+            <div className="ds-eyebrow">// Unsere Flotte</div>
+            <h2 className="ds-display text-3xl md:text-4xl mt-2 text-[#0A0A0A]">Beliebte Fahrzeuge</h2>
           </div>
-          <Link to="/katalog" className="hidden md:inline-flex items-center gap-1 text-sm font-semibold text-[#0055FF] hover:underline" data-testid="home-view-all">
+          <Link to="/katalog" className="hidden md:inline-flex items-center gap-1 text-sm font-semibold text-[#E11226] hover:underline uppercase tracking-wider" data-testid="home-view-all">
             Alle anzeigen <ArrowRight size={14} />
           </Link>
         </div>
@@ -88,11 +86,11 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="bg-[#F8FAFC] mt-20 py-20 border-y border-slate-200">
+      <section className="bg-[#F8FAFC] mt-20 py-20 border-y border-[#E5E5E5]">
         <div className="rf-container">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">So funktioniert's</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 text-[#0A192F]">In vier Schritten zum Fahrzeug</h2>
+            <span className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">So funktioniert's</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 text-[#0A0A0A]">In vier Schritten zum Fahrzeug</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
@@ -101,10 +99,10 @@ export default function Home() {
               { n: "03", t: "Online bezahlen", d: "Sicher mit Kreditkarte oder PayPal bezahlen." },
               { n: "04", t: "Losfahren", d: "Bestätigung per E-Mail & WhatsApp – abholen und los." },
             ].map((s, i) => (
-              <div key={i} className="bg-white rounded-lg border border-slate-200 p-6" data-testid={`how-step-${i}`}>
-                <div className="text-[#0055FF] font-display font-bold text-3xl">{s.n}</div>
-                <div className="mt-3 font-semibold text-[#0A192F]">{s.t}</div>
-                <div className="mt-1.5 text-sm text-slate-500 leading-relaxed">{s.d}</div>
+              <div key={i} className="bg-white rounded-lg border border-[#E5E5E5] p-6" data-testid={`how-step-${i}`}>
+                <div className="text-[#E11226] font-display font-bold text-3xl">{s.n}</div>
+                <div className="mt-3 font-semibold text-[#0A0A0A]">{s.t}</div>
+                <div className="mt-1.5 text-sm text-[#525252] leading-relaxed">{s.d}</div>
               </div>
             ))}
           </div>
@@ -118,17 +116,17 @@ export default function Home() {
             <img
               src="https://images.unsplash.com/photo-1758411897888-3ca658535fdf?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
               alt="Innenraum"
-              className="rounded-lg w-full h-80 object-cover border border-slate-200"
+              className="rounded-lg w-full h-80 object-cover border border-[#E5E5E5]"
             />
           </div>
           <div className="md:col-span-7">
-            <div className="flex items-center gap-1 text-[#0055FF] mb-4">
+            <div className="flex items-center gap-1 text-[#E11226] mb-4">
               {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
             </div>
-            <blockquote className="font-display text-2xl md:text-3xl font-medium text-[#0A192F] leading-tight">
+            <blockquote className="font-display text-2xl md:text-3xl font-medium text-[#0A0A0A] leading-tight">
               „Unkomplizierte Buchung, top gepflegtes Fahrzeug und faire Preise. RentFux ist für unsere Geschäftsreisen die erste Wahl."
             </blockquote>
-            <div className="mt-5 text-sm text-slate-600">
+            <div className="mt-5 text-sm text-[#525252]">
               <div className="font-semibold">Markus Weber</div>
               <div>Vertriebsleiter · Hanse Consulting GmbH</div>
             </div>

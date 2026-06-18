@@ -31,13 +31,13 @@ export default function Login() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center rf-container py-16 rf-fade-in" data-testid="login-page">
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
+      <div className="w-full max-w-md bg-white border border-[#E5E5E5] rounded-lg p-8 shadow-sm">
         <Link to="/" className="flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-lg bg-[#0055FF] flex items-center justify-center text-white"><Car size={18} /></div>
-          <span className="font-display font-bold text-xl text-[#0A192F]">RentFux</span>
+          <div className="w-9 h-9 rounded-lg bg-[#E11226] flex items-center justify-center text-white"><Car size={18} /></div>
+          <span className="font-display font-bold text-xl text-[#0A0A0A]">RentFux</span>
         </Link>
-        <h1 className="font-display text-3xl font-bold text-[#0A192F]">Willkommen zurück</h1>
-        <p className="text-slate-500 mt-1 text-sm">Melde dich mit deinem Konto an.</p>
+        <h1 className="font-display text-3xl font-bold text-[#0A0A0A]">Willkommen zurück</h1>
+        <p className="text-[#525252] mt-1 text-sm">Melde dich mit deinem Konto an.</p>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
@@ -48,14 +48,14 @@ export default function Login() {
             <Label className="mb-1.5 block">Passwort</Label>
             <Input type="password" value={pw} onChange={(e) => setPw(e.target.value)} required className="h-11" data-testid="login-password" />
           </div>
-          <Button type="submit" disabled={loading} className="w-full h-11 bg-[#0055FF] hover:bg-[#0044CC]" data-testid="login-submit">
+          <Button type="submit" disabled={loading} className="w-full h-11 bg-[#E11226] hover:bg-[#C20E1F]" data-testid="login-submit">
             {loading ? "Wird angemeldet..." : "Anmelden"}
           </Button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-slate-100 text-center text-sm text-slate-600">
+        <div className="mt-6 pt-6 border-t border-[#E5E5E5] text-center text-sm text-[#525252]">
           Noch kein Konto?{" "}
-          <Link to="/registrieren" className="text-[#0055FF] font-semibold hover:underline" data-testid="login-to-register">Jetzt registrieren</Link>
+          <Link to="/registrieren" className="text-[#E11226] font-semibold hover:underline" data-testid="login-to-register">Jetzt registrieren</Link>
         </div>
       </div>
     </div>

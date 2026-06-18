@@ -68,17 +68,17 @@ export default function AdminVehicles() {
     <div data-testid="admin-vehicles" className="rf-fade-in">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Flotte</div>
-          <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">Fahrzeuge</h1>
+          <div className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">Flotte</div>
+          <h1 className="font-display text-3xl font-bold text-[#0A0A0A] mt-1">Fahrzeuge</h1>
         </div>
-        <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={openNew} data-testid="vehicle-new-btn">
+        <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={openNew} data-testid="vehicle-new-btn">
           <Plus size={16} className="mr-2" /> Neues Fahrzeug
         </Button>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="bg-white border border-[#E5E5E5] rounded-lg overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+          <thead className="bg-[#F4F4F4] text-xs uppercase tracking-wider text-[#525252]">
             <tr>
               <th className="text-left p-3">Fahrzeug</th>
               <th className="text-left p-3">Kategorie</th>
@@ -87,20 +87,20 @@ export default function AdminVehicles() {
               <th className="text-right p-3">Aktionen</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-[#E5E5E5]">
             {items.map((v) => (
               <tr key={v.id} data-testid={`admin-vehicle-${v.id}`}>
                 <td className="p-3">
                   <div className="flex items-center gap-3">
-                    <img src={v.image_url} alt="" className="w-14 h-10 object-cover rounded border border-slate-100" />
+                    <img src={v.image_url} alt="" className="w-14 h-10 object-cover rounded border border-[#E5E5E5]" />
                     <div>
-                      <div className="font-semibold text-[#0A192F]">{v.brand} {v.name}</div>
-                      <div className="text-xs text-slate-500">{v.transmission} · {v.fuel}</div>
+                      <div className="font-semibold text-[#0A0A0A]">{v.brand} {v.name}</div>
+                      <div className="text-xs text-[#525252]">{v.transmission} · {v.fuel}</div>
                     </div>
                   </div>
                 </td>
-                <td className="p-3 text-slate-600">{v.category}</td>
-                <td className="p-3 font-semibold text-[#0A192F]">{v.price_per_day}€</td>
+                <td className="p-3 text-[#525252]">{v.category}</td>
+                <td className="p-3 font-semibold text-[#0A0A0A]">{v.price_per_day}€</td>
                 <td className="p-3">
                   <Badge className={v.active ? "bg-emerald-100 text-emerald-800 border-0" : "bg-red-100 text-red-800 border-0"}>
                     {v.active ? "Aktiv" : "Inaktiv"}
@@ -112,7 +112,7 @@ export default function AdminVehicles() {
                 </td>
               </tr>
             ))}
-            {items.length === 0 && (<tr><td colSpan={5} className="p-8 text-center text-slate-500">Keine Fahrzeuge vorhanden.</td></tr>)}
+            {items.length === 0 && (<tr><td colSpan={5} className="p-8 text-center text-[#525252]">Keine Fahrzeuge vorhanden.</td></tr>)}
           </tbody>
         </table>
       </div>
@@ -164,7 +164,7 @@ export default function AdminVehicles() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Abbrechen</Button>
-            <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={save} data-testid="vf-save">Speichern</Button>
+            <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={save} data-testid="vf-save">Speichern</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -173,5 +173,5 @@ export default function AdminVehicles() {
 }
 
 function Field({ label, children }) {
-  return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
+  return (<div><Label className="mb-1.5 block text-xs text-[#525252]">{label}</Label>{children}</div>);
 }

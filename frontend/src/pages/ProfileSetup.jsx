@@ -51,35 +51,35 @@ export default function ProfileSetup() {
     <div className="min-h-[80vh] bg-[#F8FAFC]" data-testid="profile-setup">
       <div className="rf-container py-12">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-[#0055FF] flex items-center justify-center text-white">
+          <div className="w-10 h-10 rounded-lg bg-[#E11226] flex items-center justify-center text-white">
             <Car size={20} />
           </div>
           <div>
-            <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">RentFux Einrichtung</div>
-            <h1 className="font-display text-2xl font-bold text-[#0A192F]">Willkommen, {user?.name}! 👋</h1>
+            <div className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">RentFux Einrichtung</div>
+            <h1 className="font-display text-2xl font-bold text-[#0A0A0A]">Willkommen, {user?.name}! 👋</h1>
           </div>
         </div>
 
         {/* Stepper */}
-        <div className="mb-8 bg-white border border-slate-200 rounded-lg p-5 overflow-x-auto">
+        <div className="mb-8 bg-white border border-[#E5E5E5] rounded-lg p-5 overflow-x-auto">
           <div className="flex items-center justify-between min-w-max gap-4">
             {STEPS.map((label, i) => (
               <div key={label} className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold ${
                   i < step ? "bg-[#10B981] text-white" :
-                  i === step ? "bg-[#0055FF] text-white" :
-                  "bg-slate-100 text-slate-400"
+                  i === step ? "bg-[#E11226] text-white" :
+                  "bg-[#F4F4F4] text-[#A3A3A3]"
                 }`}>
                   {i < step ? <Check size={16} /> : i + 1}
                 </div>
-                <div className={`text-sm font-medium hidden sm:block ${i === step ? "text-[#0A192F]" : "text-slate-500"}`}>{label}</div>
+                <div className={`text-sm font-medium hidden sm:block ${i === step ? "text-[#0A0A0A]" : "text-[#525252]"}`}>{label}</div>
                 {i < STEPS.length - 1 && <div className="w-8 h-px bg-slate-200" />}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-lg p-6 md:p-10 max-w-3xl mx-auto">
+        <div className="bg-white border border-[#E5E5E5] rounded-lg p-6 md:p-10 max-w-3xl mx-auto">
           {/* Step 0: persönlich */}
           {step === 0 && (
             <>
@@ -89,11 +89,11 @@ export default function ProfileSetup() {
                 <Field label="Geburtsdatum *"><Input type="date" value={form.date_of_birth} onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })} data-testid="wz-dob" /></Field>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-100">
+              <div className="mt-8 pt-6 border-t border-[#E5E5E5]">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Building2 size={16} className="text-slate-500" />
-                    <div className="font-semibold text-[#0A192F]">Geschäftskunde?</div>
+                    <Building2 size={16} className="text-[#525252]" />
+                    <div className="font-semibold text-[#0A0A0A]">Geschäftskunde?</div>
                   </div>
                   <Switch checked={form.is_business} onCheckedChange={(v) => setForm({ ...form, is_business: v })} data-testid="wz-business-toggle" />
                 </div>
@@ -151,31 +151,31 @@ export default function ProfileSetup() {
               <div className="w-16 h-16 rounded-full bg-[#10B981]/10 text-[#10B981] flex items-center justify-center mx-auto mb-4">
                 <Check size={28} />
               </div>
-              <h2 className="font-display text-3xl font-bold text-[#0A192F]">Alles eingerichtet!</h2>
-              <p className="mt-2 text-slate-600">Dein Konto ist bereit – du kannst jetzt Fahrzeuge buchen.</p>
+              <h2 className="font-display text-3xl font-bold text-[#0A0A0A]">Alles eingerichtet!</h2>
+              <p className="mt-2 text-[#525252]">Dein Konto ist bereit – du kannst jetzt Fahrzeuge buchen.</p>
               <div className="mt-8 flex gap-3 justify-center flex-wrap">
                 <Button variant="outline" onClick={() => navigate("/konto")} data-testid="wz-go-account">Zum Konto</Button>
-                <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={() => navigate("/katalog")} data-testid="wz-go-catalog">Fahrzeug suchen</Button>
+                <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={() => navigate("/katalog")} data-testid="wz-go-catalog">Fahrzeug suchen</Button>
               </div>
             </div>
           )}
 
           {step < 4 && (
-            <div className="mt-10 flex items-center justify-between pt-6 border-t border-slate-100">
+            <div className="mt-10 flex items-center justify-between pt-6 border-t border-[#E5E5E5]">
               <div className="flex gap-2">
                 <Button variant="ghost" onClick={back} disabled={step === 0} data-testid="wz-back">
                   <ArrowLeft size={14} className="mr-1" /> Zurück
                 </Button>
-                <Button variant="ghost" onClick={skip} className="text-slate-500" data-testid="wz-skip">
+                <Button variant="ghost" onClick={skip} className="text-[#525252]" data-testid="wz-skip">
                   <SkipForward size={14} className="mr-1" /> Später erledigen
                 </Button>
               </div>
               {step === 3 ? (
-                <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={next} data-testid="wz-next">
+                <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={next} data-testid="wz-next">
                   Fertigstellen <ArrowRight size={14} className="ml-1" />
                 </Button>
               ) : (
-                <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={saveAndNext} disabled={saving} data-testid="wz-next">
+                <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={saveAndNext} disabled={saving} data-testid="wz-next">
                   {saving ? "Speichert..." : (<>Weiter <ArrowRight size={14} className="ml-1" /></>)}
                 </Button>
               )}
@@ -190,17 +190,17 @@ export default function ProfileSetup() {
 function StepHeader({ icon: Icon, title, sub }) {
   return (
     <div className="mb-6 flex items-start gap-3">
-      <div className="w-10 h-10 rounded-lg bg-[#EFF4FF] text-[#0055FF] flex items-center justify-center shrink-0">
+      <div className="w-10 h-10 rounded-lg bg-[#FEE2E5] text-[#E11226] flex items-center justify-center shrink-0">
         <Icon size={18} />
       </div>
       <div>
-        <h2 className="font-display text-2xl font-bold text-[#0A192F]">{title}</h2>
-        <p className="text-slate-500 text-sm mt-1">{sub}</p>
+        <h2 className="font-display text-2xl font-bold text-[#0A0A0A]">{title}</h2>
+        <p className="text-[#525252] text-sm mt-1">{sub}</p>
       </div>
     </div>
   );
 }
 
 function Field({ label, children }) {
-  return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
+  return (<div><Label className="mb-1.5 block text-xs text-[#525252]">{label}</Label>{children}</div>);
 }

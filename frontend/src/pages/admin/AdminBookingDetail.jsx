@@ -19,7 +19,7 @@ const STATUSES = [
   { v: "pending", l: "Ausstehend", cls: "bg-amber-100 text-amber-800" },
   { v: "confirmed", l: "Bestätigt", cls: "bg-emerald-100 text-emerald-800" },
   { v: "active", l: "Aktiv", cls: "bg-blue-100 text-blue-800" },
-  { v: "completed", l: "Abgeschlossen", cls: "bg-slate-100 text-slate-700" },
+  { v: "completed", l: "Abgeschlossen", cls: "bg-[#F4F4F4] text-[#262626]" },
   { v: "cancelled", l: "Storniert", cls: "bg-red-100 text-red-800" },
 ];
 
@@ -85,7 +85,7 @@ export default function AdminBookingDetail() {
   }));
 
   if (!booking || !form) {
-    return <div className="text-slate-500">Lädt...</div>;
+    return <div className="text-[#525252]">Lädt...</div>;
   }
 
   const statusMeta = STATUSES.find((s) => s.v === booking.status);
@@ -93,16 +93,16 @@ export default function AdminBookingDetail() {
 
   return (
     <div className="rf-fade-in" data-testid="admin-booking-detail">
-      <Link to="/admin/buchungen" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-[#0055FF] mb-5" data-testid="back-to-bookings">
+      <Link to="/admin/buchungen" className="inline-flex items-center gap-1.5 text-sm text-[#525252] hover:text-[#E11226] mb-5" data-testid="back-to-bookings">
         <ArrowLeft size={14} /> Zurück zu allen Buchungen
       </Link>
 
       <div className="flex items-start justify-between gap-4 flex-wrap mb-8">
         <div>
-          <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">
+          <div className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">
             Buchung #{booking.id.slice(0, 8).toUpperCase()}
           </div>
-          <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">
+          <h1 className="font-display text-3xl font-bold text-[#0A0A0A] mt-1">
             {booking.vehicle_brand} {booking.vehicle_name}
           </h1>
           <div className="mt-2 flex items-center gap-2 flex-wrap">
@@ -113,7 +113,7 @@ export default function AdminBookingDetail() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button onClick={save} disabled={saving} className="bg-[#0055FF] hover:bg-[#0044CC]" data-testid="booking-save">
+          <Button onClick={save} disabled={saving} className="bg-[#E11226] hover:bg-[#C20E1F]" data-testid="booking-save">
             <Save size={14} className="mr-2" /> {saving ? "Speichert..." : "Änderungen speichern"}
           </Button>
           {!isCancelled && (
@@ -146,81 +146,81 @@ export default function AdminBookingDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Details */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h2 className="font-display font-semibold text-lg text-[#0A192F] mb-4">Buchungsdetails</h2>
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h2 className="font-display font-semibold text-lg text-[#0A0A0A] mb-4">Buchungsdetails</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <Label className="mb-1.5 block text-xs text-slate-500"><Calendar size={12} className="inline mr-1" /> Abholdatum</Label>
+                <Label className="mb-1.5 block text-xs text-[#525252]"><Calendar size={12} className="inline mr-1" /> Abholdatum</Label>
                 <Input type="date" value={form.start_date} onChange={(e) => setForm({ ...form, start_date: e.target.value })} data-testid="bd-start" />
               </div>
               <div>
-                <Label className="mb-1.5 block text-xs text-slate-500"><Calendar size={12} className="inline mr-1" /> Rückgabedatum</Label>
+                <Label className="mb-1.5 block text-xs text-[#525252]"><Calendar size={12} className="inline mr-1" /> Rückgabedatum</Label>
                 <Input type="date" value={form.end_date} min={form.start_date} onChange={(e) => setForm({ ...form, end_date: e.target.value })} data-testid="bd-end" />
               </div>
               <div className="md:col-span-2">
-                <Label className="mb-1.5 block text-xs text-slate-500"><MapPin size={12} className="inline mr-1" /> Standort</Label>
+                <Label className="mb-1.5 block text-xs text-[#525252]"><MapPin size={12} className="inline mr-1" /> Standort</Label>
                 <Select value={form.location_id} onValueChange={(v) => setForm({ ...form, location_id: v })}>
                   <SelectTrigger data-testid="bd-location"><SelectValue /></SelectTrigger>
                   <SelectContent>{locations.map((l) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="md:col-span-2">
-                <Label className="mb-1.5 block text-xs text-slate-500">Status</Label>
+                <Label className="mb-1.5 block text-xs text-[#525252]">Status</Label>
                 <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                   <SelectTrigger data-testid="bd-status"><SelectValue /></SelectTrigger>
                   <SelectContent>{STATUSES.map((s) => <SelectItem key={s.v} value={s.v}>{s.l}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="md:col-span-2">
-                <Label className="mb-1.5 block text-xs text-slate-500">Anmerkung des Kunden</Label>
+                <Label className="mb-1.5 block text-xs text-[#525252]">Anmerkung des Kunden</Label>
                 <Textarea rows={3} value={form.customer_note} onChange={(e) => setForm({ ...form, customer_note: e.target.value })} data-testid="bd-note" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h2 className="font-display font-semibold text-lg text-[#0A192F] mb-4">Extras</h2>
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h2 className="font-display font-semibold text-lg text-[#0A0A0A] mb-4">Extras</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {EXTRAS.map((e) => (
                 <label key={e.id} className={`flex items-center justify-between p-3 rounded-md border cursor-pointer ${
-                  form.extras.includes(e.id) ? "border-[#0055FF] bg-[#EFF4FF]" : "border-slate-200"
+                  form.extras.includes(e.id) ? "border-[#E11226] bg-[#FEE2E5]" : "border-[#E5E5E5]"
                 }`}>
                   <div className="flex items-center gap-2">
                     <Checkbox checked={form.extras.includes(e.id)} onCheckedChange={() => toggleExtra(e.id)} data-testid={`bd-extra-${e.id}`} />
-                    <span className="text-sm font-medium text-[#0A192F]">{e.label}</span>
+                    <span className="text-sm font-medium text-[#0A0A0A]">{e.label}</span>
                   </div>
-                  <span className="text-sm text-slate-500">+{e.price}€/Tag</span>
+                  <span className="text-sm text-[#525252]">+{e.price}€/Tag</span>
                 </label>
               ))}
             </div>
-            <p className="text-xs text-slate-500 mt-3">Änderungen an Extras oder Daten berechnen die Gesamtsumme automatisch neu.</p>
+            <p className="text-xs text-[#525252] mt-3">Änderungen an Extras oder Daten berechnen die Gesamtsumme automatisch neu.</p>
           </div>
         </div>
 
         {/* Sidebar */}
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <User size={16} /> Kunde
             </h3>
             <div className="space-y-2 text-sm">
-              <div className="font-semibold text-[#0A192F]">{booking.user_name}</div>
-              <div className="text-slate-600 flex items-center gap-1.5"><Mail size={12} /> {booking.user_email}</div>
-              <div className="text-xs text-slate-400 font-mono">User-ID: {booking.user_id.slice(0, 8)}</div>
+              <div className="font-semibold text-[#0A0A0A]">{booking.user_name}</div>
+              <div className="text-[#525252] flex items-center gap-1.5"><Mail size={12} /> {booking.user_email}</div>
+              <div className="text-xs text-[#A3A3A3] font-mono">User-ID: {booking.user_id.slice(0, 8)}</div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <Car size={16} /> Fahrzeug
             </h3>
-            <img src={booking.vehicle_image} alt="" className="w-full aspect-video object-cover rounded-md border border-slate-100 mb-3" />
-            <div className="text-xs text-slate-500">{booking.vehicle_brand}</div>
-            <div className="font-semibold text-[#0A192F]">{booking.vehicle_name}</div>
+            <img src={booking.vehicle_image} alt="" className="w-full aspect-video object-cover rounded-md border border-[#E5E5E5] mb-3" />
+            <div className="text-xs text-[#525252]">{booking.vehicle_brand}</div>
+            <div className="font-semibold text-[#0A0A0A]">{booking.vehicle_name}</div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
-            <h3 className="font-display font-semibold text-[#0A192F] mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6">
+            <h3 className="font-display font-semibold text-[#0A0A0A] mb-4 flex items-center gap-2">
               <CreditCard size={16} /> Zahlung
             </h3>
             <div className="space-y-2 text-sm">
@@ -229,20 +229,20 @@ export default function AdminBookingDetail() {
               <Row k="Tage" v={booking.days} />
               <Row k="Zwischensumme" v={`${booking.subtotal.toFixed(2)}€`} />
               <Row k="Extras" v={`${booking.extras_total.toFixed(2)}€`} />
-              <div className="pt-2 mt-2 border-t border-slate-100 flex justify-between">
-                <span className="font-semibold text-[#0A192F]">Gesamt</span>
-                <span className="font-display font-bold text-xl text-[#0055FF]" data-testid="bd-total">
+              <div className="pt-2 mt-2 border-t border-[#E5E5E5] flex justify-between">
+                <span className="font-semibold text-[#0A0A0A]">Gesamt</span>
+                <span className="font-display font-bold text-xl text-[#E11226]" data-testid="bd-total">
                   {booking.total.toFixed(2)}€
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-6 text-xs text-slate-500 space-y-1.5">
-            <div>Erstellt: <span className="text-slate-700 font-medium">{(booking.created_at || "").slice(0, 19).replace("T", " ")}</span></div>
-            {booking.paid_at && <div>Bezahlt: <span className="text-slate-700 font-medium">{booking.paid_at.slice(0, 19).replace("T", " ")}</span></div>}
+          <div className="bg-white border border-[#E5E5E5] rounded-lg p-6 text-xs text-[#525252] space-y-1.5">
+            <div>Erstellt: <span className="text-[#262626] font-medium">{(booking.created_at || "").slice(0, 19).replace("T", " ")}</span></div>
+            {booking.paid_at && <div>Bezahlt: <span className="text-[#262626] font-medium">{booking.paid_at.slice(0, 19).replace("T", " ")}</span></div>}
             {booking.cancelled_at && <div>Storniert: <span className="text-red-700 font-medium">{booking.cancelled_at.slice(0, 19).replace("T", " ")}</span></div>}
-            {booking.updated_at && <div>Zuletzt aktualisiert: <span className="text-slate-700 font-medium">{booking.updated_at.slice(0, 19).replace("T", " ")}</span></div>}
+            {booking.updated_at && <div>Zuletzt aktualisiert: <span className="text-[#262626] font-medium">{booking.updated_at.slice(0, 19).replace("T", " ")}</span></div>}
           </div>
         </aside>
       </div>
@@ -253,8 +253,8 @@ export default function AdminBookingDetail() {
 function Row({ k, v }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-slate-500">{k}</span>
-      <span className="text-[#0A192F] font-medium">{v}</span>
+      <span className="text-[#525252]">{k}</span>
+      <span className="text-[#0A0A0A] font-medium">{v}</span>
     </div>
   );
 }

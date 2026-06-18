@@ -29,22 +29,22 @@ export default function AdminDocumentCard({ customerId, docType, meta }) {
   const isImage = meta?.content_type?.startsWith("image/");
 
   return (
-    <div className="border border-slate-200 rounded-lg p-4 bg-white" data-testid={`admin-doc-${docType}`}>
+    <div className="border border-[#E5E5E5] rounded-lg p-4 bg-white" data-testid={`admin-doc-${docType}`}>
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-9 h-9 rounded-lg bg-[#EFF4FF] text-[#0055FF] flex items-center justify-center">
+        <div className="w-9 h-9 rounded-lg bg-[#FEE2E5] text-[#E11226] flex items-center justify-center">
           {isImage ? <ImageIcon size={16} /> : <FileText size={16} />}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-[#0A192F]">{LABELS[docType]}</div>
+          <div className="font-semibold text-[#0A0A0A]">{LABELS[docType]}</div>
           {meta ? (
             <>
-              <div className="text-xs text-slate-500 truncate">{meta.filename}</div>
-              <div className="text-xs text-slate-400 mt-0.5">
+              <div className="text-xs text-[#525252] truncate">{meta.filename}</div>
+              <div className="text-xs text-[#A3A3A3] mt-0.5">
                 {(meta.size / 1024).toFixed(1)} KB · {(meta.uploaded_at || "").slice(0, 16).replace("T", " ")}
               </div>
             </>
           ) : (
-            <div className="text-xs text-slate-400">Nicht hochgeladen</div>
+            <div className="text-xs text-[#A3A3A3]">Nicht hochgeladen</div>
           )}
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function AdminDocumentCard({ customerId, docType, meta }) {
 
       {url && (
         <div className="mt-3">
-          <div className="relative border border-slate-200 rounded-md overflow-hidden bg-slate-50">
+          <div className="relative border border-[#E5E5E5] rounded-md overflow-hidden bg-[#F4F4F4]">
             {isImage ? (
               <img src={url} alt={LABELS[docType]} className="w-full max-h-96 object-contain" />
             ) : (
@@ -67,7 +67,7 @@ export default function AdminDocumentCard({ customerId, docType, meta }) {
               <XCircle size={14} />
             </Button>
           </div>
-          <a href={url} target="_blank" rel="noreferrer" className="text-xs text-[#0055FF] hover:underline mt-2 inline-block">
+          <a href={url} target="_blank" rel="noreferrer" className="text-xs text-[#E11226] hover:underline mt-2 inline-block">
             In neuem Tab öffnen
           </a>
         </div>

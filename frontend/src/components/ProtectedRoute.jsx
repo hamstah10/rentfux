@@ -7,7 +7,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen" data-testid="route-loading">
-        <div className="w-10 h-10 border-4 border-slate-200 border-t-[#0055FF] rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#E5E5E5] border-t-[#E11226] rounded-full animate-spin" />
       </div>
     );
   }

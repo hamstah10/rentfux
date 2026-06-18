@@ -44,10 +44,10 @@ export default function Catalog() {
 
   return (
     <div className="rf-fade-in" data-testid="catalog-page">
-      <div className="bg-[#F8FAFC] border-b border-slate-200">
+      <div className="bg-[#F8FAFC] border-b border-[#E5E5E5]">
         <div className="rf-container py-10">
-          <div className="mb-2 text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Fahrzeuge</div>
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-[#0A192F] mb-6">Unsere Flotte</h1>
+          <div className="mb-2 text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">Fahrzeuge</div>
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-[#0A0A0A] mb-6">Unsere Flotte</h1>
           <SearchBar variant="inline" />
         </div>
       </div>
@@ -55,20 +55,20 @@ export default function Catalog() {
       <div className="rf-container py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Filters */}
         <aside className="lg:col-span-3">
-          <div className="sticky top-24 bg-white border border-slate-200 rounded-lg p-5">
-            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-100">
-              <SlidersHorizontal size={16} className="text-[#0055FF]" />
-              <h3 className="font-display font-semibold text-lg text-[#0A192F]">Filter</h3>
+          <div className="sticky top-24 bg-white border border-[#E5E5E5] rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-[#E5E5E5]">
+              <SlidersHorizontal size={16} className="text-[#E11226]" />
+              <h3 className="font-display font-semibold text-lg text-[#0A0A0A]">Filter</h3>
             </div>
 
             <div className="mb-6">
-              <Label className="text-xs uppercase tracking-wider text-slate-500 mb-3 block">Preis pro Tag</Label>
+              <Label className="text-xs uppercase tracking-wider text-[#525252] mb-3 block">Preis pro Tag</Label>
               <Slider
                 value={priceRange} min={0} max={300} step={5}
                 onValueChange={setPriceRange}
                 data-testid="filter-price"
               />
-              <div className="flex justify-between text-sm text-slate-600 mt-2">
+              <div className="flex justify-between text-sm text-[#525252] mt-2">
                 <span>{priceRange[0]}€</span>
                 <span>{priceRange[1]}€</span>
               </div>
@@ -82,7 +82,7 @@ export default function Catalog() {
               onChange={(v) => toggle(fuels, setFuels, v)} testid="fuel" />
 
             <div>
-              <Label className="text-xs uppercase tracking-wider text-slate-500 mb-3 block">Mind. Sitzplätze</Label>
+              <Label className="text-xs uppercase tracking-wider text-[#525252] mb-3 block">Mind. Sitzplätze</Label>
               <div className="flex gap-2 flex-wrap">
                 {[0, 2, 4, 5, 7].map((n) => (
                   <button
@@ -90,7 +90,7 @@ export default function Catalog() {
                     onClick={() => setSeatsMin(n)}
                     data-testid={`filter-seats-${n}`}
                     className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
-                      seatsMin === n ? "bg-[#0055FF] text-white border-[#0055FF]" : "bg-white text-slate-700 border-slate-300 hover:border-slate-400"
+                      seatsMin === n ? "bg-[#E11226] text-white border-[#E11226]" : "bg-white text-[#262626] border-[#D4D4D4] hover:border-slate-400"
                     }`}
                   >
                     {n === 0 ? "Alle" : `${n}+`}
@@ -104,7 +104,7 @@ export default function Catalog() {
         {/* Results */}
         <section className="lg:col-span-9">
           <div className="flex items-center justify-between mb-6">
-            <div className="text-sm text-slate-600" data-testid="results-count">
+            <div className="text-sm text-[#525252]" data-testid="results-count">
               <Filter size={14} className="inline mr-1.5 -mt-0.5" />
               {loading ? "Lädt..." : `${filtered.length} Fahrzeuge gefunden`}
             </div>
@@ -112,12 +112,12 @@ export default function Catalog() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-80 bg-slate-100 rounded-lg animate-pulse" />
+                <div key={i} className="h-80 bg-[#F4F4F4] rounded-lg animate-pulse" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-20 border border-dashed border-slate-300 rounded-lg">
-              <div className="text-slate-500">Keine Fahrzeuge mit diesen Filtern gefunden.</div>
+            <div className="text-center py-20 border border-dashed border-[#D4D4D4] rounded-lg">
+              <div className="text-[#525252]">Keine Fahrzeuge mit diesen Filtern gefunden.</div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -133,10 +133,10 @@ export default function Catalog() {
 function FilterGroup({ title, items, selected, onChange, testid }) {
   return (
     <div className="mb-6">
-      <Label className="text-xs uppercase tracking-wider text-slate-500 mb-3 block">{title}</Label>
+      <Label className="text-xs uppercase tracking-wider text-[#525252] mb-3 block">{title}</Label>
       <div className="space-y-2">
         {items.map((item) => (
-          <label key={item} className="flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+          <label key={item} className="flex items-center gap-2 cursor-pointer text-sm text-[#262626]">
             <Checkbox
               checked={selected.includes(item)}
               onCheckedChange={() => onChange(item)}

@@ -2,75 +2,177 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Archivo:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
+/* ---- Design Tokens ---- */
 :root {
-    --rf-primary: #0055FF;
-    --rf-primary-hover: #0044CC;
-    --rf-navy: #0A192F;
-    --rf-surface: #F8FAFC;
-    --rf-surface-alt: #F1F5F9;
-    --rf-border: #E2E8F0;
-    --rf-text: #0A192F;
-    --rf-muted: #64748B;
+    /* Carbon ramp */
+    --carbon-25: #FAFAFA;
+    --carbon-50: #F4F4F4;
+    --carbon-100: #E5E5E5;
+    --carbon-200: #D4D4D4;
+    --carbon-300: #A3A3A3;
+    --carbon-500: #525252;
+    --carbon-700: #262626;
+    --carbon-900: #0A0A0A;
+    --carbon-950: #050505;
+
+    /* Ignition ramp */
+    --power-50: #FEE2E5;
+    --power-100: #FECDD3;
+    --power-300: #FB7185;
+    --power-500: #E11226;
+    --power-600: #C20E1F;
+    --power-700: #A00B19;
+    --power-800: #7A0612;
+
+    /* Fonts */
+    --font-display: 'Orbitron', system-ui, sans-serif;
+    --font-sans: 'Archivo', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+    --ls-tight: -0.02em;
+    --ls-label: 0.12em;
+
+    /* Spacing */
+    --container: 1240px;
+    --header-h: 72px;
+    --gutter: 24px;
+
+    /* Radii — mechanical */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-xl: 14px;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-snap: cubic-bezier(0.6, 0, 0.2, 1);
+    --dur-fast: 120ms;
+    --dur-base: 200ms;
+    --dur-slow: 360ms;
 }
 
-body {
-    margin: 0;
-    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: var(--rf-text);
-    background: #ffffff;
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+    --bg: #FAFAFA;
+    --surface: #FFFFFF;
+    --surface-2: #F4F4F4;
+    --border: #E5E5E5;
+    --border-strong: #D4D4D4;
+    --text: #0A0A0A;
+    --text-muted: #525252;
+    --text-subtle: #737373;
+    --accent: #E11226;
+    --accent-hover: #C20E1F;
+    --accent-press: #A00B19;
+    --accent-soft: #FEE2E5;
+    --accent-text: #E11226;
+    --info: #0891B2;
+    --success: #16A34A;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --info-soft: #CFFAFE;
+    --success-soft: #DCFCE7;
+    --warning-soft: #FEF3C7;
+    --danger-soft: #FEE2E2;
+    --glow-power: 0 0 0 1px rgba(225, 18, 38, 0.45), 0 0 20px -8px rgba(225, 18, 38, 0.55);
+}
+
+[data-theme="dark"] {
+    --bg: #050505;
+    --surface: #0A0A0A;
+    --surface-2: #171717;
+    --border: #262626;
+    --border-strong: #404040;
+    --text: #FAFAFA;
+    --text-muted: #A3A3A3;
+    --text-subtle: #737373;
+    --accent: #E11226;
+    --accent-hover: #FB7185;
+    --accent-press: #C20E1F;
+    --accent-soft: rgba(225, 18, 38, 0.12);
+    --accent-text: #FB7185;
+}
+
+/* ---- Shadcn token bridge (so existing components keep working) ---- */
+@layer base {
+    :root {
+        --background: 0 0% 98%;
+        --foreground: 0 0% 4%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 4%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 4%;
+        --primary: 354 86% 48%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 0 0% 96%;
+        --secondary-foreground: 0 0% 4%;
+        --muted: 0 0% 96%;
+        --muted-foreground: 0 0% 32%;
+        --accent: 0 0% 96%;
+        --accent-foreground: 0 0% 4%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 90%;
+        --input: 0 0% 90%;
+        --ring: 354 86% 48%;
+        --chart-1: 354 86% 48%;
+        --chart-2: 187 91% 39%;
+        --chart-3: 142 76% 36%;
+        --chart-4: 32 95% 44%;
+        --chart-5: 0 0% 32%;
+        --radius: 0.375rem;
+    }
+}
+
+@layer base {
+    * { @apply border-border; }
+    body {
+        @apply bg-background text-foreground;
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        letter-spacing: -0.005em;
+    }
 }
 
 h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Outfit', 'IBM Plex Sans', sans-serif;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    letter-spacing: var(--ls-tight);
+    font-weight: 700;
 }
 
-@layer base {
-    :root {
-        --background: 0 0% 100%;
-        --foreground: 217 51% 11%;
-        --card: 0 0% 100%;
-        --card-foreground: 217 51% 11%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 217 51% 11%;
-        --primary: 222 100% 50%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 210 40% 96.1%;
-        --secondary-foreground: 217 51% 11%;
-        --muted: 210 40% 96.1%;
-        --muted-foreground: 215 16% 47%;
-        --accent: 210 40% 96.1%;
-        --accent-foreground: 217 51% 11%;
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 0 0% 100%;
-        --border: 214 32% 91%;
-        --input: 214 32% 91%;
-        --ring: 222 100% 50%;
-        --chart-1: 222 100% 50%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 217 51% 11%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
-    }
+/* ---- Helper classes ---- */
+.ds-display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-tight);
+    font-weight: 800;
+    line-height: 0.95;
+}
+.ds-eyebrow {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-label);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+}
+.ds-mono { font-family: var(--font-mono); }
+.ds-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-label);
+    font-size: 11px;
+    color: var(--text-muted);
 }
 
-@layer base {
-    * {
-        @apply border-border;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
-}
-
-/* RentFux utilities */
+/* ---- Layout helpers ---- */
 .rf-container {
-    max-width: 1280px;
+    max-width: var(--container);
     margin-left: auto;
     margin-right: auto;
     padding-left: 1rem;
@@ -83,47 +185,75 @@ h1, h2, h3, h4, h5, h6, .font-display {
     .rf-container { padding-left: 2rem; padding-right: 2rem; }
 }
 
+/* ---- Hero: dark engineered backdrop, no shiny gradients ---- */
 .rf-hero-bg {
     background:
-        linear-gradient(120deg, rgba(10,25,47,0.65) 0%, rgba(10,25,47,0.35) 60%, rgba(10,25,47,0.15) 100%),
-        url('https://images.pexels.com/photos/11059356/pexels-photo-11059356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1600') center/cover no-repeat;
+        linear-gradient(180deg, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0.65) 100%),
+        url('https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    color: #FAFAFA;
+    border-bottom: 1px solid var(--border);
 }
 
+/* ---- Hairline card hover — no big shadow ---- */
 .rf-card-hover {
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    transition: border-color var(--dur-base) var(--ease-out),
+                background var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out);
 }
 .rf-card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 40px -20px rgba(0, 85, 255, 0.25);
-    border-color: #CBD5E1;
+    border-color: var(--accent);
+    transform: translateY(-1px);
 }
 
 .rf-fade-in {
-    animation: rfFadeIn 0.45s ease-out both;
+    animation: rfFadeIn var(--dur-slow) var(--ease-out) both;
 }
 @keyframes rfFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Admin sidebar link */
+/* ---- Admin sidebar link ---- */
 .rf-side-link {
     display: flex;
     align-items: center;
     gap: 0.625rem;
     padding: 0.625rem 0.875rem;
-    border-radius: 0.5rem;
-    color: #334155;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
     font-weight: 500;
-    transition: background 0.2s ease, color 0.2s ease;
+    font-size: 13px;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    border-left: 2px solid transparent;
 }
 .rf-side-link:hover {
-    background: #F1F5F9;
-    color: var(--rf-navy);
+    background: var(--surface-2);
+    color: var(--text);
 }
 .rf-side-link.active {
-    background: #EFF4FF;
-    color: var(--rf-primary);
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* ---- Power glow for primary CTAs (sparse use) ---- */
+.rf-power-glow {
+    box-shadow: var(--glow-power);
+}
+
+/* ---- Telemetry-style mono number ---- */
+.rf-readout {
+    font-family: var(--font-mono);
+    font-feature-settings: "tnum" 1, "zero" 1;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
 }
 
 @layer base {

@@ -50,17 +50,17 @@ export default function AdminDiscounts() {
     <div data-testid="admin-discounts" className="rf-fade-in">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Marketing</div>
-          <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">Rabattcodes</h1>
+          <div className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">Marketing</div>
+          <h1 className="font-display text-3xl font-bold text-[#0A0A0A] mt-1">Rabattcodes</h1>
         </div>
-        <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={() => { setEditing(null); setForm(EMPTY); setOpen(true); }} data-testid="discount-new-btn">
+        <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={() => { setEditing(null); setForm(EMPTY); setOpen(true); }} data-testid="discount-new-btn">
           <Plus size={16} className="mr-2" /> Neuer Code
         </Button>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="bg-white border border-[#E5E5E5] rounded-lg overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+          <thead className="bg-[#F4F4F4] text-xs uppercase tracking-wider text-[#525252]">
             <tr>
               <th className="text-left p-3">Code</th>
               <th className="text-left p-3">Typ</th>
@@ -72,22 +72,22 @@ export default function AdminDiscounts() {
               <th className="text-right p-3">Aktionen</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-[#E5E5E5]">
             {items.map((d) => (
               <tr key={d.code} data-testid={`admin-discount-${d.code}`}>
                 <td className="p-3">
                   <div className="flex items-center gap-2">
-                    <Tag size={14} className="text-[#0055FF]" />
-                    <span className="font-mono font-semibold text-[#0A192F]">{d.code}</span>
+                    <Tag size={14} className="text-[#E11226]" />
+                    <span className="font-mono font-semibold text-[#0A0A0A]">{d.code}</span>
                   </div>
                 </td>
-                <td className="p-3 text-slate-600">{d.type === "percent" ? "Prozent" : "Festbetrag"}</td>
+                <td className="p-3 text-[#525252]">{d.type === "percent" ? "Prozent" : "Festbetrag"}</td>
                 <td className="p-3 text-right font-semibold">{d.type === "percent" ? `${d.value}%` : `${d.value}€`}</td>
-                <td className="p-3 text-right text-slate-600">{d.used_count || 0}{d.max_uses ? ` / ${d.max_uses}` : ""}</td>
-                <td className="p-3 text-slate-600">{d.min_total ? `${d.min_total}€` : "—"}</td>
-                <td className="p-3 text-slate-500 text-xs">{d.valid_until || "—"}</td>
+                <td className="p-3 text-right text-[#525252]">{d.used_count || 0}{d.max_uses ? ` / ${d.max_uses}` : ""}</td>
+                <td className="p-3 text-[#525252]">{d.min_total ? `${d.min_total}€` : "—"}</td>
+                <td className="p-3 text-[#525252] text-xs">{d.valid_until || "—"}</td>
                 <td className="p-3">
-                  <Badge className={d.active ? "bg-emerald-100 text-emerald-800 border-0" : "bg-slate-100 text-slate-600 border-0"}>
+                  <Badge className={d.active ? "bg-emerald-100 text-emerald-800 border-0" : "bg-[#F4F4F4] text-[#525252] border-0"}>
                     {d.active ? "Aktiv" : "Inaktiv"}
                   </Badge>
                 </td>
@@ -101,7 +101,7 @@ export default function AdminDiscounts() {
                 </td>
               </tr>
             ))}
-            {items.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-slate-500">Noch keine Rabattcodes erstellt.</td></tr>}
+            {items.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-[#525252]">Noch keine Rabattcodes erstellt.</td></tr>}
           </tbody>
         </table>
       </div>
@@ -128,12 +128,12 @@ export default function AdminDiscounts() {
             <div className="md:col-span-2"><Field label="Gültig bis (optional)"><Input type="date" value={form.valid_until} onChange={(e) => setForm({ ...form, valid_until: e.target.value })} data-testid="df-until" /></Field></div>
             <div className="md:col-span-2 flex items-center gap-3">
               <Switch checked={form.active} onCheckedChange={(v) => setForm({ ...form, active: v })} data-testid="df-active" />
-              <span className="text-sm text-slate-600">Aktiv</span>
+              <span className="text-sm text-[#525252]">Aktiv</span>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Abbrechen</Button>
-            <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={save} data-testid="df-save">Speichern</Button>
+            <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={save} data-testid="df-save">Speichern</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -142,5 +142,5 @@ export default function AdminDiscounts() {
 }
 
 function Field({ label, children }) {
-  return (<div><Label className="mb-1.5 block text-xs text-slate-500">{label}</Label>{children}</div>);
+  return (<div><Label className="mb-1.5 block text-xs text-[#525252]">{label}</Label>{children}</div>);
 }

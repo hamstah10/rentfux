@@ -39,16 +39,16 @@ export default function SearchBar({ variant = "hero" }) {
       data-testid="search-bar"
       className={
         isFloating
-          ? "bg-white rounded-xl shadow-2xl border border-slate-200 p-4 md:p-5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4"
-          : "bg-white rounded-lg border border-slate-200 p-4 grid grid-cols-1 md:grid-cols-12 gap-3"
+          ? "bg-white border border-[#E5E5E5] p-4 md:p-5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 rounded-sm"
+          : "bg-white border border-[#E5E5E5] p-4 grid grid-cols-1 md:grid-cols-12 gap-3 rounded-sm"
       }
     >
       <div className="md:col-span-4">
-        <Label className="text-xs uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
-          <MapPin size={12} /> Standort
-        </Label>
+        <div className="ds-label mb-1.5 flex items-center gap-1.5">
+          <MapPin size={11} /> Standort
+        </div>
         <Select value={locationId} onValueChange={setLocationId}>
-          <SelectTrigger className="h-11 border-slate-300" data-testid="search-location">
+          <SelectTrigger className="h-11 border-[#D4D4D4] rounded-sm" data-testid="search-location">
             <SelectValue placeholder="Standort wählen" />
           </SelectTrigger>
           <SelectContent>
@@ -59,29 +59,29 @@ export default function SearchBar({ variant = "hero" }) {
         </Select>
       </div>
       <div className="md:col-span-3">
-        <Label className="text-xs uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
-          <Calendar size={12} /> Abholdatum
-        </Label>
+        <div className="ds-label mb-1.5 flex items-center gap-1.5">
+          <Calendar size={11} /> Abholung
+        </div>
         <input
           type="date" value={start} min={todayPlus(0)}
           onChange={(e) => setStart(e.target.value)} required
-          className="w-full h-11 px-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0055FF]/40 focus:border-[#0055FF]"
+          className="w-full h-11 px-3 border border-[#D4D4D4] rounded-sm font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#E11226]/30 focus:border-[#E11226]"
           data-testid="search-start"
         />
       </div>
       <div className="md:col-span-3">
-        <Label className="text-xs uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
-          <Calendar size={12} /> Rückgabedatum
-        </Label>
+        <div className="ds-label mb-1.5 flex items-center gap-1.5">
+          <Calendar size={11} /> Rückgabe
+        </div>
         <input
           type="date" value={end} min={start}
           onChange={(e) => setEnd(e.target.value)} required
-          className="w-full h-11 px-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0055FF]/40 focus:border-[#0055FF]"
+          className="w-full h-11 px-3 border border-[#D4D4D4] rounded-sm font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#E11226]/30 focus:border-[#E11226]"
           data-testid="search-end"
         />
       </div>
       <div className="md:col-span-2 flex items-end">
-        <Button type="submit" className="w-full h-11 bg-[#0055FF] hover:bg-[#0044CC]" data-testid="search-submit-btn">
+        <Button type="submit" className="w-full h-11 bg-[#E11226] hover:bg-[#C20E1F] rounded-sm uppercase tracking-wider font-semibold text-sm" data-testid="search-submit-btn">
           <Search size={16} className="mr-2" /> Suchen
         </Button>
       </div>

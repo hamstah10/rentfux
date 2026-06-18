@@ -14,16 +14,19 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const navClass = ({ isActive }) =>
-    `text-sm font-medium transition-colors ${isActive ? "text-[#0055FF]" : "text-slate-700 hover:text-[#0055FF]"}`;
+    `text-sm font-medium transition-colors ${isActive ? "text-[#E11226]" : "text-[#262626] hover:text-[#E11226]"}`;
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200" data-testid="site-navbar">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#E5E5E5]" data-testid="site-navbar">
       <div className="rf-container flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-2" data-testid="nav-logo">
-          <div className="w-9 h-9 rounded-lg bg-[#0055FF] flex items-center justify-center text-white">
-            <Car size={20} />
+        <Link to="/" className="flex items-center gap-2.5" data-testid="nav-logo">
+          <div className="w-9 h-9 bg-[#E11226] flex items-center justify-center text-white rounded-sm">
+            <Car size={18} strokeWidth={2.2} />
           </div>
-          <span className="font-display font-bold text-xl tracking-tight text-[#0A192F]">RentFux</span>
+          <div className="leading-none">
+            <div className="font-display font-extrabold text-lg uppercase tracking-tight text-[#0A0A0A]">RentFux</div>
+            <div className="ds-label text-[10px] -mt-0.5">Engineered Mobility</div>
+          </div>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -37,7 +40,7 @@ export default function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="border-slate-300" data-testid="nav-user-menu">
+                <Button variant="outline" className="border-[#D4D4D4]" data-testid="nav-user-menu">
                   <User size={16} className="mr-2" />
                   {user.name || user.email}
                 </Button>
@@ -62,7 +65,7 @@ export default function Navbar() {
           ) : (
             <>
               <Button variant="ghost" onClick={() => navigate("/login")} data-testid="nav-login">Anmelden</Button>
-              <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={() => navigate("/registrieren")} data-testid="nav-register">
+              <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={() => navigate("/registrieren")} data-testid="nav-register">
                 Konto erstellen
               </Button>
             </>
@@ -75,13 +78,13 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-slate-200 bg-white">
+        <div className="md:hidden border-t border-[#E5E5E5] bg-white">
           <div className="rf-container py-4 flex flex-col gap-3">
             <NavLink to="/" end onClick={() => setOpen(false)} className="py-2" data-testid="mnav-home">Start</NavLink>
             <NavLink to="/katalog" onClick={() => setOpen(false)} className="py-2" data-testid="mnav-catalog">Fahrzeuge</NavLink>
             <NavLink to="/standorte" onClick={() => setOpen(false)} className="py-2" data-testid="mnav-locations">Standorte</NavLink>
             <NavLink to="/ueber-uns" onClick={() => setOpen(false)} className="py-2" data-testid="mnav-about">Über uns</NavLink>
-            <div className="border-t border-slate-200 pt-3 flex flex-col gap-2">
+            <div className="border-t border-[#E5E5E5] pt-3 flex flex-col gap-2">
               {user ? (
                 <>
                   <Button variant="outline" onClick={() => { setOpen(false); navigate("/konto"); }} data-testid="mnav-account">Mein Konto</Button>
@@ -93,7 +96,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <Button variant="outline" onClick={() => { setOpen(false); navigate("/login"); }} data-testid="mnav-login">Anmelden</Button>
-                  <Button className="bg-[#0055FF] hover:bg-[#0044CC]" onClick={() => { setOpen(false); navigate("/registrieren"); }} data-testid="mnav-register">Konto erstellen</Button>
+                  <Button className="bg-[#E11226] hover:bg-[#C20E1F]" onClick={() => { setOpen(false); navigate("/registrieren"); }} data-testid="mnav-register">Konto erstellen</Button>
                 </>
               )}
             </div>

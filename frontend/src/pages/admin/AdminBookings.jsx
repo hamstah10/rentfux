@@ -16,7 +16,7 @@ const STATUS_CLS = {
   pending: "bg-amber-100 text-amber-800",
   confirmed: "bg-emerald-100 text-emerald-800",
   active: "bg-blue-100 text-blue-800",
-  completed: "bg-slate-100 text-slate-700",
+  completed: "bg-[#F4F4F4] text-[#262626]",
   cancelled: "bg-red-100 text-red-800",
 };
 
@@ -48,13 +48,13 @@ export default function AdminBookings() {
   return (
     <div data-testid="admin-bookings" className="rf-fade-in">
       <div className="mb-6">
-        <div className="text-xs tracking-[0.2em] uppercase text-[#0055FF] font-semibold">Buchungen</div>
-        <h1 className="font-display text-3xl font-bold text-[#0A192F] mt-1">Alle Buchungen ({items.length})</h1>
+        <div className="text-xs tracking-[0.2em] uppercase text-[#E11226] font-semibold">Buchungen</div>
+        <h1 className="font-display text-3xl font-bold text-[#0A0A0A] mt-1">Alle Buchungen ({items.length})</h1>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg p-4 mb-4 flex flex-col md:flex-row gap-3">
+      <div className="bg-white border border-[#E5E5E5] rounded-lg p-4 mb-4 flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A3A3A3]" />
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Suche nach Kunde, Fahrzeug, ID..." className="pl-9" data-testid="booking-search" />
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
@@ -66,9 +66,9 @@ export default function AdminBookings() {
         </Select>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="bg-white border border-[#E5E5E5] rounded-lg overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+          <thead className="bg-[#F4F4F4] text-xs uppercase tracking-wider text-[#525252]">
             <tr>
               <th className="text-left p-3">ID</th>
               <th className="text-left p-3">Kunde</th>
@@ -80,23 +80,23 @@ export default function AdminBookings() {
               <th className="text-right p-3">Aktionen</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-[#E5E5E5]">
             {filtered.map((b) => (
-              <tr key={b.id} data-testid={`admin-booking-${b.id}`} className="hover:bg-slate-50">
-                <td className="p-3 font-mono text-xs text-slate-500">{b.id.slice(0, 8).toUpperCase()}</td>
+              <tr key={b.id} data-testid={`admin-booking-${b.id}`} className="hover:bg-[#F4F4F4]">
+                <td className="p-3 font-mono text-xs text-[#525252]">{b.id.slice(0, 8).toUpperCase()}</td>
                 <td className="p-3">
-                  <div className="font-semibold text-[#0A192F]">{b.user_name}</div>
-                  <div className="text-xs text-slate-500">{b.user_email}</div>
+                  <div className="font-semibold text-[#0A0A0A]">{b.user_name}</div>
+                  <div className="text-xs text-[#525252]">{b.user_email}</div>
                 </td>
                 <td className="p-3">
-                  <div className="text-[#0A192F]">{b.vehicle_brand} {b.vehicle_name}</div>
+                  <div className="text-[#0A0A0A]">{b.vehicle_brand} {b.vehicle_name}</div>
                 </td>
-                <td className="p-3 text-slate-600 text-xs">{b.start_date}<br />→ {b.end_date}</td>
+                <td className="p-3 text-[#525252] text-xs">{b.start_date}<br />→ {b.end_date}</td>
                 <td className="p-3">
                   <Badge className={b.payment_status === "paid" ? "bg-emerald-100 text-emerald-800 border-0" : "bg-amber-100 text-amber-800 border-0"}>
                     {b.payment_status === "paid" ? "Bezahlt" : "Offen"}
                   </Badge>
-                  <div className="text-[10px] uppercase text-slate-400 mt-1">{b.payment_method || "—"}</div>
+                  <div className="text-[10px] uppercase text-[#A3A3A3] mt-1">{b.payment_method || "—"}</div>
                 </td>
                 <td className="p-3 text-right font-semibold">{b.total.toFixed(2)}€</td>
                 <td className="p-3">
@@ -120,7 +120,7 @@ export default function AdminBookings() {
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-slate-500">Keine Buchungen gefunden.</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-[#525252]">Keine Buchungen gefunden.</td></tr>}
           </tbody>
         </table>
       </div>
