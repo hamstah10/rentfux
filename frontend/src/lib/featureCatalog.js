@@ -1,0 +1,110 @@
+// Predefined catalog of vehicle features/equipment.
+// Organized by category for a nicer admin form and detail page.
+// Custom features can still be added freely.
+
+export const FEATURE_CATALOG = [
+  {
+    group: "Komfort",
+    items: [
+      "Klimaautomatik",
+      "Sitzheizung vorne",
+      "Sitzheizung hinten",
+      "Lenkradheizung",
+      "Lederausstattung",
+      "Stoffausstattung",
+      "Massagesitze",
+      "Elektrische Sitzverstellung",
+      "Memory-Funktion Sitze",
+      "Panoramadach",
+      "Schiebedach",
+      "Ambientebeleuchtung",
+      "Komfortfederung",
+    ],
+  },
+  {
+    group: "Assistenz & Sicherheit",
+    items: [
+      "Adaptiver Tempomat",
+      "Spurhalteassistent",
+      "Spurwechselassistent",
+      "Verkehrszeichenerkennung",
+      "Notbremsassistent",
+      "Müdigkeitserkennung",
+      "Totwinkelassistent",
+      "Parkpilot vorne & hinten",
+      "Rückfahrkamera",
+      "360°-Kamera",
+      "Head-up-Display",
+      "Nachtsichtassistent",
+      "Matrix-LED Scheinwerfer",
+      "Xenon-Licht",
+      "Fernlichtassistent",
+      "ISOFIX",
+    ],
+  },
+  {
+    group: "Konnektivität & Multimedia",
+    items: [
+      "Apple CarPlay",
+      "Android Auto",
+      "Navigationssystem",
+      "DAB+ Radio",
+      "Bluetooth Freisprecheinrichtung",
+      "Premium Soundsystem",
+      "Induktive Handyladung",
+      "USB-C Anschlüsse",
+      "WLAN-Hotspot",
+      "Digitales Kombiinstrument",
+      "Touchscreen 10\"+",
+      "Sprachsteuerung",
+    ],
+  },
+  {
+    group: "Antrieb & Fahrwerk",
+    items: [
+      "Allradantrieb (4x4)",
+      "Frontantrieb",
+      "Heckantrieb",
+      "Sportfahrwerk",
+      "Luftfederung",
+      "Anhängerkupplung",
+      "Berganfahrhilfe",
+      "Start-Stopp-Automatik",
+      "Schaltwippen am Lenkrad",
+      "Fahrmodi (Eco/Sport/Komfort)",
+    ],
+  },
+  {
+    group: "Praktisches",
+    items: [
+      "Schlüssellose Zentralverriegelung (Keyless)",
+      "Schlüsselloser Motorstart",
+      "Elektrische Heckklappe",
+      "Sensor-Heckklappe",
+      "Dachreling",
+      "Skisack",
+      "Umklappbare Rücksitze",
+      "Isofix Kindersitz-Halterung",
+      "Regensensor",
+      "Lichtsensor",
+      "Elektrische Fensterheber",
+      "Getönte Scheiben hinten",
+      "Standheizung",
+      "Beheizbare Frontscheibe",
+    ],
+  },
+  {
+    group: "Nachhaltigkeit",
+    items: [
+      "Schnellladefähigkeit (DC)",
+      "Wallbox-Ladekabel inklusive",
+      "Typ-2-Ladekabel inklusive",
+      "Reichweite > 400 km",
+      "Wärmepumpe",
+      "Rekuperation einstellbar",
+    ],
+  },
+];
+
+// Flat list, useful for normalization checks
+export const ALL_FEATURES = FEATURE_CATALOG.flatMap((g) => g.items);

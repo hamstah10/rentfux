@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Search, Eye } from "lucide-react";
+import { Search, Eye, Trash2 } from "lucide-react";
 
 const STATUSES = ["pending", "confirmed", "active", "completed", "cancelled"];
 const STATUS_LABEL = {
@@ -31,6 +31,19 @@ export default function AdminBookings() {
   const updateStatus = async (id, status) => {
     try { await api.patch(`/admin/bookings/${id}`, { status }); toast.success("Status aktualisiert"); load(); }
     catch (e) { toast.error(apiError(e)); }
+  };
+
+  const del = async (b) => {
+    if (!window.confirm(
+      `Buchung ${b.id.slice(0, 8).toUpperCase()} (${b.user_name}, ${b.vehicle_brand} ${b.vehicle_name}) endgültig löschen?\n\nDies kann nicht rückgängig gemacht werden.`
+    )) return;
+    try {
+      await api.delete(`/admin/bookings/${b.id}`);
+      toast.success("Buchung gelöscht");
+      load();
+    } catch (e) {
+      toast.error(apiError(e));
+    }
   };
 
   const filtered = items.filter((b) => {
@@ -112,11 +125,23 @@ export default function AdminBookings() {
                   </Select>
                 </td>
                 <td className="p-3 text-right">
-                  <Link to={`/admin/buchungen/${b.id}`}>
-                    <Button size="sm" variant="outline" data-testid={`booking-view-${b.id}`}>
-                      <Eye size={14} className="mr-1" /> Details
+                  <div className="inline-flex gap-1">
+                    <Link to={`/admin/buchungen/${b.id}`}>
+                      <Button size="sm" variant="outline" data-testid={`booking-view-${b.id}`}>
+                        <Eye size={14} className="mr-1" /> Details
+                      </Button>
+                    </Link>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                      onClick={() => del(b)}
+                      data-testid={`booking-delete-${b.id}`}
+                      title="Buchung löschen"
+                    >
+                      <Trash2 size={14} />
                     </Button>
-                  </Link>
+                  </div>
                 </td>
               </tr>
             ))}

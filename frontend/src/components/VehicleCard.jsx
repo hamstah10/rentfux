@@ -1,20 +1,30 @@
 import { Link } from "react-router-dom";
 import { Users, Gauge, Fuel, Cog } from "lucide-react";
 
+const BACKEND = process.env.REACT_APP_BACKEND_URL || "";
+const resolveImg = (u) => (!u ? "" : u.startsWith("/api/") ? BACKEND + u : u);
+
 export default function VehicleCard({ vehicle }) {
+  const cover = resolveImg(vehicle.images?.[0] || vehicle.image_url);
+  const extraCount = Math.max(0, (vehicle.images?.length || 0) - 1);
   return (
     <Link
       to={`/fahrzeug/${vehicle.id}`}
       className="group rf-card-hover block bg-white border border-[#E5E5E5] overflow-hidden rounded-sm"
       data-testid={`vehicle-card-${vehicle.id}`}
     >
-      <div className="aspect-video bg-[#F4F4F4] overflow-hidden border-b border-[#E5E5E5]">
+      <div className="aspect-video bg-[#F4F4F4] overflow-hidden border-b border-[#E5E5E5] relative">
         <img
-          src={vehicle.image_url}
+          src={cover}
           alt={`${vehicle.brand} ${vehicle.name}`}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
           loading="lazy"
         />
+        {extraCount > 0 && (
+          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm">
+            +{extraCount} Bilder
+          </div>
+        )}
       </div>
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-4">

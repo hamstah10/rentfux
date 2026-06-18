@@ -293,6 +293,7 @@ class VehicleIn(BaseModel):
     doors: int = 4
     price_per_day: float
     image_url: str
+    images: List[str] = []
     description: str = ""
     features: List[str] = []
     active: bool = True
@@ -611,12 +612,25 @@ async def get_vehicle(vid: str):
     v = await db.vehicles.find_one({"id": vid}, {"_id": 0})
     if not v:
         raise HTTPException(404, "Fahrzeug nicht gefunden")
+    if v.get("location_id"):
+        loc = await db.locations.find_one({"id": v["location_id"]}, {"_id": 0, "name": 1})
+        if loc:
+            v["location_name"] = loc.get("name", "")
     return v
 
 
 @api.post("/vehicles")
 async def create_vehicle(body: VehicleIn, _: dict = Depends(require_admin)):
-    doc = {"id": str(uuid.uuid4()), **body.model_dump(),
+    data = body.model_dump()
+    # Ensure images[] always contains image_url (primary)
+    imgs = list(data.get("images") or [])
+    primary = (data.get("image_url") or "").strip()
+    if primary and primary not in imgs:
+        imgs.insert(0, primary)
+    if imgs and not primary:
+        data["image_url"] = imgs[0]
+    data["images"] = imgs
+    doc = {"id": str(uuid.uuid4()), **data,
            "created_at": datetime.now(timezone.utc).isoformat()}
     await db.vehicles.insert_one(doc)
     doc.pop("_id", None)
@@ -625,21 +639,156 @@ async def create_vehicle(body: VehicleIn, _: dict = Depends(require_admin)):
 
 @api.put("/vehicles/{vid}")
 async def update_vehicle(vid: str, body: VehicleIn, _: dict = Depends(require_admin)):
-    r = await db.vehicles.update_one({"id": vid}, {"$set": body.model_dump()})
+    data = body.model_dump()
+    imgs = list(data.get("images") or [])
+    primary = (data.get("image_url") or "").strip()
+    if primary and primary not in imgs:
+        imgs.insert(0, primary)
+    if imgs and not primary:
+        data["image_url"] = imgs[0]
+    data["images"] = imgs
+    r = await db.vehicles.update_one({"id": vid}, {"$set": data})
     if r.matched_count == 0:
         raise HTTPException(404, "Fahrzeug nicht gefunden")
     return await db.vehicles.find_one({"id": vid}, {"_id": 0})
 
 
 @api.delete("/vehicles/{vid}")
-async def delete_vehicle(vid: str, _: dict = Depends(require_admin)):
+async def delete_vehicle(vid: str, hard: bool = False, _: dict = Depends(require_admin)):
+    veh = await db.vehicles.find_one({"id": vid}, {"_id": 0, "id": 1})
+    if not veh:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    # Block hard-delete if any non-cancelled booking exists
+    active = await db.bookings.count_documents({
+        "vehicle_id": vid,
+        "status": {"$nin": ["cancelled"]},
+    })
+    if hard:
+        if active > 0:
+            raise HTTPException(
+                409,
+                f"Fahrzeug hat {active} aktive Buchung(en). Bitte erst stornieren oder deaktivieren."
+            )
+        await db.vehicles.delete_one({"id": vid})
+        await db.vehicle_positions.delete_many({"vehicle_id": vid})
+        return {"ok": True, "deleted": True}
+    # Soft delete: deactivate
     await db.vehicles.update_one({"id": vid}, {"$set": {"active": False}})
-    return {"ok": True}
+    return {"ok": True, "deactivated": True}
 
 
 @api.get("/admin/vehicles")
 async def admin_list_vehicles(_: dict = Depends(require_admin)):
     return await db.vehicles.find({}, {"_id": 0}).to_list(500)
+
+
+# ---------- Vehicle Image Uploads ----------
+IMAGE_EXT = {"jpg", "jpeg", "png", "webp"}
+
+
+@api.post("/admin/vehicles/{vid}/images")
+async def admin_upload_vehicle_image(
+    vid: str,
+    file: UploadFile = File(...),
+    _: dict = Depends(require_admin),
+):
+    veh = await db.vehicles.find_one({"id": vid}, {"_id": 0})
+    if not veh:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    if not file.filename:
+        raise HTTPException(400, "Datei fehlt")
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if ext not in IMAGE_EXT:
+        raise HTTPException(400, "Nur JPG, PNG oder WEBP erlaubt")
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, "Bild zu groß (max 5 MB)")
+    if len(data) == 0:
+        raise HTTPException(400, "Datei ist leer")
+    content_type = file.content_type or MIME_TYPES.get(ext, "application/octet-stream")
+    file_id = str(uuid.uuid4())
+    path = f"{APP_NAME}/vehicles/{vid}/{file_id}.{ext}"
+    put_object(path, data, content_type)
+    api_url = f"/api/vehicles/{vid}/images/{file_id}.{ext}"
+    images = list(veh.get("images") or [])
+    images.append(api_url)
+    update = {"images": images}
+    if not veh.get("image_url"):
+        update["image_url"] = api_url
+    await db.vehicles.update_one({"id": vid}, {"$set": update})
+    return {"url": api_url, "images": images, "size": len(data)}
+
+
+@api.get("/vehicles/{vid}/images/{filename}")
+async def serve_vehicle_image(vid: str, filename: str):
+    # filename is like "<uuid>.<ext>"; safe characters only
+    if "/" in filename or ".." in filename:
+        raise HTTPException(400, "Ungültiger Dateiname")
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    if ext not in IMAGE_EXT:
+        raise HTTPException(400, "Ungültiger Dateityp")
+    path = f"{APP_NAME}/vehicles/{vid}/{filename}"
+    try:
+        data, ct = get_object(path)
+    except Exception:
+        raise HTTPException(404, "Bild nicht gefunden")
+    return Response(
+        content=data,
+        media_type=ct or MIME_TYPES.get(ext, "application/octet-stream"),
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
+
+
+@api.delete("/admin/vehicles/{vid}/images")
+async def admin_delete_vehicle_image(
+    vid: str,
+    url: str,
+    _: dict = Depends(require_admin),
+):
+    veh = await db.vehicles.find_one({"id": vid}, {"_id": 0})
+    if not veh:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    images = [i for i in (veh.get("images") or []) if i != url]
+    update = {"images": images}
+    if veh.get("image_url") == url:
+        update["image_url"] = images[0] if images else ""
+    await db.vehicles.update_one({"id": vid}, {"$set": update})
+    # Best-effort delete from object storage (only for internal urls)
+    if url.startswith(f"/api/vehicles/{vid}/images/"):
+        filename = url.rsplit("/", 1)[-1]
+        path = f"{APP_NAME}/vehicles/{vid}/{filename}"
+        try:
+            key = init_storage()
+            if key:
+                requests.delete(
+                    f"{STORAGE_URL}/objects/{path}",
+                    headers={"X-Storage-Key": key},
+                    timeout=30,
+                )
+        except Exception as e:
+            logger.warning(f"Storage delete failed for {path}: {e}")
+    return {"ok": True, "images": images}
+
+
+@api.patch("/admin/vehicles/{vid}/images/reorder")
+async def admin_reorder_vehicle_images(
+    vid: str,
+    body: dict,
+    _: dict = Depends(require_admin),
+):
+    veh = await db.vehicles.find_one({"id": vid}, {"_id": 0})
+    if not veh:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    new_order = body.get("images") or []
+    if not isinstance(new_order, list):
+        raise HTTPException(400, "images muss eine Liste sein")
+    existing = set(veh.get("images") or [])
+    filtered = [u for u in new_order if u in existing]
+    update = {"images": filtered}
+    if filtered:
+        update["image_url"] = filtered[0]
+    await db.vehicles.update_one({"id": vid}, {"$set": update})
+    return {"ok": True, "images": filtered, "image_url": update.get("image_url", "")}
 
 
 # ---------- Bookings ----------
@@ -980,6 +1129,20 @@ async def admin_cancel_booking(bid: str, _: dict = Depends(require_admin)):
     return await db.bookings.find_one({"id": bid}, {"_id": 0})
 
 
+@api.delete("/admin/bookings/{bid}")
+async def admin_delete_booking(bid: str, _: dict = Depends(require_admin)):
+    booking = await db.bookings.find_one({"id": bid}, {"_id": 0})
+    if not booking:
+        raise HTTPException(404, "Buchung nicht gefunden")
+    if booking.get("status") in ("active", "confirmed") and booking.get("payment_status") == "paid":
+        raise HTTPException(
+            409,
+            "Aktive, bezahlte Buchung kann nicht gelöscht werden. Bitte zuerst stornieren."
+        )
+    await db.bookings.delete_one({"id": bid})
+    return {"ok": True, "deleted_id": bid}
+
+
 @api.get("/admin/customers")
 async def admin_customers(_: dict = Depends(require_admin)):
     users = await db.users.find({"role": "user"}, {"_id": 0, "password_hash": 0}).to_list(1000)
@@ -1116,6 +1279,34 @@ async def admin_update_customer(uid: str, body: AdminCustomerUpdateIn, _: dict =
         await db.users.update_one({"id": uid}, {"$set": raw})
     refreshed = await db.users.find_one({"id": uid}, {"_id": 0})
     return {"user": user_public(refreshed)}
+
+
+@api.delete("/admin/customers/{uid}")
+async def admin_delete_customer(uid: str, force: bool = False, _: dict = Depends(require_admin)):
+    target = await db.users.find_one({"id": uid}, {"_id": 0})
+    if not target:
+        raise HTTPException(404, "Kunde nicht gefunden")
+    if target.get("role") == "admin":
+        raise HTTPException(403, "Admin-Konto kann nicht gelöscht werden")
+
+    active_bookings = await db.bookings.count_documents({
+        "user_id": uid,
+        "status": {"$in": ["pending", "confirmed", "active"]},
+    })
+    if active_bookings > 0 and not force:
+        raise HTTPException(
+            409,
+            f"Kunde hat {active_bookings} aktive Buchung(en). "
+            "Bitte zuerst stornieren oder mit ?force=true wiederholen."
+        )
+
+    # Anonymise any historical bookings to keep accounting integrity
+    await db.bookings.update_many(
+        {"user_id": uid},
+        {"$set": {"user_id": None, "user_deleted": True}},
+    )
+    await db.users.delete_one({"id": uid})
+    return {"ok": True, "deleted_id": uid}
 
 
 # ---------- Invoice PDF ----------
