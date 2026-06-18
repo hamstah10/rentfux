@@ -1,11 +1,12 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Car, Calendar, MapPin, Users, LogOut, ArrowLeft, Tag } from "lucide-react";
+import { LayoutDashboard, Car, Calendar, MapPin, Users, LogOut, ArrowLeft, Tag, Navigation } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
 const links = [
   { to: "/admin", end: true, icon: LayoutDashboard, label: "Dashboard", testid: "admin-nav-dashboard" },
   { to: "/admin/fahrzeuge", icon: Car, label: "Fahrzeuge", testid: "admin-nav-vehicles" },
+  { to: "/admin/tracking", icon: Navigation, label: "GPS-Tracking", testid: "admin-nav-tracking" },
   { to: "/admin/buchungen", icon: Calendar, label: "Buchungen", testid: "admin-nav-bookings" },
   { to: "/admin/standorte", icon: MapPin, label: "Standorte", testid: "admin-nav-locations" },
   { to: "/admin/kunden", icon: Users, label: "Kunden", testid: "admin-nav-customers" },

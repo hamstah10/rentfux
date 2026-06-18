@@ -23,6 +23,7 @@ import AdminLocationsPage from "@/pages/admin/AdminLocations";
 import AdminCustomers from "@/pages/admin/AdminCustomers";
 import AdminCustomerDetail from "@/pages/admin/AdminCustomerDetail";
 import AdminDiscounts from "@/pages/admin/AdminDiscounts";
+import AdminTracking from "@/pages/admin/AdminTracking";
 import ProfileSetup from "@/pages/ProfileSetup";
 
 function PublicShell({ children }) {
@@ -61,6 +62,8 @@ function App() {
               <Route path="kunden" element={<AdminCustomers />} />
               <Route path="kunden/:id" element={<AdminCustomerDetail />} />
               <Route path="rabatte" element={<AdminDiscounts />} />
+              <Route path="tracking" element={<AdminTracking />} />
+              <Route path="tracking/:vehicleId" element={<AdminTracking />} />
             </Route>
           </Routes>
         </BrowserRouter>

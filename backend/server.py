@@ -1321,6 +1321,186 @@ async def booking_invoice(bid: str, request: Request, token: Optional[str] = Que
     )
 
 
+# ---------- GPS Tracking ----------
+# Vehicles are tracked via mocked simulated positions. Real trackers can
+# POST to /api/admin/vehicles/{id}/location with the same payload shape.
+
+# Bremerhaven center used as anchor for the mock fleet
+GPS_ANCHOR_LAT = 53.5396
+GPS_ANCHOR_LNG = 8.5809
+GPS_FENCE_RADIUS_KM = 50  # geofence radius in kilometers
+
+
+class LocationUpdateIn(BaseModel):
+    lat: float
+    lng: float
+    speed_kmh: float = 0.0
+    heading: float = 0.0  # degrees, 0=N, 90=E
+    source: str = "mock"  # "mock", "manual", "tracker"
+
+
+def _haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    import math
+    r = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlng = math.radians(lng2 - lng1)
+    a = (math.sin(dlat / 2) ** 2
+         + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng / 2) ** 2)
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+def _status_from_speed(speed_kmh: float) -> str:
+    if speed_kmh < 2:
+        return "parked"
+    if speed_kmh < 25:
+        return "city"
+    return "highway"
+
+
+async def _store_position(vehicle_id: str, payload: dict):
+    now = datetime.now(timezone.utc)
+    speed = float(payload.get("speed_kmh", 0.0))
+    lat = float(payload["lat"])
+    lng = float(payload["lng"])
+    fence_km = _haversine_km(lat, lng, GPS_ANCHOR_LAT, GPS_ANCHOR_LNG)
+    doc = {
+        "id": str(uuid.uuid4()),
+        "vehicle_id": vehicle_id,
+        "lat": lat,
+        "lng": lng,
+        "speed_kmh": speed,
+        "heading": float(payload.get("heading", 0.0)),
+        "source": payload.get("source", "mock"),
+        "status": _status_from_speed(speed),
+        "fence_km": round(fence_km, 2),
+        "geofence_alert": fence_km > GPS_FENCE_RADIUS_KM,
+        "ts": now.isoformat(),
+        "ts_epoch": int(now.timestamp()),
+    }
+    await db.vehicle_positions.insert_one(dict(doc))
+    # latest position cache on vehicle row
+    await db.vehicles.update_one(
+        {"id": vehicle_id},
+        {"$set": {"last_position": {k: doc[k] for k in
+                                    ("lat", "lng", "speed_kmh", "heading", "status",
+                                     "fence_km", "geofence_alert", "ts", "source")}}},
+    )
+    doc.pop("_id", None)
+    return doc
+
+
+@api.post("/admin/vehicles/{vid}/location")
+async def admin_push_vehicle_location(vid: str, body: LocationUpdateIn, _: dict = Depends(require_admin)):
+    veh = await db.vehicles.find_one({"id": vid}, {"_id": 0, "id": 1})
+    if not veh:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    return await _store_position(vid, body.model_dump())
+
+
+@api.get("/admin/vehicles/{vid}/location")
+async def admin_get_vehicle_location(vid: str, _: dict = Depends(require_admin)):
+    veh = await db.vehicles.find_one({"id": vid}, {"_id": 0})
+    if not veh:
+        raise HTTPException(404, "Fahrzeug nicht gefunden")
+    return veh.get("last_position") or None
+
+
+@api.get("/admin/vehicles/{vid}/track")
+async def admin_get_vehicle_track(vid: str, limit: int = 50, _: dict = Depends(require_admin)):
+    limit = max(1, min(limit, 500))
+    cursor = db.vehicle_positions.find({"vehicle_id": vid}, {"_id": 0}).sort("ts_epoch", -1).limit(limit)
+    points = [p async for p in cursor]
+    points.reverse()  # chronological
+    return points
+
+
+@api.get("/admin/fleet/locations")
+async def admin_fleet_locations(_: dict = Depends(require_admin)):
+    """Return current position for every vehicle with a last_position."""
+    cursor = db.vehicles.find({}, {"_id": 0})
+    out = []
+    async for v in cursor:
+        pos = v.get("last_position")
+        if not pos:
+            continue
+        out.append({
+            "vehicle_id": v["id"],
+            "name": v["name"],
+            "brand": v["brand"],
+            "category": v.get("category"),
+            "image_url": v.get("image_url"),
+            "price_per_day": v.get("price_per_day"),
+            "active": v.get("active", True),
+            **pos,
+        })
+    return out
+
+
+# Mock simulator: small random walk for each vehicle
+async def _seed_initial_positions():
+    """Seed every vehicle with a starting position around Bremerhaven if not set."""
+    import random
+    cursor = db.vehicles.find({"last_position": {"$exists": False}}, {"_id": 0})
+    async for v in cursor:
+        # spread ~ +/- 0.04 deg (~ 4 km lat, ~ 2.5 km lng)
+        lat = GPS_ANCHOR_LAT + random.uniform(-0.04, 0.04)
+        lng = GPS_ANCHOR_LNG + random.uniform(-0.04, 0.04)
+        speed = random.choice([0, 0, 0, 18, 42, 60])
+        heading = random.randint(0, 359)
+        await _store_position(v["id"], {
+            "lat": lat, "lng": lng, "speed_kmh": speed,
+            "heading": heading, "source": "mock",
+        })
+
+
+async def _gps_simulator_loop():
+    """Background coroutine that nudges every vehicle position every 15s."""
+    import asyncio
+    import random
+    import math
+    while True:
+        try:
+            cursor = db.vehicles.find({"last_position": {"$exists": True}}, {"_id": 0})
+            async for v in cursor:
+                pos = v.get("last_position") or {}
+                lat = float(pos.get("lat", GPS_ANCHOR_LAT))
+                lng = float(pos.get("lng", GPS_ANCHOR_LNG))
+                speed = float(pos.get("speed_kmh", 0.0))
+                heading = float(pos.get("heading", 0.0))
+
+                # 20% chance to flip status (park <-> drive)
+                if random.random() < 0.20:
+                    speed = random.choice([0.0, 22.0, 48.0, 68.0])
+                    heading = (heading + random.uniform(-90, 90)) % 360
+                else:
+                    heading = (heading + random.uniform(-15, 15)) % 360
+
+                # Move based on speed. 1 deg lat ~ 111 km. interval=15s
+                dt_h = 15.0 / 3600.0
+                dist_km = speed * dt_h
+                dlat = (dist_km / 111.0) * math.cos(math.radians(heading))
+                dlng = (dist_km / (111.0 * max(0.0001, math.cos(math.radians(lat))))) * math.sin(math.radians(heading))
+                new_lat = lat + dlat
+                new_lng = lng + dlng
+
+                # Gentle pull back to anchor if too far (so the demo stays around Bremerhaven)
+                if _haversine_km(new_lat, new_lng, GPS_ANCHOR_LAT, GPS_ANCHOR_LNG) > 30:
+                    new_lat = lat + (GPS_ANCHOR_LAT - lat) * 0.01
+                    new_lng = lng + (GPS_ANCHOR_LNG - lng) * 0.01
+
+                await _store_position(v["id"], {
+                    "lat": new_lat, "lng": new_lng,
+                    "speed_kmh": speed, "heading": heading,
+                    "source": "mock",
+                })
+        except Exception as e:
+            logger.warning(f"GPS simulator tick failed: {e}")
+        await asyncio.sleep(15)
+
+
+
+
+
 # ---------- Health ----------
 @api.get("/")
 async def root():
@@ -1457,16 +1637,24 @@ async def on_startup():
     await db.bookings.create_index("user_id")
     await db.bookings.create_index("vehicle_id")
     await db.login_attempts.create_index("identifier")
+    await db.vehicle_positions.create_index([("vehicle_id", 1), ("ts_epoch", -1)])
     await seed_admin()
     await seed_data()
+    await _seed_initial_positions()
     try:
         init_storage()
     except Exception as e:
         logger.warning(f"Storage init skipped: {e}")
+    # Background GPS simulator
+    import asyncio
+    app.state.gps_task = asyncio.create_task(_gps_simulator_loop())
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
+    task = getattr(app.state, "gps_task", None)
+    if task:
+        task.cancel()
     client.close()
 
 
