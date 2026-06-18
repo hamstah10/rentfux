@@ -29,10 +29,23 @@ export default function AdminLocations() {
     } catch (e) { toast.error(apiError(e)); }
   };
 
-  const del = async (id) => {
-    if (!window.confirm("Standort deaktivieren?")) return;
-    try { await api.delete(`/locations/${id}`); load(); toast.success("Deaktiviert"); }
-    catch (e) { toast.error(apiError(e)); }
+  const del = async (loc) => {
+    const action = loc.active
+      ? "deaktivieren (kann später wieder aktiviert werden)"
+      : "endgültig löschen";
+    if (!window.confirm(`Standort "${loc.name}" ${action}?`)) return;
+    try {
+      if (loc.active) {
+        await api.delete(`/locations/${loc.id}`);
+        toast.success("Standort deaktiviert");
+      } else {
+        await api.delete(`/locations/${loc.id}?hard=true`);
+        toast.success("Standort gelöscht");
+      }
+      load();
+    } catch (e) {
+      toast.error(apiError(e));
+    }
   };
 
   return (
@@ -69,7 +82,7 @@ export default function AdminLocations() {
               <Button size="sm" variant="outline" onClick={() => { setEditing(l); setForm(l); setOpen(true); }} data-testid={`location-edit-${l.id}`}>
                 <Pencil size={14} className="mr-1" /> Bearbeiten
               </Button>
-              <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700" onClick={() => del(l.id)} data-testid={`location-delete-${l.id}`}>
+              <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700" onClick={() => del(l)} data-testid={`location-delete-${l.id}`} title={l.active ? "Deaktivieren" : "Endgültig löschen"}>
                 <Trash2 size={14} />
               </Button>
             </div>

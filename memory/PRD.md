@@ -20,7 +20,7 @@ Eine vollständige Web-Plattform für Autovermietung (RentFux) – für Privat- 
 - Admin Dashboard: KPIs, Charts, Tables
 - Admin CRUD: Fahrzeuge, Buchungen, Kunden, Standorte, Rabattcodes
 - **GPS Tracking (Admin)**: Live-Karte (Leaflet/OSM) mit Mock-Positionen, Track-History, Status (parked/city/highway), Geofence-Alert
-- **Delete operations**: Hard delete für Fahrzeuge (mit Soft-Delete-Vorstufe), Buchungen, Kunden
+- **Delete operations**: Hard delete für Fahrzeuge, Buchungen, Kunden, **Standorte** (mit Soft-Delete-Vorstufe wenn aktiv)
 - Mehrere Standorte mit dynamischer Footer-Anzeige
 
 ## Implemented in this session (Feb 2026)

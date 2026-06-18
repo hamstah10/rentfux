@@ -561,9 +561,23 @@ async def update_location(loc_id: str, body: LocationIn, _: dict = Depends(requi
 
 
 @api.delete("/locations/{loc_id}")
-async def delete_location(loc_id: str, _: dict = Depends(require_admin)):
+async def delete_location(loc_id: str, hard: bool = False, _: dict = Depends(require_admin)):
+    loc = await db.locations.find_one({"id": loc_id}, {"_id": 0, "id": 1})
+    if not loc:
+        raise HTTPException(404, "Standort nicht gefunden")
+    if hard:
+        # Block hard-delete if any vehicles are assigned to this location
+        veh_count = await db.vehicles.count_documents({"location_id": loc_id})
+        if veh_count > 0:
+            raise HTTPException(
+                409,
+                f"Standort hat {veh_count} zugeordnete Fahrzeug(e). "
+                "Bitte erst zuweisen oder Fahrzeuge entfernen."
+            )
+        await db.locations.delete_one({"id": loc_id})
+        return {"ok": True, "deleted": True}
     await db.locations.update_one({"id": loc_id}, {"$set": {"active": False}})
-    return {"ok": True}
+    return {"ok": True, "deactivated": True}
 
 
 @api.get("/admin/locations")
