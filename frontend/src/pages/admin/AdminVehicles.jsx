@@ -91,21 +91,31 @@ export default function AdminVehicles() {
   };
 
   const del = async (v) => {
-    const action = v.active
-      ? "deaktivieren (kann später wieder aktiviert werden)"
-      : "endgültig löschen";
-    if (!window.confirm(`Fahrzeug "${v.brand} ${v.name}" ${action}?`)) return;
+    if (!window.confirm(
+      `Fahrzeug "${v.brand} ${v.name}" endgültig löschen?\n\nDies kann nicht rückgängig gemacht werden.`
+    )) return;
     try {
-      if (v.active) {
-        await api.delete(`/vehicles/${v.id}`);
-        toast.success("Fahrzeug deaktiviert");
-      } else {
-        await api.delete(`/vehicles/${v.id}?hard=true`);
-        toast.success("Fahrzeug gelöscht");
-      }
+      await api.delete(`/vehicles/${v.id}?hard=true`);
+      toast.success("Fahrzeug gelöscht");
       load();
     } catch (e) {
-      toast.error(apiError(e));
+      const msg = apiError(e);
+      // If active bookings block hard-delete, offer soft-delete fallback
+      if (msg.includes("aktive Buchung")) {
+        if (window.confirm(`${msg}\n\nStattdessen deaktivieren (Fahrzeug bleibt in der Datenbank, ist aber nicht mehr buchbar)?`)) {
+          try {
+            await api.delete(`/vehicles/${v.id}`);
+            toast.success("Fahrzeug deaktiviert");
+            load();
+            return;
+          } catch (e2) {
+            toast.error(apiError(e2));
+            return;
+          }
+        }
+        return;
+      }
+      toast.error(msg);
     }
   };
 
@@ -246,7 +256,7 @@ export default function AdminVehicles() {
                   </td>
                   <td className="p-3 text-right">
                     <Button size="sm" variant="ghost" onClick={() => openEdit(v)} data-testid={`vehicle-edit-${v.id}`}><Pencil size={14} /></Button>
-                    <Button size="sm" variant="ghost" className="text-red-600" onClick={() => del(v)} data-testid={`vehicle-delete-${v.id}`} title={v.active ? "Deaktivieren" : "Endgültig löschen"}><Trash2 size={14} /></Button>
+                    <Button size="sm" variant="ghost" className="text-red-600" onClick={() => del(v)} data-testid={`vehicle-delete-${v.id}`} title="Endgültig löschen"><Trash2 size={14} /></Button>
                   </td>
                 </tr>
               );

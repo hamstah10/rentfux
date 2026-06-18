@@ -672,17 +672,22 @@ async def delete_vehicle(vid: str, hard: bool = False, _: dict = Depends(require
     veh = await db.vehicles.find_one({"id": vid}, {"_id": 0, "id": 1})
     if not veh:
         raise HTTPException(404, "Fahrzeug nicht gefunden")
-    # Block hard-delete if any non-cancelled booking exists
-    active = await db.bookings.count_documents({
-        "vehicle_id": vid,
-        "status": {"$nin": ["cancelled"]},
-    })
     if hard:
+        # Block only on open bookings (not cancelled/completed)
+        active = await db.bookings.count_documents({
+            "vehicle_id": vid,
+            "status": {"$in": ["pending", "confirmed", "active"]},
+        })
         if active > 0:
             raise HTTPException(
                 409,
                 f"Fahrzeug hat {active} aktive Buchung(en). Bitte erst stornieren oder deaktivieren."
             )
+        # Anonymise historical bookings (completed/cancelled) to preserve accounting
+        await db.bookings.update_many(
+            {"vehicle_id": vid},
+            {"$set": {"vehicle_id": None, "vehicle_deleted": True}},
+        )
         await db.vehicles.delete_one({"id": vid})
         await db.vehicle_positions.delete_many({"vehicle_id": vid})
         return {"ok": True, "deleted": True}
