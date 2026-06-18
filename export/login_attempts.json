@@ -1,0 +1,65 @@
+[{
+	"_id": {
+		"$oid": "69e93c846bc470eb0a9c2cf7"
+	},
+	"identifier": "10.64.130.9:test_nope_31b6cd@rentfux.de",
+	"count": 1,
+	"updated_at": "2026-04-22T21:24:20.559713+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93c896bc470eb0a9c2d52"
+	},
+	"identifier": "10.64.130.9:test_brute_c6763f@rentfux.de",
+	"count": 3,
+	"updated_at": "2026-04-22T21:24:26.445643+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93ca56bc470eb0a9c2d83"
+	},
+	"identifier": "10.64.129.166:test_brute_8da7af@rentfux.de",
+	"count": 4,
+	"updated_at": "2026-04-22T21:24:55.176918+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cbd6bc470eb0a9c2dc2"
+	},
+	"identifier": "10.64.129.166:test_nope_bda9d4@rentfux.de",
+	"count": 1,
+	"updated_at": "2026-04-22T21:25:17.431949+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cc26bc470eb0a9c2e17"
+	},
+	"identifier": "10.64.130.9:test_brute_58bd25@rentfux.de",
+	"count": 1,
+	"updated_at": "2026-04-22T21:25:22.426704+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cd46bc470eb0a9c2e49"
+	},
+	"identifier": "10.64.129.166:test_nope_f3043c@rentfux.de",
+	"count": 1,
+	"updated_at": "2026-04-22T21:25:40.053490+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345ca95a2393296cde8b06"
+	},
+	"identifier": "10.79.128.145:test_nope_1573e9@rentfux.de",
+	"count": 1,
+	"updated_at": "2026-06-18T21:01:29.769855+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345cae5a2393296cde8b67"
+	},
+	"identifier": "10.79.128.145:test_brute_4509eb@rentfux.de",
+	"count": 2,
+	"updated_at": "2026-06-18T21:01:34.782112+00:00"
+}]
+

@@ -1,0 +1,555 @@
+[{
+	"_id": {
+		"$oid": "69e93c861cff6c7e73bedbce"
+	},
+	"id": "0e12ae43-52d2-43cb-9c36-261084b5145e",
+	"user_id": "e55cba00-102d-4961-afe8-14d633ced942",
+	"user_email": "test_user_6b5669ef@rentfux.de",
+	"user_name": "Updated Name",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Hamburg Hauptbahnhof",
+	"start_date": "2026-05-22",
+	"end_date": "2026-05-25",
+	"days": 3,
+	"extras": [
+		"Navigation",
+		"Vollkasko"
+	],
+	"extras_total": 51,
+	"subtotal": 117.0,
+	"total": 168.0,
+	"status": "active",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "Test note",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-22T21:24:22.156739+00:00",
+	"paid_at": "2026-04-22T21:24:22.218314+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cd5e86255a95bbb6d86"
+	},
+	"id": "cc484115-64a9-4603-88a5-9fe8c5114481",
+	"user_id": "fc7d5e87-2b3f-45a6-b23f-0f59f9ebf9e6",
+	"user_email": "test_user_a42928a4@rentfux.de",
+	"user_name": "Updated Name",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Hamburg Hauptbahnhof",
+	"start_date": "2027-02-17",
+	"end_date": "2027-02-20",
+	"days": 3,
+	"extras": [
+		"Navigation",
+		"Vollkasko"
+	],
+	"extras_total": 51,
+	"subtotal": 117.0,
+	"total": 168.0,
+	"status": "active",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "Test note",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-22T21:25:41.503507+00:00",
+	"paid_at": "2026-04-22T21:25:41.583671+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93e11e189924672f633b6"
+	},
+	"id": "30bc6168-9d0c-4b87-849f-5533d3e034cb",
+	"user_id": "25329202-ca2f-4ab1-a033-2697938ee569",
+	"user_email": "testadminbk_1776893457@rf.de",
+	"user_name": "Test",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-05-01",
+	"end_date": "2026-05-08",
+	"days": 7,
+	"extras": [
+		"Navigation",
+		"Vollkasko"
+	],
+	"extras_total": 119,
+	"subtotal": 273.0,
+	"total": 392.0,
+	"status": "cancelled",
+	"payment_status": "unpaid",
+	"payment_method": null,
+	"customer_note": "",
+	"notifications": {
+		"email_sent": false,
+		"whatsapp_sent": false
+	},
+	"created_at": "2026-04-22T21:30:57.644665+00:00",
+	"updated_at": "2026-04-22T21:30:57.914598+00:00",
+	"cancelled_at": "2026-04-22T21:30:58.036518+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e94871d08fc350c9f57311"
+	},
+	"id": "7264e967-3c98-4805-8f81-99b7d89317e8",
+	"user_id": "guest-14dba5e1-caf8-4ec9-bb46-bf929030710c",
+	"user_email": "guest_1776896113@rf.de",
+	"user_name": "Anna Gast",
+	"is_guest": true,
+	"guest_customer": {
+		"email": "guest_1776896113@rf.de",
+		"name": "Anna Gast",
+		"phone": "+49 170 999",
+		"date_of_birth": "1995-03-20",
+		"address": {
+			"street": "Musterstr",
+			"house_number": "5",
+			"postal_code": "12345",
+			"city": "Berlin",
+			"country": "Deutschland"
+		},
+		"license_number": "B987654321",
+		"license_expiry": "2032-01-01",
+		"id_card_number": ""
+	},
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-08-01",
+	"end_date": "2026-08-05",
+	"days": 4,
+	"extras": [
+		"Navigation"
+	],
+	"extras_total": 20,
+	"subtotal": 156.0,
+	"total": 176.0,
+	"status": "confirmed",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-22T22:15:13.677695+00:00",
+	"paid_at": "2026-04-22T22:15:13.677703+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e94872d08fc350c9f57313"
+	},
+	"id": "ea0220f4-431d-4666-8235-c07bd5d0734d",
+	"user_id": "58505d7c-ba94-47c9-9e9d-7ae4c7de35fd",
+	"user_email": "guest_acc_1776896113@rf.de",
+	"user_name": "Tim Neu",
+	"is_guest": false,
+	"guest_customer": null,
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-09-10",
+	"end_date": "2026-09-13",
+	"days": 3,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 117.0,
+	"total": 117.0,
+	"status": "confirmed",
+	"payment_status": "paid",
+	"payment_method": "paypal",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-22T22:15:14.056991+00:00",
+	"paid_at": "2026-04-22T22:15:14.056996+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e953316da7593ffd929722"
+	},
+	"id": "979f6b98-3d1a-4e42-80b5-5655c84b5937",
+	"user_id": "guest-ae78fc04-c1ad-4c64-a763-e753ef48cb6a",
+	"user_email": "pdf_1776898865@rf.de",
+	"user_name": "PDF Tester",
+	"is_guest": true,
+	"guest_customer": {
+		"email": "pdf_1776898865@rf.de",
+		"name": "PDF Tester",
+		"phone": "+49 170",
+		"date_of_birth": "1995-01-01",
+		"address": {
+			"street": "Str",
+			"house_number": "1",
+			"postal_code": "20099",
+			"city": "Hamburg",
+			"country": "DE"
+		},
+		"license_number": "B123456",
+		"license_expiry": "",
+		"id_card_number": ""
+	},
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-10-20",
+	"end_date": "2026-10-24",
+	"days": 4,
+	"extras": [
+		"Navigation"
+	],
+	"extras_total": 20,
+	"subtotal": 156.0,
+	"discount_code": "SOMMER20",
+	"discount_amount": 35.2,
+	"total": 140.8,
+	"status": "confirmed",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-22T23:01:05.676844+00:00",
+	"paid_at": "2026-04-22T23:01:05.676853+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e953a06da7593ffd929723"
+	},
+	"id": "4088fae3-a3cf-434a-b68f-dcbb5ecbe5bf",
+	"user_id": "ffcb8066-d59c-4ad6-beed-ef147fe81f47",
+	"user_email": "admin@rentfux.de",
+	"user_name": "RentFux Admin",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-04-23",
+	"end_date": "2026-04-26",
+	"days": 3,
+	"extras": [
+		"Zusatzfahrer"
+	],
+	"extras_total": 24,
+	"subtotal": 117.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 141.0,
+	"status": "pending",
+	"payment_status": "unpaid",
+	"payment_method": null,
+	"customer_note": "",
+	"notifications": {
+		"email_sent": false,
+		"whatsapp_sent": false
+	},
+	"created_at": "2026-04-22T23:02:56.726674+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e953d96da7593ffd929724"
+	},
+	"id": "8c9b521c-ea90-4a1a-a4e2-ce92a340555e",
+	"user_id": "ffcb8066-d59c-4ad6-beed-ef147fe81f47",
+	"user_email": "admin@rentfux.de",
+	"user_name": "RentFux Admin",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"vehicle_name": "A-Klasse",
+	"vehicle_brand": "Mercedes-Benz",
+	"vehicle_image": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-04-23",
+	"end_date": "2026-04-26",
+	"days": 3,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 237.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 237.0,
+	"status": "pending",
+	"payment_status": "unpaid",
+	"payment_method": null,
+	"customer_note": "",
+	"notifications": {
+		"email_sent": false,
+		"whatsapp_sent": false
+	},
+	"created_at": "2026-04-22T23:03:53.964417+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e9557bdf699e9ab0552f13"
+	},
+	"id": "98320bcb-b031-494a-aafc-b84d9fddcf55",
+	"user_id": "ffcb8066-d59c-4ad6-beed-ef147fe81f47",
+	"user_email": "admin@rentfux.de",
+	"user_name": "RentFux Admin",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"vehicle_name": "Model 3",
+	"vehicle_brand": "Tesla",
+	"vehicle_image": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-04-23",
+	"end_date": "2026-04-26",
+	"days": 3,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 357.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 357.0,
+	"status": "cancelled",
+	"payment_status": "unpaid",
+	"payment_method": null,
+	"customer_note": "",
+	"notifications": {
+		"email_sent": false,
+		"whatsapp_sent": false
+	},
+	"created_at": "2026-04-22T23:10:51.195293+00:00",
+	"cancelled_at": "2026-04-22T23:17:59.158632+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e955b5df699e9ab0552f15"
+	},
+	"id": "2666875e-dbbf-4fdb-a4a8-957009c6a650",
+	"user_id": "966fdb9b-5dd2-4f6a-874d-354ebc57624d",
+	"user_email": "flow_1776899507@rf.de",
+	"user_name": "Flow User",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-11-01",
+	"end_date": "2026-11-04",
+	"days": 3,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 117.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 117.0,
+	"status": "completed",
+	"payment_status": "unpaid",
+	"payment_method": null,
+	"customer_note": "",
+	"notifications": {
+		"email_sent": false,
+		"whatsapp_sent": false
+	},
+	"created_at": "2026-04-22T23:11:49.194370+00:00",
+	"updated_at": "2026-05-27T22:13:14.280266+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e955d7f7b30aac7a97b968"
+	},
+	"id": "bc328412-2428-4579-82ec-922e16208a3e",
+	"user_id": "910e0807-1d2c-4606-bdae-f065c8c0c440",
+	"user_email": "flow2_1776899541@rf.de",
+	"user_name": "F2",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-11-10",
+	"end_date": "2026-11-13",
+	"days": 3,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 117.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 117.0,
+	"status": "completed",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-22T23:12:23.480364+00:00",
+	"paid_at": "2026-04-22T23:12:23.591745+00:00",
+	"updated_at": "2026-05-27T22:13:11.083048+00:00"
+},
+{
+	"_id": {
+		"$oid": "69ec6639bc1ba9621a51e531"
+	},
+	"id": "703b19a7-50c8-4d93-a9bf-a1574f43ce54",
+	"user_id": "ffcb8066-d59c-4ad6-beed-ef147fe81f47",
+	"user_email": "admin@rentfux.de",
+	"user_name": "RentFux Admin",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2026-04-26",
+	"end_date": "2026-04-29",
+	"days": 3,
+	"extras": [
+		"Vollkasko"
+	],
+	"extras_total": 36,
+	"subtotal": 117.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 153.0,
+	"status": "completed",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-04-25T06:59:05.590965+00:00",
+	"paid_at": "2026-04-25T06:59:05.766396+00:00",
+	"updated_at": "2026-05-27T22:13:06.885151+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345ca01d148300b9d64c77"
+	},
+	"id": "8ea4659d-6d21-4e4d-a668-a5a011962e86",
+	"user_id": "guest-debfb15c-c484-4c41-b672-6cea7f4cf0b3",
+	"user_email": "test_guest_d79204@rentfux.de",
+	"user_name": "Guest GPS",
+	"is_guest": true,
+	"guest_customer": {
+		"email": "TEST_guest_d79204@rentfux.de",
+		"name": "Guest GPS",
+		"phone": "+491701112222",
+		"date_of_birth": "1990-05-15",
+		"address": {
+			"street": "Teststr",
+			"house_number": "1",
+			"postal_code": "28195",
+			"city": "Bremen",
+			"country": "Deutschland"
+		},
+		"license_number": "DE123456789",
+		"license_expiry": "",
+		"id_card_number": ""
+	},
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2027-07-23",
+	"end_date": "2027-07-25",
+	"days": 2,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 78.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 78.0,
+	"status": "confirmed",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-06-18T21:01:20.214284+00:00",
+	"paid_at": "2026-06-18T21:01:20.214293+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345cd96696a7a4cb46de00"
+	},
+	"id": "8d49197a-cfef-4713-81e9-7083350ffa5c",
+	"user_id": "guest-ce804003-34a3-4722-8401-2b47eb1c2cf5",
+	"user_email": "test_guest_81f201@rentfux.de",
+	"user_name": "Guest GPS",
+	"is_guest": true,
+	"guest_customer": {
+		"email": "TEST_guest_81f201@rentfux.de",
+		"name": "Guest GPS",
+		"phone": "+491701112222",
+		"date_of_birth": "1990-05-15",
+		"address": {
+			"street": "Teststr",
+			"house_number": "1",
+			"postal_code": "28195",
+			"city": "Bremen",
+			"country": "Deutschland"
+		},
+		"license_number": "DE123456789",
+		"license_expiry": "",
+		"id_card_number": ""
+	},
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"vehicle_name": "Polo",
+	"vehicle_brand": "Volkswagen",
+	"vehicle_image": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"location_id": "loc-hamburg-hbf",
+	"location_name": "RentFux Bremerhaven",
+	"start_date": "2030-07-07",
+	"end_date": "2030-07-09",
+	"days": 2,
+	"extras": [],
+	"extras_total": 0,
+	"subtotal": 78.0,
+	"discount_code": null,
+	"discount_amount": 0.0,
+	"total": 78.0,
+	"status": "confirmed",
+	"payment_status": "paid",
+	"payment_method": "stripe",
+	"customer_note": "",
+	"notifications": {
+		"email_sent": true,
+		"whatsapp_sent": true
+	},
+	"created_at": "2026-06-18T21:02:17.030358+00:00",
+	"paid_at": "2026-06-18T21:02:17.030366+00:00"
+}]
+

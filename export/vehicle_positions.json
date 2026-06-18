@@ -1,0 +1,1701 @@
+[{
+	"_id": {
+		"$oid": "6a3463caf78770533e935995"
+	},
+	"id": "232a1c6b-edcb-4571-8364-035c67934b94",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.59443504280631,
+	"lng": 8.455157948472973,
+	"speed_kmh": 68.0,
+	"heading": 186.98316437901767,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.3,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.821198+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463caf78770533e935996"
+	},
+	"id": "610cac47-765a-42b8-a8fe-59221aec89a6",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64487902153194,
+	"lng": 8.590832052973985,
+	"speed_kmh": 0.0,
+	"heading": 38.285593249214344,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 11.72,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.821710+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463caf78770533e935994"
+	},
+	"id": "1cbbd73e-3370-42a4-b345-d472fc9235a8",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.54988725142157,
+	"lng": 8.67350379778046,
+	"speed_kmh": 68.0,
+	"heading": 120.70602768059437,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 6.22,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.820723+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463caf78770533e935990"
+	},
+	"id": "16a02a59-5eb5-4d9d-8c61-213c7e81920b",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49589923036556,
+	"lng": 8.601736003996793,
+	"speed_kmh": 22.0,
+	"heading": 38.17938304973339,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 5.05,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.817928+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463caf78770533e935993"
+	},
+	"id": "5dd31026-e2c2-4830-a353-94db18aad7ba",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.54917071523498,
+	"lng": 8.578746584494723,
+	"speed_kmh": 48.0,
+	"heading": 223.72024450964918,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.07,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.820199+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463caf78770533e935992"
+	},
+	"id": "3b458575-aa4b-4398-be84-5d6a5daf7397",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.486383463010654,
+	"lng": 8.504319192526918,
+	"speed_kmh": 22.0,
+	"heading": 62.76909770544398,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 7.79,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.819639+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463caf78770533e935991"
+	},
+	"id": "05a8ddd2-8e8c-4c9e-aad7-d21290a50b7e",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.63669053315417,
+	"lng": 8.615303912722288,
+	"speed_kmh": 22.0,
+	"heading": 53.38364802690789,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 11.03,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:54.818918+00:00",
+	"ts_epoch": 1781818314
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e93598f"
+	},
+	"id": "6dedf085-bdc8-4533-916b-15f936b004bf",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64487902153194,
+	"lng": 8.590832052973985,
+	"speed_kmh": 0.0,
+	"heading": 309.5804460151625,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 11.72,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.815873+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e93598d"
+	},
+	"id": "39ff166a-45a5-469d-91cc-3840df46dbaf",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.551190669943836,
+	"lng": 8.669809697559337,
+	"speed_kmh": 68.0,
+	"heading": 107.74007892719834,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 6.01,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.814906+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e93598a"
+	},
+	"id": "8afc808e-347e-4b7f-b661-4738cd2c0028",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.63619796606068,
+	"lng": 8.614185957944981,
+	"speed_kmh": 48.0,
+	"heading": 13.901031869484182,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.96,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.813267+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e935989"
+	},
+	"id": "e2125fbe-d26a-4d78-9223-05d352111355",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.495250065723596,
+	"lng": 8.600877921732748,
+	"speed_kmh": 22.0,
+	"heading": 39.89947917311776,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 5.11,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.812301+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e93598e"
+	},
+	"id": "4671337f-4687-47d1-bc95-dc6b81da249d",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.59696866031604,
+	"lng": 8.45568086944085,
+	"speed_kmh": 68.0,
+	"heading": 194.66844601206373,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.44,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.815378+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e93598b"
+	},
+	"id": "2d11254b-04c6-4455-adf7-9658627ee0df",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.48600558364064,
+	"lng": 8.503085115675468,
+	"speed_kmh": 22.0,
+	"heading": 50.72022275490431,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 7.87,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.813862+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463bbf78770533e93598c"
+	},
+	"id": "3a2b0dd5-fab5-4871-be7b-426ef62ce310",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55047291881874,
+	"lng": 8.580842634200604,
+	"speed_kmh": 48.0,
+	"heading": 230.96080227540085,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.21,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:39.814387+00:00",
+	"ts_epoch": 1781818299
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935984"
+	},
+	"id": "497ec85d-0b1f-4fd9-b591-c228df133d11",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.485482746948605,
+	"lng": 8.502010807443181,
+	"speed_kmh": 22.0,
+	"heading": 60.616649300456885,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 7.96,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.806764+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935988"
+	},
+	"id": "da8eadd5-d861-4211-ad95-7ed8cc9ccb1e",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64487902153194,
+	"lng": 8.590832052973985,
+	"speed_kmh": 48.0,
+	"heading": 288.7370018231557,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.72,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.808813+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935986"
+	},
+	"id": "8b84c1e2-7681-4d02-9e65-56581fbae469",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55196843112911,
+	"lng": 8.665717453939255,
+	"speed_kmh": 68.0,
+	"heading": 98.24022137353386,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 5.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.807830+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935983"
+	},
+	"id": "7e1169f2-45aa-472c-a36f-b933a03ef506",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.634448935150715,
+	"lng": 8.613455903324306,
+	"speed_kmh": 48.0,
+	"heading": 4.65990787362739,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.76,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.806150+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935982"
+	},
+	"id": "8b02cbde-5027-4e07-88f7-d225263f5c4a",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.4946165161133,
+	"lng": 8.599987483988851,
+	"speed_kmh": 22.0,
+	"heading": 25.221185620595744,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 5.16,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.805115+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935987"
+	},
+	"id": "795c02d2-fca7-4001-b826-b6092908d976",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.59943801843173,
+	"lng": 8.456770086645552,
+	"speed_kmh": 68.0,
+	"heading": 197.34416360862593,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.56,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.808325+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a3463acf78770533e935985"
+	},
+	"id": "f9f0cf07-3343-4dfb-87a3-ae4c1aef588e",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55160778712883,
+	"lng": 8.583198282204764,
+	"speed_kmh": 48.0,
+	"heading": 244.33887990137285,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.34,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:24.807311+00:00",
+	"ts_epoch": 1781818284
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e93597f"
+	},
+	"id": "f6346794-4c60-49f5-bc4f-fcf93b5e5457",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.552334272448434,
+	"lng": 8.661465224625633,
+	"speed_kmh": 68.0,
+	"heading": 107.8216725041682,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 5.51,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.802092+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e93597e"
+	},
+	"id": "b6c1a8d8-7d92-4178-b599-e0b13aac37bf",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55238805294843,
+	"lng": 8.585932041035313,
+	"speed_kmh": 48.0,
+	"heading": 230.341178657785,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.46,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.801583+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e93597d"
+	},
+	"id": "947eff50-4486-484b-bc8d-3b0e34995af9",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.48507755503551,
+	"lng": 8.500801480073047,
+	"speed_kmh": 22.0,
+	"heading": 74.5283574504615,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 8.05,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.801004+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e935981"
+	},
+	"id": "892b14a9-15ed-42f4-b5c5-000eef29135d",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64430023840485,
+	"lng": 8.593710464222088,
+	"speed_kmh": 48.0,
+	"heading": 277.7706951638208,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.67,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.803091+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e93597c"
+	},
+	"id": "d383774f-3f48-4e34-94a1-837100fdcc67",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.63265308924362,
+	"lng": 8.613209039548293,
+	"speed_kmh": 22.0,
+	"heading": 301.9743764795848,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 10.56,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.800373+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e935980"
+	},
+	"id": "e2a053af-2795-465b-9a4b-fdfd689516a2",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.60187450973607,
+	"lng": 8.458052447309203,
+	"speed_kmh": 68.0,
+	"heading": 207.26163096497027,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.67,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.802604+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34639df78770533e93597b"
+	},
+	"id": "b4afa99d-c90f-449d-bee3-31814bb4fe9d",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49386941663097,
+	"lng": 8.599395971796316,
+	"speed_kmh": 22.0,
+	"heading": 24.21926446601749,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 5.23,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:31:09.799413+00:00",
+	"ts_epoch": 1781818269
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e935977"
+	},
+	"id": "da0c657f-e0c4-48a2-ad1c-d4eace53bd67",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.553537989313654,
+	"lng": 8.588267000005768,
+	"speed_kmh": 48.0,
+	"heading": 242.8520081815092,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.62,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.795597+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e935978"
+	},
+	"id": "0cd53ae3-a66c-4252-8202-0d36caea8571",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55311549502329,
+	"lng": 8.657374738612035,
+	"speed_kmh": 68.0,
+	"heading": 96.13906266942108,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 5.27,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.796115+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e935979"
+	},
+	"id": "e9070551-1f07-4617-81a6-b11cf20e2e5f",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.60414353540899,
+	"lng": 8.460022931553171,
+	"speed_kmh": 68.0,
+	"heading": 221.80938508830354,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.73,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.796625+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e935975"
+	},
+	"id": "d4d1abfa-b512-4c8d-a59c-742e146aef8c",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.632215781475786,
+	"lng": 8.6143904485924,
+	"speed_kmh": 0.0,
+	"heading": 307.2234484665369,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 10.53,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.794397+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e935974"
+	},
+	"id": "6fc746fd-f198-44e8-9c01-738f74ea06d4",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49311627814707,
+	"lng": 8.598826519369693,
+	"speed_kmh": 22.0,
+	"heading": 36.476429304103505,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 5.3,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.793448+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e93597a"
+	},
+	"id": "d1de6e58-5253-4e78-ae4a-ca6ec8a0f827",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64405661890757,
+	"lng": 8.596722030817222,
+	"speed_kmh": 48.0,
+	"heading": 291.00387089960896,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.66,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.797114+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34638ef78770533e935976"
+	},
+	"id": "0c7eb7bb-50ae-4028-a662-b596c2fa0aba",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.4848572565714,
+	"lng": 8.49946391210922,
+	"speed_kmh": 22.0,
+	"heading": 75.51948580979712,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 8.13,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:54.795012+00:00",
+	"ts_epoch": 1781818254
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e935971"
+	},
+	"id": "796cc40d-4760-4ab5-91f2-c19c4dc41c27",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55338846999257,
+	"lng": 8.653102684096181,
+	"speed_kmh": 68.0,
+	"heading": 87.09567927637414,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 5.01,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.790100+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e93596f"
+	},
+	"id": "0b513886-0455-4b4f-959c-8cfd50d49c7f",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.48465075822018,
+	"lng": 8.498120146760822,
+	"speed_kmh": 22.0,
+	"heading": 75.66883108627532,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 8.2,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.789021+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e935972"
+	},
+	"id": "801f6163-07b7-4b5c-992b-22471b446b51",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.60604612336551,
+	"lng": 8.462890913125323,
+	"speed_kmh": 48.0,
+	"heading": 191.35490015375905,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.74,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.790591+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e935970"
+	},
+	"id": "12ade2a3-4a7d-4f5f-91f1-9c9229c070d7",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55436013418421,
+	"lng": 8.590965884569023,
+	"speed_kmh": 48.0,
+	"heading": 246.6785900941783,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.789587+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e93596e"
+	},
+	"id": "16ba98fa-70a3-42c5-b67a-66b2917713da",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.632215781475786,
+	"lng": 8.6143904485924,
+	"speed_kmh": 0.0,
+	"heading": 319.3999149336991,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 10.53,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.788351+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e935973"
+	},
+	"id": "aadb21dd-3a3d-4ea0-9500-b5b618cfaac1",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64341079724745,
+	"lng": 8.599559510695052,
+	"speed_kmh": 48.0,
+	"heading": 296.5709878968424,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.61,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.791064+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a34637ff78770533e93596d"
+	},
+	"id": "ee0dec09-c5d4-4e94-bfcc-40a6b1db5624",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.492452230366325,
+	"lng": 8.598001299641718,
+	"speed_kmh": 22.0,
+	"heading": 30.22155094235798,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 5.36,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:39.787256+00:00",
+	"ts_epoch": 1781818239
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e93596a"
+	},
+	"id": "a6638e6e-f845-49a3-b102-c7e47540a7a8",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55325913661095,
+	"lng": 8.648811521226905,
+	"speed_kmh": 68.0,
+	"heading": 98.68823851636674,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 4.74,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.784239+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e93596c"
+	},
+	"id": "e357ae4b-d5f6-4b51-871c-9c064b624d2d",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.6426048400052,
+	"lng": 8.602277867799351,
+	"speed_kmh": 48.0,
+	"heading": 281.90030935175224,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.54,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.785254+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e93596b"
+	},
+	"id": "84231861-4637-42aa-9782-38cb7aec5c4d",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.60781265751881,
+	"lng": 8.463488829007465,
+	"speed_kmh": 48.0,
+	"heading": 194.69424616577265,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.85,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.784768+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e935968"
+	},
+	"id": "89823cd5-da76-4573-abd8-6447f80b8614",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.484446344756996,
+	"lng": 8.496775487891076,
+	"speed_kmh": 22.0,
+	"heading": 89.86309359345935,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 8.28,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.783175+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e935969"
+	},
+	"id": "cda8bc22-bfb7-4192-acbb-6956ef59300e",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 176.31856559283088,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.783730+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e935966"
+	},
+	"id": "32a50e25-2935-42fa-9d16-6703257fd5be",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 115.59590258994128,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.781573+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346370f78770533e935967"
+	},
+	"id": "f72b6800-dfd3-4592-97ab-51bab9e34c67",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.632215781475786,
+	"lng": 8.6143904485924,
+	"speed_kmh": 68.0,
+	"heading": 43.06219668726768,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.53,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:24.782564+00:00",
+	"ts_epoch": 1781818224
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e935964"
+	},
+	"id": "431d5e00-1c84-4639-b9bf-b1b8b32b3b2d",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.642233291413184,
+	"lng": 8.60525189211851,
+	"speed_kmh": 48.0,
+	"heading": 285.953078343292,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.52,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.779261+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e935961"
+	},
+	"id": "eaaa16f0-1676-4b24-b7d2-730bd2b46138",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 185.29331842653878,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.777748+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e935962"
+	},
+	"id": "926a42a6-241f-49c2-b1f6-616e6e363fa1",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 126.46436976706744,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.778251+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e93595e"
+	},
+	"id": "58fa7bd9-c969-4211-b679-164078f1670c",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 110.84904051345349,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.775689+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e93595f"
+	},
+	"id": "da9efb00-8f67-4da9-a2c4-e94bbd9e2e43",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.63035085356001,
+	"lng": 8.611451351848363,
+	"speed_kmh": 68.0,
+	"heading": 28.993138544821214,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.29,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.776622+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e935963"
+	},
+	"id": "8f2d7870-ede9-456c-b1b7-57779c5078bd",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.60955552820551,
+	"lng": 8.46425919531552,
+	"speed_kmh": 48.0,
+	"heading": 204.23575987270527,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.95,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.778758+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346361f78770533e935960"
+	},
+	"id": "0f13df88-81a1-4464-98ac-78635e14b07d",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.48444437147485,
+	"lng": 8.495387644943964,
+	"speed_kmh": 48.0,
+	"heading": 150.15004436151892,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 8.34,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:30:09.777211+00:00",
+	"ts_epoch": 1781818209
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e93595b"
+	},
+	"id": "8afb3726-9be6-40de-b7bc-eda597c0a089",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 131.37824562636473,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.771156+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e93595c"
+	},
+	"id": "532516af-6ba2-4299-8bd2-06613fed6989",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.6111985265736,
+	"lng": 8.465505906206662,
+	"speed_kmh": 48.0,
+	"heading": 293.75618680232185,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.02,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.771654+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e93595d"
+	},
+	"id": "9c753df6-fe25-4cfa-8099-435c8a8f5017",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64173806609729,
+	"lng": 8.608174150115497,
+	"speed_kmh": 22.0,
+	"heading": 196.70970422920342,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 11.5,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.772135+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e935957"
+	},
+	"id": "e3b0e5cd-3f64-4631-a516-74426ac7d5dc",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 120.23770918670574,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.768520+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e935958"
+	},
+	"id": "9c67ab4b-3f5b-4a48-a06d-07085b2d2027",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.62811819261301,
+	"lng": 8.609365036509084,
+	"speed_kmh": 68.0,
+	"heading": 38.04892445720524,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.02,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.769487+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e935959"
+	},
+	"id": "30ec29bc-964d-40f1-9226-59d91d8bbb6b",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.48600713150508,
+	"lng": 8.493880447120773,
+	"speed_kmh": 48.0,
+	"heading": 156.00678383571227,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 8.28,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.770089+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346352f78770533e93595a"
+	},
+	"id": "a135adc5-02cd-4086-8b66-2dbfb1606812",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 177.99597931584526,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:54.770647+00:00",
+	"ts_epoch": 1781818194
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e935950"
+	},
+	"id": "6c7b5bba-d3ae-49a3-a0d9-43d50839c920",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.62610809638529,
+	"lng": 8.606712275707924,
+	"speed_kmh": 68.0,
+	"heading": 44.81357709081496,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 9.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.762785+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e935951"
+	},
+	"id": "94ff1ccb-d8ff-456c-9c68-a9fbcc8742d3",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.48765324611583,
+	"lng": 8.492649070902374,
+	"speed_kmh": 48.0,
+	"heading": 158.9036420305779,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 8.21,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.763298+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e935952"
+	},
+	"id": "c878780c-2f0e-42ab-927a-53e9a5938621",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 174.88479904327457,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.763794+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e935953"
+	},
+	"id": "0169bc6e-3b45-44d0-88bf-4db161a6e474",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 152.76936895518898,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.764431+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e935954"
+	},
+	"id": "9cbea3a6-35bc-48c8-9a9a-c01107263976",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.610472678784575,
+	"lng": 8.468285629812417,
+	"speed_kmh": 0.0,
+	"heading": 274.49492644884754,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 10.83,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.765139+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e935955"
+	},
+	"id": "038cefc9-7bbd-4319-8bc3-8ce5d23308e5",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.642529020445416,
+	"lng": 8.608574681805505,
+	"speed_kmh": 22.0,
+	"heading": 201.0729570236304,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 11.59,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.765794+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346343f78770533e93594f"
+	},
+	"id": "b6651cbb-5d74-411a-adf2-52430579192f",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 134.375269150111,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:39.761941+00:00",
+	"ts_epoch": 1781818179
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e93594a"
+	},
+	"id": "048941e2-94ca-46c2-826f-a048a7ae7a27",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 186.89453686827275,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.758094+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e93594b"
+	},
+	"id": "92710db7-0e42-4bcc-af7c-85b4e732d49b",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 151.0741164375975,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.758550+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e935949"
+	},
+	"id": "c2531b27-af79-4243-9f73-279e065a45bc",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.489334284703745,
+	"lng": 8.4915590438262,
+	"speed_kmh": 48.0,
+	"heading": 150.61469782995619,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 8.13,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.757600+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e93594c"
+	},
+	"id": "1a18946c-db4a-461f-b433-da3e444e576c",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.610472678784575,
+	"lng": 8.468285629812417,
+	"speed_kmh": 48.0,
+	"heading": 195.80140745748312,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.83,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.759001+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e93594d"
+	},
+	"id": "bc9f45f8-cf2c-44c8-874a-1f796590a968",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.64329961780275,
+	"lng": 8.609075568699325,
+	"speed_kmh": 22.0,
+	"heading": 189.6113149486605,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 11.68,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.759457+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e935948"
+	},
+	"id": "e09eabca-09cb-411d-8552-f8d80a4d5db1",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.624297306050266,
+	"lng": 8.603678869475548,
+	"speed_kmh": 68.0,
+	"heading": 41.63584603260683,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 9.54,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.757067+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346334f78770533e935947"
+	},
+	"id": "696d9f28-3a67-4f95-87bf-9849b50f06c5",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 133.476147822527,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:24.756239+00:00",
+	"ts_epoch": 1781818164
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e935944"
+	},
+	"id": "ee687ec2-39b7-4099-9a7c-29cdf5f7f169",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.61220639284716,
+	"lng": 8.469112666948176,
+	"speed_kmh": 48.0,
+	"heading": 180.97463147364422,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 10.94,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.752014+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e935945"
+	},
+	"id": "11f49b2b-fe67-48bc-a29d-79c11ca2ba13",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.644113851580684,
+	"lng": 8.609308164804762,
+	"speed_kmh": 0.0,
+	"heading": 192.7378383335718,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 11.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.752825+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e935941"
+	},
+	"id": "83f534d8-710a-4b5f-bc9f-a2bb65c157c6",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.49090426616644,
+	"lng": 8.490073023195688,
+	"speed_kmh": 22.0,
+	"heading": 223.10852620753698,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 8.09,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.750368+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e93593f"
+	},
+	"id": "d6de95e4-88f0-42d7-92ce-3de108396867",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 127.21775481421663,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.748954+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e935940"
+	},
+	"id": "4949abe1-f20e-4117-abab-3513f9788b43",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.62238957276052,
+	"lng": 8.600819506653032,
+	"speed_kmh": 68.0,
+	"heading": 50.04692970827721,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 9.3,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.749807+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e935942"
+	},
+	"id": "2f9d145a-8b28-4b45-9e12-b66466e13686",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 172.40857094280412,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.750874+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a346325f78770533e935943"
+	},
+	"id": "0c078c1d-74ed-4b16-975b-08207df033b0",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 157.41478504851216,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:09.751355+00:00",
+	"ts_epoch": 1781818149
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af18608"
+	},
+	"id": "8a69ebcb-9abe-4b4a-8bf9-ae538a16bfb2",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.49150716905633,
+	"lng": 8.491021611319063,
+	"speed_kmh": 22.0,
+	"heading": 225.114662268104,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 7.99,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.912745+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af18609"
+	},
+	"id": "0e1b76b1-9e30-4aad-aafe-17714dc2e2ec",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 0.0,
+	"heading": 184.82051712701445,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.913273+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af1860a"
+	},
+	"id": "52c35b77-9d43-4cde-85d4-585b7d246a28",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 169.24542683109948,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.913782+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af1860b"
+	},
+	"id": "3ca2018f-f979-4fef-b459-badcc5c32852",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.6140079339723,
+	"lng": 8.469164330773692,
+	"speed_kmh": 48.0,
+	"heading": 182.86177918540417,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.08,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.914238+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af1860c"
+	},
+	"id": "5057a21b-3e02-4592-8ecb-f6bb98464940",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.644113851580684,
+	"lng": 8.609308164804762,
+	"speed_kmh": 0.0,
+	"heading": 201.53739873958935,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 11.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.914690+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af18606"
+	},
+	"id": "3b60fa08-c7cf-4ad8-b16a-4e3d860978d9",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 113.16584151099896,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.911347+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a34631e6227edce0af18607"
+	},
+	"id": "20a4a325-55bd-4584-91f5-8a031eb88348",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.620750425756206,
+	"lng": 8.59752053222308,
+	"speed_kmh": 68.0,
+	"heading": 51.06554794011187,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 9.09,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:29:02.912190+00:00",
+	"ts_epoch": 1781818142
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda18f"
+	},
+	"id": "5457eda4-ce8b-4dd9-9bfb-c7c962b5fb88",
+	"vehicle_id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"lat": 53.55507344711011,
+	"lng": 8.593751159167805,
+	"speed_kmh": 48.0,
+	"heading": 214.14555437983648,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 1.92,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.348017+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda190"
+	},
+	"id": "456753ae-c565-4b9b-851c-df95306049f7",
+	"vehicle_id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"lat": 53.55364471984526,
+	"lng": 8.644564105516917,
+	"speed_kmh": 0.0,
+	"heading": 172.16397871703268,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 4.49,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.348526+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda191"
+	},
+	"id": "e8e5aca3-2bb9-435a-887c-5c3c9e06b5c4",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.61580748871908,
+	"lng": 8.469315980319774,
+	"speed_kmh": 68.0,
+	"heading": 104.92101873029026,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.23,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.349007+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda18d"
+	},
+	"id": "39609b6d-59e7-4b8b-9ae4-b604969291f9",
+	"vehicle_id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"lat": 53.619146322850234,
+	"lng": 8.594173077567369,
+	"speed_kmh": 68.0,
+	"heading": 47.75727258060144,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 8.89,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.346900+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda18e"
+	},
+	"id": "25bde3e6-b275-413d-b817-78fca77173cb",
+	"vehicle_id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"lat": 53.49208994631456,
+	"lng": 8.49200510650244,
+	"speed_kmh": 22.0,
+	"heading": 230.92811440937328,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 7.9,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.347484+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda192"
+	},
+	"id": "aa7e14d5-cd8f-4c01-8ae0-7d537c504d38",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.644113851580684,
+	"lng": 8.609308164804762,
+	"speed_kmh": 0.0,
+	"heading": 196.1144900578912,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 11.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.349493+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346318f5e4fdf1f0dda18c"
+	},
+	"id": "b1f6c1b5-68b2-4765-8a3a-6bb14d7a67c2",
+	"vehicle_id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"lat": 53.49173864621377,
+	"lng": 8.59730261370103,
+	"speed_kmh": 0.0,
+	"heading": 125.68042063253515,
+	"source": "mock",
+	"status": "parked",
+	"fence_km": 5.43,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:56.345968+00:00",
+	"ts_epoch": 1781818136
+},
+{
+	"_id": {
+		"$oid": "6a346309f5e4fdf1f0dda189"
+	},
+	"id": "0fd8a236-4161-413e-968f-26a2807a731b",
+	"vehicle_id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"lat": 53.61646473855099,
+	"lng": 8.465157961960488,
+	"speed_kmh": 68.0,
+	"heading": 91.07990815357964,
+	"source": "mock",
+	"status": "highway",
+	"fence_km": 11.46,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:41.342800+00:00",
+	"ts_epoch": 1781818121
+},
+{
+	"_id": {
+		"$oid": "6a346309f5e4fdf1f0dda18a"
+	},
+	"id": "a5377186-3f95-47e2-9cda-64b67dfff7c4",
+	"vehicle_id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"lat": 53.644113851580684,
+	"lng": 8.609308164804762,
+	"speed_kmh": 22.0,
+	"heading": 155.19462484533057,
+	"source": "mock",
+	"status": "city",
+	"fence_km": 11.77,
+	"geofence_alert": false,
+	"ts": "2026-06-18T21:28:41.343270+00:00",
+	"ts_epoch": 1781818121
+}]
+

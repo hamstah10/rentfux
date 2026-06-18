@@ -1,0 +1,29 @@
+[{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc151"
+	},
+	"id": "loc-hamburg-hbf",
+	"name": "RentFux Bremerhaven",
+	"address": "Deichstr. 48",
+	"city": "Bremerhaven",
+	"postal_code": "27568",
+	"active": true,
+	"created_at": "2026-04-22T21:15:15.872523+00:00",
+	"email": "info@rentfux.de",
+	"phone": "+49 471 0000000"
+},
+{
+	"_id": {
+		"$oid": "6a3455cc8fe564627ee174d0"
+	},
+	"id": "67309a35-2ea7-4819-89dd-c88a34dcddd0",
+	"name": "RentFUX Bremen",
+	"address": "Bremerstr. 2",
+	"city": "Bremen",
+	"postal_code": "28199",
+	"phone": "+49 421 111111",
+	"email": "bre@rentfux.de",
+	"active": true,
+	"created_at": "2026-06-18T20:32:12.298855+00:00"
+}]
+

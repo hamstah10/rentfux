@@ -1,0 +1,452 @@
+[{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc150"
+	},
+	"id": "ffcb8066-d59c-4ad6-beed-ef147fe81f47",
+	"email": "admin@rentfux.de",
+	"password_hash": "$2b$12$NxLTB2C3RfXVC2iXj7DrweyjCOsTDkFhefiPPsWJ/kxwe4Wmchoeq",
+	"name": "RentFux Admin",
+	"phone": "+4915228076375",
+	"role": "admin",
+	"created_at": "2026-04-22T21:15:15.871003+00:00",
+	"address": {
+		"street": "Deichstr.",
+		"house_number": "48",
+		"postal_code": "27568",
+		"city": "Bremerhaven",
+		"country": "Deutschland"
+	},
+	"company": {
+		"company_name": "",
+		"vat_id": "",
+		"contact_person": ""
+	},
+	"date_of_birth": "1976-06-10",
+	"id_card_number": "L2RVR2T37 ",
+	"is_business": false,
+	"license_expiry": "2026-04-30",
+	"license_number": "sdfadsfasdfasdf",
+	"documents": {
+		"id_card": {
+			"path": "rentfux/users/ffcb8066-d59c-4ad6-beed-ef147fe81f47/id_card/f96d8ba8-4b04-4c05-97df-7de0bac76cc0.pdf",
+			"filename": "Ausweis 5. Sept. 2023.pdf",
+			"content_type": "application/pdf",
+			"size": 145258,
+			"uploaded_at": "2026-04-22T23:01:30.239450+00:00"
+		},
+		"license": {
+			"path": "rentfux/users/ffcb8066-d59c-4ad6-beed-ef147fe81f47/license/821ebcd1-bdcf-41a1-af3a-ba6167331046.pdf",
+			"filename": "Ausweis 5. Sept. 2023.pdf",
+			"content_type": "application/pdf",
+			"size": 145258,
+			"uploaded_at": "2026-04-22T23:02:17.409170+00:00"
+		}
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93c831cff6c7e73bedbcc"
+	},
+	"id": "1e7f87e0-e72f-4b31-b38e-ad91b4414ce3",
+	"email": "test_dup_317628@rentfux.de",
+	"password_hash": "$2b$12$U7RxFgnt5I4yjXTNxICEXOIcJ862VYGgaHyVb3bxQiwQDu7uhzLAi",
+	"name": "Admin Updated Name",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:24:19.983158+00:00",
+	"address": {
+		"street": "AdminStr",
+		"house_number": "99",
+		"postal_code": "10115",
+		"city": "Berlin",
+		"country": "Deutschland"
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93c841cff6c7e73bedbcd"
+	},
+	"id": "e55cba00-102d-4961-afe8-14d633ced942",
+	"email": "test_user_6b5669ef@rentfux.de",
+	"password_hash": "$2b$12$gVug6DPQV1xqtz8Xstw9E.KlAxikd8r/J0vh2LTysWrMaICrtkmwO",
+	"name": "Updated Name",
+	"phone": "+491709999999",
+	"role": "user",
+	"created_at": "2026-04-22T21:24:20.903048+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cbd704750cb2e1b913c"
+	},
+	"id": "ca638339-92f6-4965-bcd6-c1cf9abc66b4",
+	"email": "test_user_006bdaf8@rentfux.de",
+	"password_hash": "$2b$12$YA1P8/idEdjoYmcARp7TL.wtXPsNDmqwBZjKqZ32wgG4gERrQRg3m",
+	"name": "Updated Name",
+	"phone": "+491709999999",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:17.789995+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cbf704750cb2e1b913d"
+	},
+	"id": "dd77d58b-0f3a-4db7-b74b-27076df0b8ea",
+	"email": "test_other_6f4512@rentfux.de",
+	"password_hash": "$2b$12$esXDANl3wqElxhxPR14Q4OH2ZbM3jtN0gfcc2gZNSDFokZ174eOjW",
+	"name": "Other",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:19.341777+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cc7704750cb2e1b9141"
+	},
+	"id": "328ffba1-90af-4466-864b-12227b676368",
+	"email": "test_user_c82d768a@rentfux.de",
+	"password_hash": "$2b$12$81Sh/rjjaRqrqUMv0e7VFOLaxOGR4Jt8tcxK6WinV9YaVBiU41EGK",
+	"name": "Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:27.765105+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cd3e86255a95bbb6d84"
+	},
+	"id": "0591f239-2c0c-49a2-a3bb-c2e11de00751",
+	"email": "test_dup_0874bf@rentfux.de",
+	"password_hash": "$2b$12$jji9MHHQW2qf9PXGFK1xfuO6DvZgOyVBcwbsJUNBS6yOUheVPnfZe",
+	"name": "Dup",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:39.485999+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cd4e86255a95bbb6d85"
+	},
+	"id": "fc7d5e87-2b3f-45a6-b23f-0f59f9ebf9e6",
+	"email": "test_user_a42928a4@rentfux.de",
+	"password_hash": "$2b$12$AkNKzTS3IT5ry0jk1rc9veDWP0ETEhJ4VJ/twuMXuV2cm3OmWNAvq",
+	"name": "Updated Name",
+	"phone": "+491709999999",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:40.400735+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cd6e86255a95bbb6d87"
+	},
+	"id": "de163888-749b-4fc0-a4f9-f626afabd5c3",
+	"email": "test_other_1dab53@rentfux.de",
+	"password_hash": "$2b$12$bRLgBFoGX5AUdANkhwCcNOUOQd16AFA.3urLqjn8pFL0myRZ1qvum",
+	"name": "Other",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:42.259546+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93cd8e86255a95bbb6d8a"
+	},
+	"id": "c4bf6fe6-fcd7-4599-b952-a3cddf4459cc",
+	"email": "test_brute_0bb185@rentfux.de",
+	"password_hash": "$2b$12$032AbVOKl80BghGJ.YcoYOz5gWZbXebAeiXpWM0bIIovggsprH8S2",
+	"name": "B",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:25:44.856194+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e93e11e189924672f633b5"
+	},
+	"id": "25329202-ca2f-4ab1-a033-2697938ee569",
+	"email": "testadminbk_1776893457@rf.de",
+	"password_hash": "$2b$12$B9ETvWiE.pGVq8fq476TsOKscYvb8OI29Sivzzr2ROZIcWijmIFyy",
+	"name": "Test",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:30:57.501450+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e94100dcf5dcdf6bc2c4ed"
+	},
+	"id": "ca4ef2ac-a4a3-4e94-9a17-c6b809d13c6d",
+	"email": "doc_test_1776894207@rf.de",
+	"password_hash": "$2b$12$vW8eCfYDsWoMPJxej0nU.OSUVMgv19zy9vA3MuZc2kKgy7P6jxe7e",
+	"name": "Max Muster",
+	"phone": "+49 170 123456",
+	"role": "user",
+	"created_at": "2026-04-22T21:43:28.167209+00:00",
+	"address": {
+		"street": "Hauptstraße",
+		"house_number": "12",
+		"postal_code": "20099",
+		"city": "Hamburg",
+		"country": "Deutschland"
+	},
+	"date_of_birth": "1990-05-15",
+	"id_card_number": "T012345678",
+	"license_expiry": "2030-12-31",
+	"license_number": "B12345678",
+	"documents": {
+		"license": {
+			"path": "rentfux/users/ca4ef2ac-a4a3-4e94-9a17-c6b809d13c6d/license/15c0503a-6060-4c6e-a0a6-c1047c4e9b7a.png",
+			"filename": "fakelic.png",
+			"content_type": "image/png",
+			"size": 2056,
+			"uploaded_at": "2026-04-22T21:43:28.724935+00:00"
+		}
+	}
+},
+{
+	"_id": {
+		"$oid": "69e9422274662594dbfcd007"
+	},
+	"id": "ad029ea7-b0d4-495c-bc9e-a3fcd3317541",
+	"email": "biz_1776894497@rf.de",
+	"password_hash": "$2b$12$u41gAVKI5BU9fLnehkz61ub4AT.qQX9OP53QGcsXQ6fZwrnbdtUS6",
+	"name": "Bob Biz",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-04-22T21:48:18.086174+00:00",
+	"company": {
+		"company_name": "Hanse GmbH",
+		"vat_id": "DE123456789",
+		"contact_person": "Bob"
+	},
+	"is_business": true
+},
+{
+	"_id": {
+		"$oid": "69e94872d08fc350c9f57312"
+	},
+	"id": "58505d7c-ba94-47c9-9e9d-7ae4c7de35fd",
+	"email": "guest_acc_1776896113@rf.de",
+	"password_hash": "$2b$12$ubN70/VPQ/AuC2N8CLNezej/xvHCDpnkfNVMDRQlPQ0j2RLd5sAUK",
+	"name": "Tim Neu",
+	"phone": "+49 151 55",
+	"date_of_birth": "2000-01-01",
+	"address": {
+		"street": "Neuestr",
+		"house_number": "1",
+		"postal_code": "54321",
+		"city": "Köln",
+		"country": "Deutschland"
+	},
+	"license_number": "C111222333",
+	"license_expiry": "",
+	"id_card_number": "",
+	"role": "user",
+	"created_at": "2026-04-22T22:15:14.054655+00:00"
+},
+{
+	"_id": {
+		"$oid": "69e955b3df699e9ab0552f14"
+	},
+	"id": "966fdb9b-5dd2-4f6a-874d-354ebc57624d",
+	"email": "flow_1776899507@rf.de",
+	"password_hash": "$2b$12$3zcuPoW1vmJuM1752E0iPOOI01xu6uJZFev8Y289QSGhzhRBQn1WW",
+	"name": "Flow User",
+	"phone": "+49 170",
+	"role": "user",
+	"created_at": "2026-04-22T23:11:47.784531+00:00",
+	"address": {
+		"street": "Str",
+		"house_number": "1",
+		"postal_code": "20099",
+		"city": "Hamburg",
+		"country": "DE"
+	},
+	"date_of_birth": "1990-01-01",
+	"license_number": "B12345",
+	"documents": {
+		"license": {
+			"path": "rentfux/users/966fdb9b-5dd2-4f6a-874d-354ebc57624d/license/0908bad2-15e6-46e5-a6e7-ff9a11e999f4.png",
+			"filename": "a.png",
+			"content_type": "image/png",
+			"size": 1032,
+			"uploaded_at": "2026-04-22T23:11:48.261195+00:00"
+		},
+		"id_card": {
+			"path": "rentfux/users/966fdb9b-5dd2-4f6a-874d-354ebc57624d/id_card/d5511f73-668b-4a9b-a424-28eede256fc6.png",
+			"filename": "a.png",
+			"content_type": "image/png",
+			"size": 1032,
+			"uploaded_at": "2026-04-22T23:11:48.669145+00:00"
+		}
+	}
+},
+{
+	"_id": {
+		"$oid": "69e955d6f7b30aac7a97b967"
+	},
+	"id": "910e0807-1d2c-4606-bdae-f065c8c0c440",
+	"email": "flow2_1776899541@rf.de",
+	"password_hash": "$2b$12$5f4aMv.nkXpK6n4m2Trp9.OPYXc1xirMCEqif7W504wjbluj5L3Ny",
+	"name": "F2",
+	"phone": "+49",
+	"role": "user",
+	"created_at": "2026-04-22T23:12:22.376818+00:00",
+	"address": {
+		"street": "X",
+		"house_number": "1",
+		"postal_code": "20099",
+		"city": "HH",
+		"country": "Deutschland"
+	},
+	"date_of_birth": "1990-01-01",
+	"license_number": "B1",
+	"documents": {
+		"license": {
+			"path": "rentfux/users/910e0807-1d2c-4606-bdae-f065c8c0c440/license/317c34bf-bdbc-47a6-bd17-b083947ab49d.png",
+			"filename": "x.png",
+			"content_type": "image/png",
+			"size": 520,
+			"uploaded_at": "2026-04-22T23:12:22.742423+00:00"
+		},
+		"id_card": {
+			"path": "rentfux/users/910e0807-1d2c-4606-bdae-f065c8c0c440/id_card/6f0e9e50-bf23-4a3d-9838-78a3f81e6e7e.png",
+			"filename": "x.png",
+			"content_type": "image/png",
+			"size": 520,
+			"uploaded_at": "2026-04-22T23:12:23.043453+00:00"
+		}
+	}
+},
+{
+	"_id": {
+		"$oid": "6a345c650039ce26d90d9f1a"
+	},
+	"id": "6f4b7c72-c468-4078-ac66-9ac2f343d429",
+	"email": "test_gps_ac880e4a@rentfux.de",
+	"password_hash": "$2b$12$563FKfAEa53O2zJUmp/zTujm7/MbCBzXVX5s5UMejNnq1Ljc2glSG",
+	"name": "GPS Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-06-18T21:00:21.740534+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345c873eca7d590d20e745"
+	},
+	"id": "e4d3f16c-4790-487e-b963-05c718d9e684",
+	"email": "test_gps_b2a49f13@rentfux.de",
+	"password_hash": "$2b$12$VWJRJbPYfeoLwDTqCb1l2O9zPC9wiBf.KBfJePTa4mwMmqk8T8fM.",
+	"name": "GPS Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-06-18T21:00:55.786181+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345c9e1d148300b9d64c6d"
+	},
+	"id": "f944df8e-4f1a-4f68-9cad-3bc4e4639e3a",
+	"email": "test_gps_29722b27@rentfux.de",
+	"password_hash": "$2b$12$8p/uExTQPfm4T241HaGoEe.4hN/.GEjaQENr1VEvvf8BUn7Bcx/6q",
+	"name": "GPS Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:18.294648+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345ca51d148300b9d64c78"
+	},
+	"id": "a5c4de41-7592-413c-b901-bce3b63e4709",
+	"email": "test_gps_bf975439@rentfux.de",
+	"password_hash": "$2b$12$qJyeRe7EbslPrHnhcy3zFeyiXWOBG9.j5gSM8MU72aGyBbW/9ixGy",
+	"name": "GPS Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:25.478409+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345ca91d148300b9d64c8d"
+	},
+	"id": "2c9f2b4f-ca00-4cea-ba2f-1c4043b9b2c6",
+	"email": "test_dup_4f213c@rentfux.de",
+	"password_hash": "$2b$12$AI7zpX2K6fG5daHAQnIvh.LG3MT7EUcaLBpKgSS3OBQxD4TaCbkGa",
+	"name": "Dup",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:29.230433+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345caa1d148300b9d64c8e"
+	},
+	"id": "fa20e43d-3163-42a3-aea8-91f51b1d68fa",
+	"email": "test_user_db147891@rentfux.de",
+	"password_hash": "$2b$12$V72TJ2ktIYzNM2tfp2o93OP5nNKtZrdHCV9SviPtjFnTDOifBXp1S",
+	"name": "Updated Name",
+	"phone": "+491709999999",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:30.138983+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345cab1d148300b9d64c8f"
+	},
+	"id": "501d1adf-9168-4ed4-a989-6865a99dc1f9",
+	"email": "test_other_0142c0@rentfux.de",
+	"password_hash": "$2b$12$.ioQNuo/XV0VoEOxKAsEoOxzkt8WNWVO/wgIqTHKKsd82MH.KSihi",
+	"name": "Other",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:31.647795+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345cad1d148300b9d64c92"
+	},
+	"id": "4b48fe92-7fb3-40d2-aa52-399d8f836272",
+	"email": "test_brute_4509eb@rentfux.de",
+	"password_hash": "$2b$12$eSV6i10rUDr9QjB5It7a2e3jsJhDvhxvGzOYkZ/e2Q8KBojKq509u",
+	"name": "B",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:33.348385+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345cbd1d148300b9d64c9e"
+	},
+	"id": "de52a625-0067-4808-966e-146d0fec965c",
+	"email": "test_user_886df0c9@rentfux.de",
+	"password_hash": "$2b$12$4Eqtep5haxOQz4HvNjjBju0BFRFywM7HD2mTocIGoTiWXDdH4MZPe",
+	"name": "Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-06-18T21:01:49.892906+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345cd76696a7a4cb46ddf6"
+	},
+	"id": "6a61dc7f-c277-4f6b-951a-8e32dac29b24",
+	"email": "test_gps_cad84252@rentfux.de",
+	"password_hash": "$2b$12$mk8I0nVeAMRviV5Hxc5ejeU3oYriRl5QeNhjHl8D4o92/3Ug1s8He",
+	"name": "GPS Test User",
+	"phone": "+491701234567",
+	"role": "user",
+	"created_at": "2026-06-18T21:02:15.193053+00:00"
+},
+{
+	"_id": {
+		"$oid": "6a345e3e2ce465f96a2b87b4"
+	},
+	"id": "2c2f22f7-858e-4c33-9c1b-5e8de8bea627",
+	"email": "tmp1781816894@x.de",
+	"password_hash": "$2b$12$.Gq1c9TdPvRjGecYe/Dxae.7eLlyiLYpu4nI.JH5cJ88lOlhIVt8G",
+	"name": "Tmp",
+	"phone": "",
+	"role": "user",
+	"created_at": "2026-06-18T21:08:14.845707+00:00"
+}]
+

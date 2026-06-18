@@ -1,0 +1,290 @@
+[{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc152"
+	},
+	"id": "6457d458-02a4-4111-9a9c-83d18ae8294d",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.894819+00:00",
+	"name": "Polo",
+	"brand": "Volkswagen",
+	"category": "Kleinwagen",
+	"transmission": "Schaltgetriebe",
+	"fuel": "Benzin",
+	"seats": 5,
+	"doors": 4,
+	"price_per_day": 39.0,
+	"image_url": "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80",
+	"description": "Wendiger Kleinwagen – ideal für die Stadt und Kurzstrecken.",
+	"features": [
+		"Klimaautomatik",
+		"Sitzheizung vorne",
+		"Apple CarPlay",
+		"Android Auto",
+		"Rückfahrkamera",
+		"Bluetooth Freisprecheinrichtung",
+		"Schaltwippen am Lenkrad",
+		"Eigenes Feature 1"
+	],
+	"last_position": {
+		"lat": 53.49589923036556,
+		"lng": 8.601736003996793,
+		"speed_kmh": 22.0,
+		"heading": 38.17938304973339,
+		"status": "city",
+		"fence_km": 5.05,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.817928+00:00",
+		"source": "mock"
+	},
+	"images": [
+		"https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1200&q=80"
+	]
+},
+{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc153"
+	},
+	"id": "dd6fe22b-ee40-4ad3-b629-9cf350c145c6",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.895151+00:00",
+	"name": "Golf 8",
+	"brand": "Volkswagen",
+	"category": "Kompakt",
+	"transmission": "Automatik",
+	"fuel": "Benzin",
+	"seats": 5,
+	"doors": 5,
+	"price_per_day": 59.0,
+	"image_url": "https://images.unsplash.com/photo-1520031441872-265e4ff70366?auto=format&fit=crop&w=1200&q=80",
+	"description": "Der beliebte Kompaktwagen – effizient, komfortabel und zuverlässig.",
+	"features": [
+		"Automatik",
+		"Navigation",
+		"Tempomat",
+		"LED-Scheinwerfer"
+	],
+	"last_position": {
+		"lat": 53.63669053315417,
+		"lng": 8.615303912722288,
+		"speed_kmh": 22.0,
+		"heading": 53.38364802690789,
+		"status": "city",
+		"fence_km": 11.03,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.818918+00:00",
+		"source": "mock"
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc154"
+	},
+	"id": "17b5dc69-56c3-4102-8b07-532c9da26940",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.895387+00:00",
+	"name": "A-Klasse",
+	"brand": "Mercedes-Benz",
+	"category": "Mittelklasse",
+	"transmission": "Automatik",
+	"fuel": "Diesel",
+	"seats": 5,
+	"doors": 5,
+	"price_per_day": 79.0,
+	"image_url": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=1200&q=80",
+	"description": "Sportlich-elegante Limousine mit MBUX und Premium-Ausstattung.",
+	"features": [
+		"MBUX",
+		"Automatik",
+		"Ledersitze",
+		"Sitzheizung"
+	],
+	"last_position": {
+		"lat": 53.486383463010654,
+		"lng": 8.504319192526918,
+		"speed_kmh": 22.0,
+		"heading": 62.76909770544398,
+		"status": "city",
+		"fence_km": 7.79,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.819639+00:00",
+		"source": "mock"
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc155"
+	},
+	"id": "ae5e113a-a5ef-437b-a96c-1cfcb627932b",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.895599+00:00",
+	"name": "3er Touring",
+	"brand": "BMW",
+	"category": "Mittelklasse",
+	"transmission": "Automatik",
+	"fuel": "Diesel",
+	"seats": 5,
+	"doors": 5,
+	"price_per_day": 89.0,
+	"image_url": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
+	"description": "Dynamischer Kombi mit viel Platz – perfekt für Geschäftsreisen.",
+	"features": [
+		"Navigation",
+		"Head-Up-Display",
+		"Automatik",
+		"Panoramadach"
+	],
+	"last_position": {
+		"lat": 53.54917071523498,
+		"lng": 8.578746584494723,
+		"speed_kmh": 48.0,
+		"heading": 223.72024450964918,
+		"status": "highway",
+		"fence_km": 1.07,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.820199+00:00",
+		"source": "mock"
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc156"
+	},
+	"id": "2efd096d-62e3-4fa9-813b-f0ec1d4e5709",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.895808+00:00",
+	"name": "Tiguan",
+	"brand": "Volkswagen",
+	"category": "SUV",
+	"transmission": "Automatik",
+	"fuel": "Diesel",
+	"seats": 5,
+	"doors": 5,
+	"price_per_day": 99.0,
+	"image_url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80",
+	"description": "Geräumiger SUV mit 4Motion-Allradantrieb – ideal für Familien.",
+	"features": [
+		"Allrad",
+		"Panoramadach",
+		"AppConnect",
+		"Rückfahrkamera"
+	],
+	"last_position": {
+		"lat": 53.54988725142157,
+		"lng": 8.67350379778046,
+		"speed_kmh": 68.0,
+		"heading": 120.70602768059437,
+		"status": "highway",
+		"fence_km": 6.22,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.820723+00:00",
+		"source": "mock"
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc157"
+	},
+	"id": "9b34940c-b6cd-4b8a-8c67-86eb53cff5c9",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.896007+00:00",
+	"name": "Model 3",
+	"brand": "Tesla",
+	"category": "Mittelklasse",
+	"transmission": "Automatik",
+	"fuel": "Elektro",
+	"seats": 5,
+	"doors": 4,
+	"price_per_day": 119.0,
+	"image_url": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=80",
+	"description": "Vollelektrisch, leise und schnell. Autopilot inklusive.",
+	"features": [
+		"Autopilot",
+		"Supercharger-Zugang",
+		"Glasdach",
+		"15'' Display"
+	],
+	"last_position": {
+		"lat": 53.59443504280631,
+		"lng": 8.455157948472973,
+		"speed_kmh": 68.0,
+		"heading": 186.98316437901767,
+		"status": "highway",
+		"fence_km": 10.3,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.821198+00:00",
+		"source": "mock"
+	}
+},
+{
+	"_id": {
+		"$oid": "69e93a636a45f56f8cefc158"
+	},
+	"id": "9717a2f1-55f4-4d29-a6c3-816dba94b36d",
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-04-22T21:15:15.896206+00:00",
+	"name": "Multivan",
+	"brand": "Volkswagen",
+	"category": "Van",
+	"transmission": "Automatik",
+	"fuel": "Diesel",
+	"seats": 7,
+	"doors": 5,
+	"price_per_day": 149.0,
+	"image_url": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80",
+	"description": "Das Raumwunder für Großfamilien und Geschäftsteams.",
+	"features": [
+		"7 Sitze",
+		"Schiebetüren",
+		"Klimaautomatik",
+		"Anhängerkupplung"
+	],
+	"last_position": {
+		"lat": 53.64487902153194,
+		"lng": 8.590832052973985,
+		"speed_kmh": 0.0,
+		"heading": 38.285593249214344,
+		"status": "parked",
+		"fence_km": 11.72,
+		"geofence_alert": false,
+		"ts": "2026-06-18T21:31:54.821710+00:00",
+		"source": "mock"
+	}
+},
+{
+	"_id": {
+		"$oid": "6a34636df78770533e935965"
+	},
+	"id": "0205606f-af76-4b89-901e-5fa51dc7e17c",
+	"name": "Q5",
+	"brand": "Audi",
+	"category": "Luxus",
+	"transmission": "Automatik",
+	"fuel": "Hybrid",
+	"seats": 5,
+	"doors": 5,
+	"price_per_day": 169.0,
+	"image_url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80",
+	"images": [
+		"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80"
+	],
+	"description": "Souveräner SUV mit Premium-Ausstattung – ideal für Geschäftsreisen und Familien.",
+	"features": [
+		"Klimaautomatik",
+		"Lederausstattung",
+		"Apple CarPlay",
+		"Android Auto",
+		"Rückfahrkamera",
+		"Adaptiver Tempomat"
+	],
+	"active": true,
+	"location_id": "loc-hamburg-hbf",
+	"created_at": "2026-06-18T21:30:21.295741+00:00"
+}]
+
