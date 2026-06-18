@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, MapPin, Save, User as UserIcon, FileText, Home, Building2, Download } from "lucide-react";
+import { Calendar, Car, MapPin, Save, User as UserIcon, FileText, Home, Briefcase, Download } from "lucide-react";
 import { toast } from "sonner";
 import DocumentUpload from "@/components/DocumentUpload";
 import { Switch } from "@/components/ui/switch";
@@ -94,6 +94,7 @@ export default function Account() {
           <TabsTrigger value="bookings" data-testid="tab-bookings"><Calendar size={14} className="mr-1.5" /> Buchungen</TabsTrigger>
           <TabsTrigger value="profile" data-testid="tab-profile"><UserIcon size={14} className="mr-1.5" /> Profil</TabsTrigger>
           <TabsTrigger value="address" data-testid="tab-address"><Home size={14} className="mr-1.5" /> Adresse</TabsTrigger>
+          <TabsTrigger value="business" data-testid="tab-business"><Briefcase size={14} className="mr-1.5" /> Geschäftskunde</TabsTrigger>
           <TabsTrigger value="documents" data-testid="tab-documents"><FileText size={14} className="mr-1.5" /> Dokumente</TabsTrigger>
         </TabsList>
 

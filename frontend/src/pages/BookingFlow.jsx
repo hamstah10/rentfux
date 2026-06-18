@@ -221,7 +221,7 @@ export default function BookingFlow() {
                 {i < step ? <Check size={16} /> : i + 1}
               </div>
               <div className={`text-sm font-medium ${i === step ? "text-[#0A0A0A]" : "text-[#525252]"}`}>{label}</div>
-              {i < STEPS.length - 1 && <div className="w-8 h-px bg-slate-200 mx-2 hidden md:block" />}
+              {i < STEPS.length - 1 && <div className="w-8 h-px bg-[#E5E5E5] mx-2 hidden md:block" />}
             </div>
           ))}
         </div>

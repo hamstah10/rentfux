@@ -15,7 +15,7 @@ export default function Footer() {
   const email = loc?.email || "service@rentfux.de";
 
   return (
-    <footer className="mt-24 border-t border-[#E5E5E5] bg-[#0A0A0A] text-slate-200" data-testid="site-footer">
+    <footer className="mt-24 border-t border-[#262626] bg-[#0A0A0A] text-[#D4D4D4]" data-testid="site-footer">
       <div className="rf-container py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
         <div>
           <div className="flex items-center gap-2 mb-4">
@@ -66,7 +66,7 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-slate-800">
+      <div className="border-t border-[#262626]">
         <div className="rf-container py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[#525252]">
           <span>© {new Date().getFullYear()} RentFux GmbH · Alle Rechte vorbehalten.</span>
           <span>Mobilität neu gedacht.</span>

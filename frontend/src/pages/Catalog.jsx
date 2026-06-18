@@ -90,7 +90,7 @@ export default function Catalog() {
                     onClick={() => setSeatsMin(n)}
                     data-testid={`filter-seats-${n}`}
                     className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
-                      seatsMin === n ? "bg-[#E11226] text-white border-[#E11226]" : "bg-white text-[#262626] border-[#D4D4D4] hover:border-slate-400"
+                      seatsMin === n ? "bg-[#E11226] text-white border-[#E11226]" : "bg-white text-[#262626] border-[#D4D4D4] hover:border-[#A3A3A3]"
                     }`}
                   >
                     {n === 0 ? "Alle" : `${n}+`}
